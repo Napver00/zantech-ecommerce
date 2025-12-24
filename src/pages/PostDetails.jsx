@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom"; // Updated Link import
 import parse, { domToReact } from "html-react-parser"; // 1. Import Parser
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -11,9 +11,19 @@ import CodeBlock from "@/components/CodeBlock"; // 2. Import your new CodeBlock
 
 const PostDetails = () => {
   const { slug } = useParams();
+  const location = useLocation(); // Hook to access state
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Determine back link destination
+  const backLink =
+    location.state?.from === "tutorials"
+      ? `/tutorials?page=${location.state.page}`
+      : "/blog";
+
+  const backText =
+    location.state?.from === "tutorials" ? "Back to Tutorials" : "Back to Blog";
 
   // --- Fetch Data Logic (No Changes Here) ---
   useEffect(() => {
@@ -198,10 +208,10 @@ const PostDetails = () => {
           <div className="container mx-auto max-w-4xl">
             {/* Back Link */}
             <Link
-              to="/blog"
+              to={backLink}
               className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-8 font-bold transition-colors"
             >
-              <ArrowLeft size={20} /> Back to Tutorials
+              <ArrowLeft size={20} /> {backText}
             </Link>
 
             {/* 4. THE CONTENT CONTAINER */}

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Calendar, Tag, ArrowRight, Clock, User } from "lucide-react";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, linkState }) => {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -26,6 +26,7 @@ const PostCard = ({ post }) => {
   return (
     <Link
       to={`/postdetails/${post.slug}`}
+      state={linkState}
       className="group flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden h-full"
     >
       {/* Image Section */}
