@@ -107,8 +107,8 @@ const Checkout = () => {
     ? shippingOption === "localPickup"
       ? 0
       : shippingOption === "insideDhaka"
-      ? orderInfo.insideDhaka
-      : orderInfo.outsideDhaka
+        ? orderInfo.insideDhaka
+        : orderInfo.outsideDhaka
     : 0;
   const discountAmount = coupon ? coupon.discount : 0;
   const subtotalAfterDiscount = cartTotal + shippingCharge - discountAmount;
@@ -187,13 +187,13 @@ const Checkout = () => {
     if (user) {
       if (!user.id) {
         setOrderError(
-          "User information is missing. Please try logging in again."
+          "User information is missing. Please try logging in again.",
         );
         return;
       }
       if (shippingAddresses.length === 0) {
         setOrderError(
-          "Please add a shipping address in your dashboard before placing an order."
+          "Please add a shipping address in your dashboard before placing an order.",
         );
         return;
       }
@@ -256,12 +256,12 @@ const Checkout = () => {
         setTimeout(() => navigate("/"), 5000);
       } else {
         setOrderError(
-          data.message || "Failed to place order. Please try again."
+          data.message || "Failed to place order. Please try again.",
         );
       }
     } catch (error) {
       setOrderError(
-        "An unexpected error occurred. Please check your connection and try again."
+        "An unexpected error occurred. Please check your connection and try again.",
       );
     } finally {
       setIsPlacingOrder(false);
@@ -778,20 +778,20 @@ const Checkout = () => {
                           : "border-gray-200"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
                           <RadioGroupItem
                             value="insideDhaka"
                             id="insideDhaka"
                           />
                           <Label
                             htmlFor="insideDhaka"
-                            className="cursor-pointer font-medium text-gray-900 text-sm"
+                            className="cursor-pointer font-medium text-gray-900 text-sm truncate"
                           >
                             Inside Dhaka
                           </Label>
                         </div>
-                        <span className="font-semibold text-gray-900 text-sm">
+                        <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
                           ৳{orderInfo?.insideDhaka || "..."}
                         </span>
                       </div>
@@ -803,20 +803,20 @@ const Checkout = () => {
                           : "border-gray-200"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
                           <RadioGroupItem
                             value="outsideDhaka"
                             id="outsideDhaka"
                           />
                           <Label
                             htmlFor="outsideDhaka"
-                            className="cursor-pointer font-medium text-gray-900 text-sm"
+                            className="cursor-pointer font-medium text-gray-900 text-sm truncate"
                           >
                             Outside Dhaka
                           </Label>
                         </div>
-                        <span className="font-semibold text-gray-900 text-sm">
+                        <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
                           ৳{orderInfo?.outsideDhaka || "..."}
                         </span>
                       </div>

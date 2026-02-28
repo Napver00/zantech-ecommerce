@@ -32,8 +32,9 @@ const ProductCard = ({ product }) => {
     }
   }, [wishlist, product.id]);
 
-  const hasDiscount = Number(discount) > 0 || (discountedPrice && discountedPrice < price);
-  const finalPrice = hasDiscount ? discountedPrice ?? price : price;
+  const hasDiscount =
+    Number(discount) > 0 || (discountedPrice && discountedPrice < price);
+  const finalPrice = hasDiscount ? (discountedPrice ?? price) : price;
   const savings = hasDiscount ? price - finalPrice : 0;
 
   const handleAddToCart = (e) => {
@@ -81,13 +82,15 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden">
+    <div className="group relative bg-white rounded-[2rem] border border-gray-100/50 hover:border-blue-100 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:-translate-y-1 overflow-hidden">
       {/* Discount Badge */}
       {hasDiscount && (
-        <div className="absolute top-3 left-3 z-10">
-          <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-            <Zap className="w-3 h-3" />
-            {discountPercentage ? `-${Math.round(discountPercentage)}%` : "Sale"}
+        <div className="absolute top-4 left-4 z-10">
+          <div className="bg-white/90 backdrop-blur-md text-red-600 text-[10px] font-bold px-3 py-1 rounded-full shadow-sm border border-red-100 flex items-center gap-1 uppercase tracking-wider">
+            <Zap className="w-3 h-3 fill-current" />
+            {discountPercentage
+              ? `${Math.round(discountPercentage)}% Off`
+              : "Sale"}
           </div>
         </div>
       )}
@@ -95,10 +98,10 @@ const ProductCard = ({ product }) => {
       {/* Wishlist Button */}
       <button
         onClick={handleWishlistToggle}
-        className={`absolute top-3 right-3 z-10 p-2.5 rounded-full backdrop-blur-sm transition-all duration-300 ${
+        className={`absolute top-4 right-4 z-10 p-2.5 rounded-xl backdrop-blur-md transition-all duration-300 ${
           isWishlisted
-            ? "bg-red-100 text-red-600 shadow-lg scale-110"
-            : "bg-white/90 text-gray-600 hover:bg-white hover:text-red-500 hover:scale-105"
+            ? "bg-red-500 text-white shadow-lg shadow-red-200 scale-110"
+            : "bg-white/80 text-gray-400 hover:bg-white hover:text-red-500 border border-gray-100"
         }`}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
@@ -127,7 +130,7 @@ const ProductCard = ({ product }) => {
       </Link>
 
       {/* Product Info */}
-      <div className="p-5 space-y-3">
+      <div className="p-5 sm:p-6 space-y-3 sm:space-y-4">
         {rating && (
           <div className="flex items-center gap-2">
             <div className="flex items-center">
@@ -148,7 +151,7 @@ const ProductCard = ({ product }) => {
           </div>
         )}
 
-        <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-3 min-h-[4.5rem]">
+        <h3 className="font-bold text-gray-900 text-sm sm:text-lg leading-tight tracking-tight mb-1">
           <Link
             to={`/product/${product.slug}`}
             className="hover:text-blue-600 transition-colors"
@@ -160,12 +163,12 @@ const ProductCard = ({ product }) => {
 
         <div className="space-y-2">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-2xl font-bold text-gray-900">
+            <span className="text-lg sm:text-2xl font-bold text-gray-900">
               ৳{finalPrice?.toLocaleString()}
             </span>
             {hasDiscount && (
               <>
-                <span className="text-base text-gray-500 line-through">
+                <span className="text-xs sm:text-base text-gray-500 line-through">
                   ৳{price?.toLocaleString()}
                 </span>
                 {savings > 0 && (
@@ -200,7 +203,7 @@ const ProductCard = ({ product }) => {
             disabled={
               isLoading || (product.stock !== undefined && product.stock === 0)
             }
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:hover:scale-100 disabled:cursor-not-allowed"
+            className="w-full bg-gray-900 hover:bg-blue-600 disabled:bg-gray-200 text-white font-bold py-3.5 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-sm active:scale-[0.98]"
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -214,9 +217,9 @@ const ProductCard = ({ product }) => {
 
           <Link
             to={`/product/${product.slug}`}
-            className="w-full block text-center border-2 border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm hover:shadow-md transform hover:scale-[1.02]"
+            className="w-full block text-center border border-gray-100 hover:border-blue-100 bg-white text-gray-500 hover:text-blue-600 font-bold py-3 px-4 rounded-2xl transition-all duration-300 text-sm"
           >
-            View Details
+            Details
           </Link>
         </div>
       </div>

@@ -47,7 +47,7 @@ const HeroSection = () => {
   const goToPrevious = () => {
     if (images.length === 0) return;
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length,
     );
   };
 
@@ -100,13 +100,15 @@ const HeroSection = () => {
   return (
     <div className="w-full mb-8">
       {/* Full-width Hero Slider */}
-      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900">
+      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900 group">
         {/* Images */}
         {images.map((image, index) => (
           <div
             key={image.id}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === currentIndex ? "opacity-100" : "opacity-0"
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              index === currentIndex
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-105"
             }`}
           >
             <img
@@ -114,68 +116,78 @@ const HeroSection = () => {
               alt={`Hero slide ${index + 1}`}
               className="w-full h-full object-cover"
             />
-            {/* Gradient Overlay for better text readability if needed */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+            {/* Subtle Overlay */}
+            <div className="absolute inset-0 bg-black/40"></div>
+
+            {/* Centered Minimalist Content */}
+            <div className="absolute inset-0 flex items-center justify-center text-center">
+              <div className="container mx-auto px-4 md:px-8">
+                <div
+                  className={`max-w-3xl mx-auto transition-all duration-1000 transform ${
+                    index === currentIndex
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-4 opacity-0"
+                  }`}
+                >
+                  <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md text-white/80 text-[10px] font-bold uppercase tracking-[0.3em] rounded-full mb-6 border border-white/10">
+                    ZánTech Robotics
+                  </span>
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
+                    Awaken your hidden <br />
+                    <span className="text-blue-400">Talent</span>
+                  </h1>
+                  <p className="text-gray-200 text-base md:text-lg mb-10 leading-relaxed max-w-xl mx-auto opacity-90">
+                    Next-generation robotic parts and DIY kits for innovators.
+                  </p>
+                  <div className="flex justify-center">
+                    <button className="bg-white text-gray-900 hover:bg-blue-600 hover:text-white px-10 py-4 rounded-full font-bold transition-all shadow-xl active:scale-95">
+                      Shop Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ))}
 
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows - Minimal */}
         {images.length > 1 && (
           <>
             <button
               aria-label="Previous slide"
               onClick={goToPrevious}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 group z-10"
+              className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-all opacity-0 group-hover:opacity-100 z-20"
             >
-              <ChevronLeft className="h-6 w-6 md:h-7 md:w-7 text-white" />
+              <ChevronLeft className="h-8 w-8" />
             </button>
 
             <button
               aria-label="Next slide"
               onClick={goToNext}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 group z-10"
+              className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-all opacity-0 group-hover:opacity-100 z-20"
             >
-              <ChevronRight className="h-6 w-6 md:h-7 md:w-7 text-white" />
+              <ChevronRight className="h-8 w-8" />
             </button>
           </>
         )}
 
-        {/* Dot Indicators */}
+        {/* Indicators - Simple Dots */}
         {images.length > 1 && (
-          <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex space-x-2 md:space-x-3 z-10">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2.5 z-20">
             {images.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`transition-all duration-300 rounded-full ${
                   index === currentIndex
-                    ? "w-8 md:w-10 h-2 md:h-2.5 bg-white"
-                    : "w-2 md:w-2.5 h-2 md:h-2.5 bg-white/60 hover:bg-white/80"
+                    ? "w-2.5 h-2.5 bg-white"
+                    : "w-2 h-2 bg-white/20 hover:bg-white/40"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
         )}
-
-        {/* Optional: Slide counter */}
-        {images.length > 1 && (
-          <div className="absolute top-6 right-6 bg-black/40 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium z-10">
-            {currentIndex + 1} / {images.length}
-          </div>
-        )}
-      </div>
-
-      {/* Content Section Below Hero */}
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16">
-        <div className="max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-            Awaken your hidden{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-              Talent
-            </span>
-          </h1>
-        </div>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ import {
   ShieldCheck,
   Truck,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { config } from "@/config";
@@ -59,7 +59,7 @@ const Gallery = ({ images = [], alt = "" }) => {
           alt={alt}
           className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-110"
         />
-        
+
         {/* Navigation Arrows */}
         {imgs.length > 1 && (
           <>
@@ -83,15 +83,15 @@ const Gallery = ({ images = [], alt = "" }) => {
 
       {/* Thumbnails */}
       {imgs.length > 1 && (
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-5 gap-4">
           {imgs.map((src, idx) => (
             <button
               key={idx}
               onClick={() => setIndex(idx)}
-              className={`aspect-square p-2 rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+              className={`aspect-square p-2 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${
                 idx === index
-                  ? "border-blue-600 ring-2 ring-blue-100 shadow-md bg-white"
-                  : "border-transparent bg-slate-50 hover:border-slate-200"
+                  ? "border-blue-600 shadow-lg shadow-blue-500/10 bg-white scale-105"
+                  : "border-transparent bg-white hover:border-slate-200"
               }`}
             >
               <img
@@ -122,7 +122,9 @@ const StarRating = ({ rating, totalReviews = 0 }) => {
           />
         ))}
       </div>
-      <span className="text-sm font-bold text-slate-900">{rating.toFixed(1)}</span>
+      <span className="text-sm font-bold text-slate-900">
+        {rating.toFixed(1)}
+      </span>
       <span className="text-sm text-slate-500">({totalReviews} reviews)</span>
     </div>
   );
@@ -133,19 +135,19 @@ const QuantitySelector = ({ max = 1, value = 1, onChange }) => {
   const dec = () => onChange?.(Math.max(1, value - 1));
 
   return (
-    <div className="flex items-center border border-slate-300 rounded-xl overflow-hidden bg-white">
+    <div className="flex items-center border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50 p-1">
       <button
         onClick={dec}
         disabled={value <= 1}
-        className="p-3 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-600"
+        className="w-10 h-10 flex items-center justify-center hover:bg-white rounded-xl disabled:opacity-30 disabled:cursor-not-allowed transition-all text-slate-600 hover:shadow-sm"
       >
         <Minus className="w-4 h-4" />
       </button>
-      <span className="w-12 text-center font-semibold text-slate-900">{value}</span>
+      <span className="w-12 text-center font-bold text-slate-900">{value}</span>
       <button
         onClick={inc}
         disabled={value >= max}
-        className="p-3 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-600"
+        className="w-10 h-10 flex items-center justify-center hover:bg-white rounded-xl disabled:opacity-30 disabled:cursor-not-allowed transition-all text-slate-600 hover:shadow-sm"
       >
         <Plus className="w-4 h-4" />
       </button>
@@ -162,7 +164,7 @@ const ProductPage = () => {
   const { addToCart } = useCart();
   const { addToWishlist, wishlist } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [activeTab, setActiveTab] = useState('description');
+  const [activeTab, setActiveTab] = useState("description");
 
   const siteUrl = "https://store.zantechbd.com";
   const productUrl = `${siteUrl}/product/${slug}`;
@@ -185,10 +187,15 @@ const ProductPage = () => {
           const p = json.data;
           const normalized = {
             ...p,
-            image: p.image || p.image_path || (Array.isArray(p.images) && p.images[0]?.path) || "",
+            image:
+              p.image ||
+              p.image_path ||
+              (Array.isArray(p.images) && p.images[0]?.path) ||
+              "",
             description: p.description || "",
             discountedPrice: p.discountedPrice ?? p.discounted_price ?? p.price,
-            discountPercentage: p.discountPercentage ?? p.discount_percentage ?? null,
+            discountPercentage:
+              p.discountPercentage ?? p.discount_percentage ?? null,
             meta_title: p.meta_title || p.name,
             meta_keywords: p.meta_keywords || "",
             meta_description: p.meta_description || p.short_description || "",
@@ -204,7 +211,9 @@ const ProductPage = () => {
       }
     };
     if (slug) fetchProduct();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [slug]);
 
   const handleAddToCart = () => {
@@ -233,76 +242,92 @@ const ProductPage = () => {
       url: window.location.href,
     };
     if (navigator.share) {
-      try { await navigator.share(shareData); } catch (err) {}
+      try {
+        await navigator.share(shareData);
+      } catch (err) {}
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Link copied to clipboard");
     }
   };
 
-  const seoImage = product?.image?.startsWith("http") 
-    ? product.image 
-    : product?.image 
-      ? `${siteUrl}${product.image}` 
+  const seoImage = product?.image?.startsWith("http")
+    ? product.image
+    : product?.image
+      ? `${siteUrl}${product.image}`
       : "";
 
   const SeoComponent = (
     <Seo
-      title={product?.meta_title || (product ? `${product.name} | Zantech Store` : undefined)}
+      title={
+        product?.meta_title ||
+        (product ? `${product.name} | Zantech Store` : undefined)
+      }
       description={product?.meta_description || product?.short_description}
       keywords={product?.meta_keywords}
       image={seoImage}
       url={productUrl}
       type="product"
-      product={product ? {
-        price: product.discountedPrice,
-        currency: "BDT",
-        availability: product.quantity > 0 ? "in stock" : "out of stock",
-        brand: product.brand || "Zantech",
-      } : undefined}
+      product={
+        product
+          ? {
+              price: product.discountedPrice,
+              currency: "BDT",
+              availability: product.quantity > 0 ? "in stock" : "out of stock",
+              brand: product.brand || "Zantech",
+            }
+          : undefined
+      }
     />
   );
 
-  if (loading) return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
-      {SeoComponent}
-      <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <Skeleton className="aspect-square rounded-2xl bg-slate-200" />
-          <div className="space-y-6">
-            <Skeleton className="h-8 w-3/4 bg-slate-200" />
-            <Skeleton className="h-6 w-1/2 bg-slate-200" />
-            <Skeleton className="h-24 w-full bg-slate-200" />
-            <Skeleton className="h-12 w-full bg-slate-200" />
+  if (loading)
+    return (
+      <div className="flex flex-col min-h-screen bg-slate-50">
+        {SeoComponent}
+        <Header />
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <Skeleton className="aspect-square rounded-2xl bg-slate-200" />
+            <div className="space-y-6">
+              <Skeleton className="h-8 w-3/4 bg-slate-200" />
+              <Skeleton className="h-6 w-1/2 bg-slate-200" />
+              <Skeleton className="h-24 w-full bg-slate-200" />
+              <Skeleton className="h-12 w-full bg-slate-200" />
+            </div>
           </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+        </main>
+        <Footer />
+      </div>
+    );
 
-  if (error || !product) return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
-      {SeoComponent}
-      <Header />
-      <main className="flex-grow flex items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-10 h-10 text-red-500" />
+  if (error || !product)
+    return (
+      <div className="flex flex-col min-h-screen bg-slate-50">
+        {SeoComponent}
+        <Header />
+        <main className="flex-grow flex items-center justify-center p-4">
+          <div className="text-center max-w-md">
+            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertCircle className="w-10 h-10 text-red-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              Product Not Found
+            </h2>
+            <p className="text-slate-600 mb-8">
+              {error || "The product you are looking for does not exist."}
+            </p>
+            <Link
+              to="/shop"
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+            >
+              Back to Shop
+            </Link>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Product Not Found</h2>
-          <p className="text-slate-600 mb-8">{error || "The product you are looking for does not exist."}</p>
-          <Link to="/shop" className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
-            Back to Shop
-          </Link>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
-
-
+        </main>
+        <Footer />
+      </div>
+    );
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
@@ -314,9 +339,13 @@ const ProductPage = () => {
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8 overflow-x-auto whitespace-nowrap pb-2">
-            <Link to="/" className="hover:text-blue-600 transition-colors">Home</Link>
+            <Link to="/" className="hover:text-blue-600 transition-colors">
+              Home
+            </Link>
             <ChevronRight className="w-4 h-4" />
-            <Link to="/shop" className="hover:text-blue-600 transition-colors">Shop</Link>
+            <Link to="/shop" className="hover:text-blue-600 transition-colors">
+              Shop
+            </Link>
             <ChevronRight className="w-4 h-4" />
             <span className="text-slate-900 font-medium">{product.name}</span>
           </nav>
@@ -325,7 +354,13 @@ const ProductPage = () => {
             {/* Left Column: Gallery */}
             <div>
               <Gallery
-                images={product.images?.length ? product.images : product.image ? [product.image] : []}
+                images={
+                  product.images?.length
+                    ? product.images
+                    : product.image
+                      ? [product.image]
+                      : []
+                }
                 alt={product.name}
               />
             </div>
@@ -352,27 +387,35 @@ const ProductPage = () => {
                   )}
                 </div>
 
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-3">
                   {product.name}
                 </h1>
 
                 <div className="flex items-center gap-4 mb-6">
                   {product.average_rating > 0 && (
-                    <StarRating rating={product.average_rating} totalReviews={product.ratings?.length} />
+                    <StarRating
+                      rating={product.average_rating}
+                      totalReviews={product.ratings?.length}
+                    />
                   )}
-                  <button onClick={handleShare} className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-blue-600 transition-colors">
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-blue-600 transition-colors"
+                  >
                     <Share2 className="w-4 h-4" />
                     Share
                   </button>
                 </div>
 
-                <div className="flex items-end gap-4 mb-6">
-                  <span className="text-4xl font-bold text-slate-900">
+                <div className="flex items-end gap-3 mb-6">
+                  <span className="text-3xl sm:text-4xl font-bold text-slate-900">
                     ৳{product.discountedPrice}
                   </span>
                   {product.discountedPrice < product.price && (
                     <div className="flex flex-col mb-1">
-                      <span className="text-lg text-slate-400 line-through">৳{product.price}</span>
+                      <span className="text-lg text-slate-400 line-through">
+                        ৳{product.price}
+                      </span>
                       <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
                         -{product.discountPercentage}% OFF
                       </span>
@@ -385,14 +428,20 @@ const ProductPage = () => {
                 </p>
               </div>
 
-              {/* Actions */}
-              <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-6">
+              {/* Actions - Premium Minimal Card */}
+              <div className="p-8 bg-white rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-slate-200/50 space-y-8">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-900">Quantity</span>
-                  <span className="text-sm text-slate-500">{product.quantity} items available</span>
+                  <div className="space-y-1">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                      Quantity
+                    </span>
+                    <p className="text-sm text-slate-500 font-medium tracking-tight">
+                      {product.quantity} items available
+                    </p>
+                  </div>
                 </div>
-                
-                <div className="flex flex-col sm:flex-row gap-4">
+
+                <div className="flex flex-col sm:flex-row gap-5">
                   <QuantitySelector
                     max={product.quantity}
                     value={quantity}
@@ -401,59 +450,77 @@ const ProductPage = () => {
                   <button
                     onClick={handleAddToCart}
                     disabled={product.quantity === 0}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold text-lg py-3 px-8 rounded-xl flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:shadow-blue-600/20 active:scale-[0.98]"
+                    className="flex-1 bg-gray-900 hover:bg-blue-600 disabled:bg-slate-200 disabled:cursor-not-allowed text-white font-bold text-lg py-4 px-8 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-xl shadow-gray-900/10 hover:shadow-blue-600/20"
                   >
                     <ShoppingCart className="w-5 h-5" />
                     Add to Cart
                   </button>
                   <button
                     onClick={handleWishlistToggle}
-                    className={`p-3 rounded-xl border-2 transition-all ${
+                    className={`p-4 rounded-2xl border transition-all ${
                       isWishlisted
-                        ? "border-red-200 bg-red-50 text-red-500"
-                        : "border-slate-200 hover:border-blue-300 hover:text-blue-600 text-slate-400"
+                        ? "bg-red-500 text-white border-red-500 shadow-lg shadow-red-200"
+                        : "border-slate-100 bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-white hover:border-red-100"
                     }`}
                   >
-                    <Heart className={`w-6 h-6 ${isWishlisted ? "fill-current" : ""}`} />
+                    <Heart
+                      className={`w-6 h-6 ${isWishlisted ? "fill-current" : ""}`}
+                    />
                   </button>
                 </div>
 
-                {/* Trust Badges */}
-                <div className="grid grid-cols-2 gap-4 pt-6 border-t border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                      <Truck className="w-5 h-5" />
+                {/* Trust Badges - Minimal Grid */}
+                <div className="grid grid-cols-2 gap-y-8 gap-x-4 pt-8 border-t border-slate-50">
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-all duration-300">
+                      <Truck className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">Fast Delivery</p>
-                      <p className="text-xs text-slate-500">2-3 days delivery</p>
+                      <p className="text-sm font-bold text-slate-900">
+                        Fast Delivery
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                        Express
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                      <ShieldCheck className="w-5 h-5" />
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all duration-300">
+                      <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">Genuine Product</p>
-                      <p className="text-xs text-slate-500">100% Authentic</p>
+                      <p className="text-sm font-bold text-slate-900">
+                        Genuine
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                        Authentic
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
-                      <RotateCcw className="w-5 h-5" />
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-purple-50 group-hover:text-purple-600 transition-all duration-300">
+                      <RotateCcw className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">Easy Returns</p>
-                      <p className="text-xs text-slate-500">3 days return policy</p>
+                      <p className="text-sm font-bold text-slate-900">
+                        Returns
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                        3 Days
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
-                      <Check className="w-5 h-5" />
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-amber-50 group-hover:text-amber-600 transition-all duration-300">
+                      <Check className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">Warranty</p>
-                      <p className="text-xs text-slate-500">Official warranty</p>
+                      <p className="text-sm font-bold text-slate-900">
+                        Warranty
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                        Official
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -469,11 +536,15 @@ const ProductPage = () => {
                   <Package className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Bundle Includes</h2>
-                  <p className="text-emerald-700">Get everything you need in one package</p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+                    Bundle Includes
+                  </h2>
+                  <p className="text-emerald-700">
+                    Get everything you need in one package
+                  </p>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {product.bundle_items.map((item) => (
                   <Link
@@ -492,8 +563,12 @@ const ProductPage = () => {
                       {item.name}
                     </h3>
                     <div className="flex items-center justify-between">
-                      <span className="text-emerald-600 font-bold">x{item.bundle_quantity}</span>
-                      <span className="text-slate-500 text-sm">View Details</span>
+                      <span className="text-emerald-600 font-bold">
+                        x{item.bundle_quantity}
+                      </span>
+                      <span className="text-slate-500 text-sm">
+                        View Details
+                      </span>
                     </div>
                   </Link>
                 ))}
@@ -504,7 +579,7 @@ const ProductPage = () => {
           {/* Tabs: Description & Reviews */}
           <div className="mb-16">
             <div className="flex items-center gap-8 border-b border-slate-200 mb-8 overflow-x-auto">
-              {['description', 'reviews'].map((tab) => (
+              {["description", "reviews"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -523,8 +598,8 @@ const ProductPage = () => {
             </div>
 
             <div className="min-h-[300px]">
-              {activeTab === 'description' && (
-                <div 
+              {activeTab === "description" && (
+                <div
                   className="prose prose-lg prose-slate max-w-none
                     prose-headings:font-bold prose-headings:text-slate-900
                     prose-p:text-slate-600 prose-p:leading-relaxed
@@ -537,18 +612,23 @@ const ProductPage = () => {
                 />
               )}
 
-              {activeTab === 'reviews' && (
+              {activeTab === "reviews" && (
                 <div className="space-y-8">
                   {product.ratings?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {product.ratings.map((review) => (
-                        <div key={review.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <div
+                          key={review.id}
+                          className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm"
+                        >
                           <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20">
                               {review.user.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <h4 className="font-bold text-slate-900">{review.user}</h4>
+                              <h4 className="font-bold text-slate-900">
+                                {review.user}
+                              </h4>
                               <div className="flex items-center gap-1">
                                 {[...Array(5)].map((_, i) => (
                                   <Star
@@ -563,7 +643,9 @@ const ProductPage = () => {
                               </div>
                             </div>
                           </div>
-                          <p className="text-slate-600 italic">"{review.rating}"</p>
+                          <p className="text-slate-600 italic">
+                            "{review.rating}"
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -572,8 +654,12 @@ const ProductPage = () => {
                       <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Star className="w-8 h-8 text-slate-300" />
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900 mb-2">No Reviews Yet</h3>
-                      <p className="text-slate-500">Be the first to review this product!</p>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">
+                        No Reviews Yet
+                      </h3>
+                      <p className="text-slate-500">
+                        Be the first to review this product!
+                      </p>
                     </div>
                   )}
                 </div>
@@ -583,7 +669,9 @@ const ProductPage = () => {
 
           {/* Related Products */}
           <div className="border-t border-slate-200 pt-16">
-            <h2 className="text-2xl font-bold text-slate-900 mb-8">You Might Also Like</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-8">
+              You Might Also Like
+            </h2>
             <RelatedProducts
               categorySlug={product.categories?.[0]?.slug}
               currentProductId={product.id}
