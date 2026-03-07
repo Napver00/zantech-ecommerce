@@ -14,6 +14,8 @@ const Tutorials = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalTutorials, setTotalTutorials] = useState(0);
 
   // Get current page from URL or default to 1
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
@@ -25,7 +27,7 @@ const Tutorials = () => {
       setError(null);
       try {
         const response = await fetch(
-          `${config.baseURL}/posts/published?category=tutorial`
+          `${config.baseURL}/posts/published?category=tutorial&page=${currentPage}&limit=${itemsPerPage}`,
         );
         if (!response.ok) {
           throw new Error("Failed to fetch tutorials.");
@@ -35,9 +37,14 @@ const Tutorials = () => {
           const postData = Array.isArray(data.data)
             ? data.data
             : data.data
-            ? [data.data]
-            : [];
+              ? [data.data]
+              : [];
           setTutorials(postData);
+
+          if (data.pagination) {
+            setTotalPages(data.pagination.total_pages);
+            setTotalTutorials(data.pagination.total_rows);
+          }
         } else {
           throw new Error(data.message || "Could not retrieve tutorials.");
         }
@@ -48,14 +55,7 @@ const Tutorials = () => {
       }
     };
     fetchTutorials();
-  }, []);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(tutorials.length / itemsPerPage);
-  const paginatedTutorials = tutorials.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  }, [currentPage]);
 
   const handlePageChange = (page) => {
     setSearchParams({ page: page.toString() });
@@ -120,7 +120,7 @@ const Tutorials = () => {
                 </div>
                 <div className="text-left">
                   <p className="text-2xl font-bold text-gray-900">
-                    {tutorials.length}
+                    {totalTutorials}
                   </p>
                   <p className="text-sm text-gray-600">Tutorials</p>
                 </div>
@@ -177,7 +177,7 @@ const Tutorials = () => {
         {!loading && !error && tutorials.length > 0 && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {paginatedTutorials.map((tutorial) => (
+              {tutorials.map((tutorial) => (
                 <PostCard
                   key={tutorial.id}
                   post={tutorial}
