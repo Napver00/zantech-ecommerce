@@ -9,6 +9,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
@@ -25,10 +28,23 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy dist to production branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: production
-          publish_dir: ./dist
-          force_orphan: true
+      - name: Deploy all dist files to production branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create or switch to production branch
+          git fetch origin production || true
+          git checkout production 2>/dev/null || git checkout --orphan production
+
+          # Remove all old files from the branch
+          git rm -rf . --quiet || true
+
+          # Copy all dist files to root of production branch
+          cp -r dist/. .
+
+          # Stage and commit everything
+          git add -A
+          git commit -m "deploy: from main@${{ github.sha }}" || echo "No changes to commit"
+
+          git push origin production
