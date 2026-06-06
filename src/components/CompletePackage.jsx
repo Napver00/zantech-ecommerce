@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { config } from '@/config';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Package, AlertTriangle, Sparkles, ArrowRight } from 'lucide-react';
+import { Rocket, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CompletePackage = () => {
@@ -24,158 +24,82 @@ const CompletePackage = () => {
           throw new Error('Unexpected API response');
         }
       } catch (err) {
-        console.error('Failed to load products for starter-kit:', err);
         if (mounted) setError(err.message || 'Failed to load products');
       } finally {
         if (mounted) setLoading(false);
       }
     };
-
     fetchProducts();
     return () => { mounted = false; };
   }, []);
 
-  const LoadingSkeleton = () => (
-    <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
-      <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 aspect-square flex items-center justify-center">
-        <Skeleton className="h-32 w-32 rounded-lg" />
-      </div>
-      <div className="p-6">
-        <Skeleton className="h-5 w-3/4 mb-3" />
-        <Skeleton className="h-4 w-1/2 mb-4" />
-        <div className="flex justify-between items-center">
-          <Skeleton className="h-6 w-20" />
-          <Skeleton className="h-9 w-24 rounded-lg" />
-        </div>
-      </div>
-    </div>
-  );
-
-  const ErrorState = () => (
-    <div className="col-span-full">
-      <div className="bg-white rounded-xl shadow-sm border border-red-100 p-8 text-center">
-        <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <AlertTriangle className="h-8 w-8 text-red-600" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Unable to Load Starter Kits</h3>
-        <p className="text-gray-600 mb-6">{error}</p>
-        <button 
-          onClick={() => window.location.reload()}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
-        >
-          Try Again
-        </button>
-      </div>
-    </div>
-  );
-
-  const EmptyState = () => (
-    <div className="col-span-full">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-        <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Package className="h-8 w-8 text-gray-400" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">No Starter Kits Available</h3>
-        <p className="text-gray-600 mb-6">We're working on adding new starter kits. Check back soon!</p>
-        <a 
-          href="/shop" 
-          className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
-        >
-          Browse All Products
-          <ArrowRight className="ml-1 h-4 w-4" />
-        </a>
-      </div>
-    </div>
-  );
-
   return (
-    <section className="mt-16">
-      {/* Header Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl shadow-lg">
-              <Package className="h-6 w-6 text-white" />
+    <section className="mt-12">
+      {/* Section Header */}
+      <div className="flex items-center justify-between mb-7">
+        <div className="flex items-center gap-4">
+          <div className="relative flex-shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/30">
+              <Rocket className="w-7 h-7 text-white" />
             </div>
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">Starter Kits</h2>
-              <p className="text-gray-600 mt-1">Complete packages to kickstart your projects</p>
-            </div>
+            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-emerald-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white">
+              ✦
+            </span>
           </div>
-          
-          {/* View All Link */}
-          {!loading && !error && products.length > 0 && (
-            <Link
-              to="/shop?category_slug=starter-kit"
-              className="flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200 group"
-            >
-              View All
-              <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
-          )}
-        </div>
-
-        {/* Features */}
-        <div className="flex flex-wrap gap-6 mb-6">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span>Everything included</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span>Beginner friendly</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-            <span>Step-by-step guides</span>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">Starter Kits</h2>
+            <p className="text-gray-500 text-sm mt-0.5">Complete packages to kickstart your projects</p>
           </div>
         </div>
-      </div>
-
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {loading ? (
-          Array.from({ length: 8 }).map((_, i) => (
-            <LoadingSkeleton key={i} />
-          ))
-        ) : error ? (
-          <ErrorState />
-        ) : products.length === 0 ? (
-          <EmptyState />
-        ) : (
-          products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
+        {!loading && !error && products.length > 0 && (
+          <Link
+            to="/shop?category_slug=starter-kit"
+            className="hidden sm:flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-semibold bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-all"
+          >
+            View All
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         )}
       </div>
 
-      {/* Bottom CTA */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+              <Skeleton className="aspect-[5/4] bg-gray-100" />
+              <div className="p-4 space-y-2.5">
+                <Skeleton className="h-4 w-4/5 bg-gray-100" />
+                <Skeleton className="h-4 w-3/5 bg-gray-100" />
+                <Skeleton className="h-10 w-full rounded-xl bg-gray-100" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="bg-red-50 border border-red-100 rounded-2xl p-10 text-center">
+          <AlertTriangle className="h-10 w-10 text-red-400 mx-auto mb-3" />
+          <p className="text-red-800 font-semibold">Unable to Load Starter Kits</p>
+          <p className="text-red-500 text-sm mt-1">{error}</p>
+        </div>
+      ) : products.length === 0 ? (
+        <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-12 text-center">
+          <Rocket className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-700 font-semibold">No Starter Kits Available</p>
+          <p className="text-gray-400 text-sm mt-1">We're working on adding new starter kits. Check back soon!</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+
       {!loading && !error && products.length > 0 && (
-        <div className="mt-12 text-center">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-100">
-            <div className="flex items-center justify-center mb-4">
-              <Sparkles className="h-6 w-6 text-blue-600 mr-2" />
-              <h3 className="text-xl font-semibold text-gray-900">Ready to Start Building?</h3>
-            </div>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Our starter kits include everything you need to get started with your next project. 
-              Complete components, detailed instructions, and expert support.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/shop?category_slug=starter-kit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                Browse All Starter Kits
-              </Link>
-              <a 
-                href="/contact"
-                className="border-2 border-gray-300 hover:border-blue-300 bg-white text-gray-700 hover:text-blue-700 px-6 py-3 rounded-lg font-medium transition-all duration-200"
-              >
-                Need Help Choosing?
-              </a>
-            </div>
-          </div>
+        <div className="mt-6 text-center sm:hidden">
+          <Link to="/shop?category_slug=starter-kit" className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold text-sm">
+            View All Starter Kits <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       )}
     </section>

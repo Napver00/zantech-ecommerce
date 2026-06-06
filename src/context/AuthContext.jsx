@@ -39,13 +39,14 @@ export const AuthProvider = ({ children }) => {
         const response = await fetch(`${config.baseURL}/wishlist`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
         });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         if (data.success && Array.isArray(data.data)) {
             const wishlistProductIds = data.data.map(item => item.product_id);
             setWishlist(wishlistProductIds);
         }
     } catch (err) {
-        console.error("Failed to fetch wishlist:", err);
+        // silently fail — wishlist is non-critical on load
     }
   };
 

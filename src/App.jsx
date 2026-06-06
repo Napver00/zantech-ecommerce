@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -32,6 +32,28 @@ const Addresses = lazy(() => import("./pages/Dashboard/Addresses"));
 const AccountDetails = lazy(() => import("./pages/Dashboard/AccountDetails"));
 const Wishlist = lazy(() => import("./pages/Dashboard/Wishlist"));
 
+// 404 page
+const NotFound = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="text-center max-w-md">
+      <div className="text-8xl font-black text-gray-200 mb-4">404</div>
+      <h1 className="text-2xl font-black text-gray-900 mb-2">Page Not Found</h1>
+      <p className="text-gray-500 mb-8">The page you're looking for doesn't exist or has been moved.</p>
+      <a href="/" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-colors">
+        Back to Home
+      </a>
+    </div>
+  </div>
+);
+
+// Redirect /search?q=term → /shop?search=term
+const SearchRedirect = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const q = params.get("q") || "";
+  return <Navigate to={`/shop?search=${encodeURIComponent(q)}`} replace />;
+};
+
 // Simple loading fallback
 const PageLoader = () => (
   <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -60,6 +82,7 @@ function App() {
                 <Route path="/faq" element={<Faq />} />
                 <Route path="/product/:slug" element={<ProductPage />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/search" element={<SearchRedirect />} />
 
                 <Route
                   path="/dashboard"
@@ -81,7 +104,7 @@ function App() {
                   <Route path="wishlist" element={<Wishlist />} />
                 </Route>
 
-                <Route path="*" element={<HomePage />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </BrowserRouter>
