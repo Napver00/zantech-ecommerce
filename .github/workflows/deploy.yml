@@ -40,9 +40,9 @@ jobs:
           git fetch origin production || true
           git checkout production 2>/dev/null || git checkout --orphan production
 
-          # Remove everything so only fresh dist files remain
+          # Remove everything except .git so only fresh dist files remain
           git rm -rf . --quiet || true
-          rm -rf * .* 2>/dev/null || true
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
           # Copy all dist files to root
           cp -r /tmp/dist_build/. .
