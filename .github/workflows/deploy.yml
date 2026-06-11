@@ -1,26 +1,25 @@
-name: Build and Deploy to Production
+name: Build and Deploy
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout main branch
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -28,29 +27,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Save all dist files to deploy branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Save the dist folder to a temp location outside repo
-          cp -r dist /tmp/dist_build
-
-          # Fetch and checkout deploy branch (create if not exists)
-          git fetch origin deploy || true
-          git checkout deploy 2>/dev/null || git checkout --orphan deploy
-
-          # Remove everything except .git so only fresh dist files remain
-          git rm -rf . --quiet || true
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
-
-          # Copy all dist files to root
-          cp -r /tmp/dist_build/. .
-
-          # Commit and push all files
-          git add -A
-          git commit -m "deploy: build from main@${{ github.sha }}" || echo "Nothing to commit"
-          git push origin deploy --force
+      - name: Deploy to Deploy Branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: deploy
 
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
