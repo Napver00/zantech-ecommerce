@@ -269,7 +269,7 @@ const ProductPage = () => {
       {SeoComponent}
       <Header />
 
-      <main className="flex-grow py-5 md:py-8 pb-28 lg:pb-8">
+      <main className="flex-grow py-5 md:py-8 pb-36 lg:pb-8">
         <div className="container mx-auto px-4 max-w-6xl">
 
           {/* ── Breadcrumb ── */}
@@ -644,16 +644,18 @@ const ProductPage = () => {
 
       {/* ── Mobile Sticky Add-to-Cart Bar ── */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 px-4 py-3 shadow-2xl shadow-black/10">
-        <div className="flex items-center gap-3 max-w-lg mx-auto">
-          <div className="flex-shrink-0">
-            <p className="text-[10px] text-gray-400 uppercase tracking-wider">Price</p>
-            <p className="text-lg font-black text-gray-900 leading-tight">৳{product.discountedPrice?.toLocaleString()}</p>
-            {hasDiscount && (
-              <p className="text-xs text-gray-400 line-through">৳{product.price?.toLocaleString()}</p>
-            )}
-          </div>
-          <div className="flex items-center gap-2 flex-1">
+        <div className="flex flex-col gap-2.5 max-w-lg mx-auto">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-shrink-0">
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Price</p>
+              <p className="text-lg font-black text-gray-900 leading-tight">৳{product.discountedPrice?.toLocaleString()}</p>
+              {hasDiscount && (
+                <p className="text-xs text-gray-400 line-through">৳{product.price?.toLocaleString()}</p>
+              )}
+            </div>
             <QuantitySelector max={product.quantity} value={quantity} onChange={setQuantity} />
+          </div>
+          <div className="flex items-center gap-2">
             <button
               onClick={handleAddToCart}
               disabled={product.quantity === 0}
