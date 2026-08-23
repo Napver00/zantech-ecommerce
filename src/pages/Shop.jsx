@@ -62,22 +62,6 @@ const getCategoryIcon = (name = "") => {
   return Tag;
 };
 
-const getCategoryColor = (index) => {
-  const colors = [
-    "text-blue-600 bg-blue-50",
-    "text-emerald-600 bg-emerald-50",
-    "text-violet-600 bg-violet-50",
-    "text-amber-600 bg-amber-50",
-    "text-rose-600 bg-rose-50",
-    "text-cyan-600 bg-cyan-50",
-    "text-orange-600 bg-orange-50",
-    "text-indigo-600 bg-indigo-50",
-    "text-teal-600 bg-teal-50",
-    "text-pink-600 bg-pink-50",
-  ];
-  return colors[index % colors.length];
-};
-
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -281,7 +265,7 @@ const Shop = () => {
                   <button key={page} onClick={() => handlePageChange(page)}
                     className={`h-9 w-9 rounded-lg text-sm font-semibold transition-colors ${
                       current_page === page
-                        ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+                        ? "bg-blue-600 text-white"
                         : "border border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700"
                     }`}>
                     {page}
@@ -339,37 +323,34 @@ const Shop = () => {
         <div className="container mx-auto px-4 py-6">
 
           {/* Page Header */}
-          <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-6 sm:p-8 mb-6 text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-blue-600/30 via-transparent to-transparent" />
-            <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-black mb-1">
-                  {activeCategory ? activeCategory.name : "All Products"}
-                </h1>
-                <p className="text-blue-200 text-sm">
-                  {isLoading
-                    ? "Loading products..."
-                    : `${pagination.total.toLocaleString()} products available`}
-                </p>
-              </div>
-              {/* Search bar */}
-              <div className="relative w-full sm:w-80">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 pointer-events-none" />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={liveSearch}
-                  onChange={e => setLiveSearch(e.target.value)}
-                  placeholder="Search products..."
-                  className="w-full bg-white/15 border border-white/25 text-white placeholder-white/50 pl-10 pr-9 py-2.5 rounded-xl text-sm focus:outline-none focus:bg-white/25 focus:border-white/50 transition-all"
-                />
-                {liveSearch && (
-                  <button onClick={() => setLiveSearch("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors">
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-1">
+                {activeCategory ? activeCategory.name : "All Products"}
+              </h1>
+              <p className="text-gray-500 text-sm">
+                {isLoading
+                  ? "Loading products..."
+                  : `${pagination.total.toLocaleString()} products available`}
+              </p>
+            </div>
+            {/* Search bar */}
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={liveSearch}
+                onChange={e => setLiveSearch(e.target.value)}
+                placeholder="Search products..."
+                className="w-full bg-white border border-gray-200 text-gray-900 placeholder-gray-400 pl-10 pr-9 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+              {liveSearch && (
+                <button onClick={() => setLiveSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -378,45 +359,45 @@ const Shop = () => {
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Filters:</span>
               {filters.search && (
-                <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
                   <Search className="w-3 h-3" />
                   "{filters.search}"
                   <button onClick={() => { setLiveSearch(""); handleFilterChange("search", ""); }}
-                    className="hover:bg-blue-200 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               {filters.category_slug && activeCategory && (
-                <span className="inline-flex items-center gap-1.5 bg-violet-50 border border-violet-200 text-violet-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
                   {React.createElement(getCategoryIcon(activeCategory.name), { className: "w-3 h-3" })}
                   {activeCategory.name}
                   <button onClick={() => handleFilterChange("category_slug", "")}
-                    className="hover:bg-violet-200 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               {filters.min_price && (
-                <span className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
                   Min ৳{Number(filters.min_price).toLocaleString()}
                   <button onClick={() => handleFilterChange("min_price", "")}
-                    className="hover:bg-emerald-200 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               {filters.max_price && (
-                <span className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
                   Max ৳{Number(filters.max_price).toLocaleString()}
                   <button onClick={() => handleFilterChange("max_price", "")}
-                    className="hover:bg-emerald-200 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               <button onClick={clearFilters}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full border border-gray-200 hover:border-red-200 transition-all">
+                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full transition-colors">
                 <RefreshCw className="w-3 h-3" /> Clear All
               </button>
             </div>
@@ -445,12 +426,10 @@ const Shop = () => {
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
-                      <Filter className="h-3.5 w-3.5 text-blue-600" />
-                    </div>
-                    <span className="text-sm font-black text-gray-800 uppercase tracking-wider">Filters</span>
+                    <Filter className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm font-bold text-gray-800 uppercase tracking-wide">Filters</span>
                     {activeFilterCount > 0 && (
-                      <span className="bg-blue-600 text-white text-[10px] font-black w-4.5 h-4.5 px-1.5 py-0.5 rounded-full leading-none">
+                      <span className="bg-blue-600 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full leading-none flex items-center justify-center">
                         {activeFilterCount}
                       </span>
                     )}
@@ -500,34 +479,27 @@ const Shop = () => {
                         : <ChevronDown className="h-4 w-4 text-gray-400" />}
                     </button>
                     {expandedSections.category && (
-                      <div className="mt-3 space-y-0.5 max-h-72 overflow-y-auto -mx-1 px-1">
+                      <div className="scroll-strip mt-3 space-y-0.5 max-h-72 overflow-y-auto -mx-1 px-1">
                         <button onClick={() => handleFilterChange("category_slug", "")}
-                          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm transition-all text-left ${
+                          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm transition-colors text-left ${
                             filters.category_slug === ""
                               ? "bg-blue-50 text-blue-700 font-semibold"
                               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                           }`}>
-                          <div className="w-6 h-6 bg-gray-100 rounded-md flex items-center justify-center flex-shrink-0">
-                            <Grid3X3 className="w-3 h-3 text-gray-500" />
-                          </div>
+                          <Grid3X3 className="w-4 h-4 text-gray-400 flex-shrink-0" />
                           All Products
                         </button>
-                        {categories.map((cat, idx) => {
+                        {categories.map((cat) => {
                           const Icon = getCategoryIcon(cat.name);
-                          const colorClass = getCategoryColor(idx);
                           const isActive = filters.category_slug === cat.slug;
                           return (
                             <button key={cat.id} onClick={() => handleFilterChange("category_slug", cat.slug)}
-                              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm transition-all text-left group ${
+                              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm transition-colors text-left group ${
                                 isActive
                                   ? "bg-blue-50 text-blue-700 font-semibold"
                                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                               }`}>
-                              <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${
-                                isActive ? "bg-blue-100 text-blue-600" : colorClass
-                              }`}>
-                                <Icon className="w-3 h-3" />
-                              </div>
+                              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-blue-600" : "text-gray-400"}`} />
                               <span className="line-clamp-1 flex-1">{cat.name}</span>
                             </button>
                           );
