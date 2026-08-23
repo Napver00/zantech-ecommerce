@@ -203,7 +203,7 @@ const Header = () => {
         <div className="container mx-auto flex justify-between items-center px-4">
           <div className="flex items-center space-x-6">
             <span className="text-blue-100 font-medium">
-              Welcome to ZanTech Commerce
+              Welcome to ZAN Tech
             </span>
             <div className="hidden md:flex items-center space-x-4">
               <Link
@@ -285,7 +285,7 @@ const Header = () => {
           <Link to="/" className="flex items-center group">
             <img
               src="/zantech-logo.webp"
-              alt="ZANTech Logo"
+              alt="ZAN Tech Logo"
               className="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
             />
           </Link>
@@ -600,7 +600,7 @@ const Header = () => {
                     <div className="p-4">
                       <img
                         src="/zantech-logo.webp"
-                        alt="ZANTech"
+                        alt="ZAN Tech"
                         className="h-10 mb-4"
                       />
                     </div>

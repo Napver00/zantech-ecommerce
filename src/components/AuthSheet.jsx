@@ -135,7 +135,7 @@ export const AuthSheet = () => {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500 font-medium">New to ZanTech?</span>
+                  <span className="px-4 bg-white text-gray-500 font-medium">New to ZAN Tech?</span>
                 </div>
               </div>
 

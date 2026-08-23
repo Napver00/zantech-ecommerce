@@ -10,8 +10,10 @@ import {
   ArrowUp,
   Twitter,
   Youtube,
+  Send,
 } from "lucide-react";
 import { config } from "@/config";
+import { toast } from "sonner";
 
 const iconForPlatform = (platform) => {
   const p = platform?.toLowerCase?.();
@@ -26,6 +28,7 @@ const iconForPlatform = (platform) => {
 
 const Footer = () => {
   const [company, setCompany] = useState(null);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -52,6 +55,15 @@ const Footer = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    toast.success("Thanks for subscribing!", {
+      description: "You'll hear from us about new kits and STEM workshops.",
+    });
+    setNewsletterEmail("");
+  };
+
   const socialLinks = company?.social_links || [];
   const location = company?.location || "Barishal, Barisal Division Bangladesh";
   const email = company?.email || "zantechbd@gmail.com";
@@ -65,24 +77,53 @@ const Footer = () => {
         <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-indigo-900/10 rounded-full blur-[100px]"></div>
       </div>
 
-      <div className="relative container mx-auto px-6 pt-20 pb-10">
+      <div className="relative container mx-auto px-6 pt-14 pb-10">
+        {/* Newsletter */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-14 mb-14 border-b border-slate-800">
+          <div>
+            <h3 className="text-xl md:text-2xl font-extrabold text-white leading-tight">
+              Stay in the loop
+            </h3>
+            <p className="text-slate-400 text-sm mt-1.5 max-w-md">
+              New kits, restocks, and free STEM workshops — straight to your inbox.
+            </p>
+          </div>
+          <form onSubmit={handleSubscribe} className="flex w-full lg:w-auto gap-2.5 flex-shrink-0">
+            <input
+              type="email"
+              required
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="flex-1 lg:w-72 bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm rounded-xl px-4 py-3 focus:outline-none focus:bg-white/10 focus:border-blue-500/50 transition-all"
+            />
+            <button
+              type="submit"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl transition-colors flex-shrink-0 text-sm"
+            >
+              <Send className="w-4 h-4" />
+              <span className="hidden sm:inline">Subscribe</span>
+            </button>
+          </form>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand & Social */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
                <img
                   src="/zantech-logo.webp"
-                  alt="ZanTech"
+                  alt="ZAN Tech"
                   className="h-12 brightness-0 invert"
                   onError={(e) => {
                     e.target.style.display = "none";
                     e.target.nextSibling.style.display = "block";
                   }}
                 />
-              <span className="text-2xl font-bold text-white tracking-tight hidden">ZanTech</span>
+              <span className="text-2xl font-bold text-white tracking-tight hidden">ZAN Tech</span>
             </div>
             <p className="text-slate-400 leading-relaxed max-w-xs">
-              Awaken your hidden talent. We provide top-notch tech solutions and education to empower the next generation.
+              Engineering makers and engineers with technology solutions and education kits.
             </p>
             <div className="flex gap-3">
               {socialLinks.length > 0 ? (
@@ -187,7 +228,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
-            &copy; {new Date().getFullYear()} ZanTech. All rights reserved.
+            &copy; {new Date().getFullYear()} ZAN Tech. All rights reserved.
           </p>
           
           <button
