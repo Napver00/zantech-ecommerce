@@ -16,7 +16,6 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import RelatedProducts from "@/components/RelatedProducts";
-import FrequentlyBoughtTogether from "@/components/FrequentlyBoughtTogether";
 import Seo from "@/components/Seo";
 
 // ─── Gallery ────────────────────────────────────────────────
@@ -492,40 +491,6 @@ const ProductPage = () => {
                     <Share2 className="w-4 h-4" /> Share
                   </button>
                 </div>
-
-                {/* Kit Includes (bundle products only) */}
-                {isBundleProduct && (
-                  <div className="pt-3.5 mt-3.5 border-t border-gray-200">
-                    <p className="text-xs font-black text-gray-900 uppercase tracking-wide mb-2.5">
-                      This kit includes
-                    </p>
-                    <ul className="space-y-1.5">
-                      {product.bundle_items.map((item) => (
-                        <li key={item.item_id} className="flex items-center gap-2 text-sm text-gray-600">
-                          <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" strokeWidth={2.5} />
-                          <span className="flex-1 leading-snug">
-                            {item.name}
-                            {item.bundle_quantity > 1 && (
-                              <span className="text-gray-400"> × {item.bundle_quantity}</span>
-                            )}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                <FrequentlyBoughtTogether
-                  currentProduct={{
-                    id: product.id,
-                    slug: product.slug,
-                    name: product.name,
-                    image: product.image,
-                    price: product.price,
-                    discountedPrice: product.discountedPrice,
-                  }}
-                  categorySlug={product.categories?.[0]?.slug}
-                />
               </div>
 
               {/* Trust strip — inline, no boxes */}
@@ -589,6 +554,21 @@ const ProductPage = () => {
                 Description
                 {activeTab === "description" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900" />}
               </button>
+              {isBundleProduct && (
+                <button
+                  onClick={() => setActiveTab("kit")}
+                  className={`flex items-center gap-2 pb-3.5 text-sm font-bold transition-colors relative ${
+                    activeTab === "kit" ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                  }`}
+                >
+                  <Package className="w-4 h-4" />
+                  Kit Includes
+                  <span className="text-[10px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
+                    {product.bundle_items.length}
+                  </span>
+                  {activeTab === "kit" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900" />}
+                </button>
+              )}
               <button
                 onClick={() => setActiveTab("reviews")}
                 className={`flex items-center gap-2 pb-3.5 text-sm font-bold transition-colors relative ${
@@ -630,6 +610,33 @@ const ProductPage = () => {
                 ].join(" ")}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description || "") }}
               />
+            )}
+
+            {activeTab === "kit" && isBundleProduct && (
+              <div>
+                {bundleSavings > 0 && (
+                  <div className="flex items-start gap-2.5 bg-emerald-50 rounded-xl px-3.5 py-3 mb-5">
+                    <Sparkles className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-emerald-800 leading-snug">
+                      <span className="font-bold">Save ৳{bundleSavings.toLocaleString()} ({bundleSavingsPercent}%)</span> buying
+                      these {product.bundle_items.length} parts as a kit — ৳{bundleIndividualTotal.toLocaleString()} bought separately
+                    </p>
+                  </div>
+                )}
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
+                  {product.bundle_items.map((item) => (
+                    <li key={item.item_id} className="flex items-center gap-2.5 text-sm text-gray-600">
+                      <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" strokeWidth={2.5} />
+                      <span className="flex-1 leading-snug">
+                        {item.name}
+                        {item.bundle_quantity > 1 && (
+                          <span className="text-gray-400"> × {item.bundle_quantity}</span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
 
             {activeTab === "reviews" && (
