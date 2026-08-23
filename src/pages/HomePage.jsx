@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import CategorySidebar from "@/components/CategorySidebar";
+import CategoryShowcase from "@/components/CategoryShowcase";
 import CompletePackage from "@/components/CompletePackage";
 import CompetitionPackage from "@/components/CompetitionPackage";
 import BestSelling from "@/components/BestSelling";
@@ -77,6 +78,7 @@ const HomePage = () => {
           <div className="col-span-1 lg:col-span-3 space-y-0">
             <HeroSection />
             <FeatureStrip />
+            <CategoryShowcase />
             <CompletePackage />
             <CompetitionPackage />
             <BestSelling />

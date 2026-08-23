@@ -115,3 +115,55 @@
     text-rendering: optimizeLegibility;
   }
 }
+
+/* Scrollbars — thin, rounded, inset thumb instead of the default chunky bar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-300) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-300);
+  border-radius: 9999px;
+  border: 2.5px solid var(--color-neutral-100);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gray-400);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Category scrollers (horizontal chip strip + sidebar list) — a slightly
+   bolder, brand-tinted thumb than the default page scrollbar */
+.scroll-strip {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blue-300) transparent;
+}
+
+.scroll-strip::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scroll-strip::-webkit-scrollbar-thumb {
+  background-color: var(--color-blue-300);
+  border: none;
+  border-radius: 9999px;
+}
+
+.scroll-strip::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-blue-400);
+}

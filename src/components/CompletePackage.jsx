@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import SectionHeader from "./SectionHeader";
 import { config } from '@/config';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Rocket, AlertTriangle, ArrowRight } from 'lucide-react';
@@ -34,33 +35,14 @@ const CompletePackage = () => {
   }, []);
 
   return (
-    <section className="mt-12">
-      {/* Section Header */}
-      <div className="flex items-center justify-between mb-7">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-shrink-0">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/30">
-              <Rocket className="w-7 h-7 text-white" />
-            </div>
-            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-emerald-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white">
-              ✦
-            </span>
-          </div>
-          <div>
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">Starter Kits</h2>
-            <p className="text-gray-500 text-sm mt-0.5">Complete packages to kickstart your projects</p>
-          </div>
-        </div>
-        {!loading && !error && products.length > 0 && (
-          <Link
-            to="/shop?category_slug=starter-kit"
-            className="hidden sm:flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-semibold bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-all"
-          >
-            View All
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        )}
-      </div>
+    <section className="mt-14">
+      <SectionHeader
+        icon={Rocket}
+        eyebrow="Beginner friendly"
+        title="Starter Kits"
+        subtitle="Complete packages to kickstart your projects"
+        viewAllHref="/shop?category_slug=starter-kit"
+      />
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

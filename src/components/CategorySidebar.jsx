@@ -30,22 +30,6 @@ const getCategoryIcon = (name = '') => {
   return Tag;
 };
 
-const getCategoryColor = (index) => {
-  const colors = [
-    'text-blue-600 bg-blue-50',
-    'text-emerald-600 bg-emerald-50',
-    'text-violet-600 bg-violet-50',
-    'text-amber-600 bg-amber-50',
-    'text-rose-600 bg-rose-50',
-    'text-cyan-600 bg-cyan-50',
-    'text-orange-600 bg-orange-50',
-    'text-indigo-600 bg-indigo-50',
-    'text-teal-600 bg-teal-50',
-    'text-pink-600 bg-pink-50',
-  ];
-  return colors[index % colors.length];
-};
-
 const CategorySidebar = () => {
   const [categories, setCategories] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -97,12 +81,10 @@ const CategorySidebar = () => {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 px-4 py-4">
+      <div className="bg-gray-900 px-4 py-4">
         <div className="flex items-center gap-2.5 mb-3">
-          <div className="w-8 h-8 bg-white/15 rounded-xl flex items-center justify-center">
-            <Grid3X3 className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-white font-black text-sm tracking-widest uppercase">Categories</span>
+          <Grid3X3 className="w-4 h-4 text-white" />
+          <span className="text-white font-bold text-sm tracking-wide uppercase">Categories</span>
         </div>
         {/* Search within categories */}
         <div className="relative">
@@ -131,15 +113,13 @@ const CategorySidebar = () => {
             : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-4 border-l-transparent'
         }`}
       >
-        <div className="w-7 h-7 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <Grid3X3 className="w-3.5 h-3.5 text-gray-500" />
-        </div>
+        <Grid3X3 className="w-4 h-4 text-gray-400 flex-shrink-0" />
         <span>All Products</span>
         <ChevronRight className="w-3.5 h-3.5 ml-auto text-gray-400" />
       </button>
 
       {/* Categories list */}
-      <div className="max-h-[480px] overflow-y-auto overscroll-contain">
+      <div className="scroll-strip max-h-[480px] overflow-y-auto overscroll-contain">
         {isLoading ? (
           <ul className="p-3 space-y-2">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -168,9 +148,8 @@ const CategorySidebar = () => {
           </div>
         ) : (
           <ul className="p-2">
-            {filtered.map((category, index) => {
+            {filtered.map((category) => {
               const Icon = getCategoryIcon(category.name);
-              const colorClass = getCategoryColor(index);
               const isActive = activeSlug === category.slug;
 
               return (
@@ -178,17 +157,13 @@ const CategorySidebar = () => {
                   <button
                     type="button"
                     onClick={() => handleSelectCategory(category.slug)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors group ${
                       isActive
                         ? 'bg-blue-50 text-blue-700 font-semibold'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }`}
                   >
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
-                      isActive ? 'bg-blue-100 text-blue-600' : colorClass
-                    }`}>
-                      <Icon className="w-3.5 h-3.5" />
-                    </div>
+                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
                     <span className="flex-1 text-left leading-snug line-clamp-1">{category.name}</span>
                     <ChevronRight className={`w-3.5 h-3.5 flex-shrink-0 transition-all ${
                       isActive ? 'text-blue-500' : 'text-gray-300 group-hover:text-gray-500 group-hover:translate-x-0.5'

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
+import SectionHeader from './SectionHeader';
 import { config } from '@/config';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Flame, AlertTriangle, ArrowRight } from 'lucide-react';
@@ -42,33 +43,14 @@ const BestSelling = ({ limit = 8 }) => {
   }, [limit]);
 
   return (
-    <section className="mt-12">
-      {/* Section Header */}
-      <div className="flex items-center justify-between mb-7">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-shrink-0">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center shadow-xl shadow-orange-500/30">
-              <Flame className="w-7 h-7 text-white" />
-            </div>
-            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white">
-              🔥
-            </span>
-          </div>
-          <div>
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">Best Selling</h2>
-            <p className="text-gray-500 text-sm mt-0.5">Most loved by our customers</p>
-          </div>
-        </div>
-        {!loading && !error && products.length > 0 && (
-          <Link
-            to="/shop"
-            className="hidden sm:flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-semibold bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-all"
-          >
-            View All
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        )}
-      </div>
+    <section className="mt-14">
+      <SectionHeader
+        icon={Flame}
+        eyebrow="Trending now"
+        title="Best Selling"
+        subtitle="Most loved by our customers"
+        viewAllHref="/shop"
+      />
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">

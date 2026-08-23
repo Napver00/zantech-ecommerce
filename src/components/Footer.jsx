@@ -70,14 +70,8 @@ const Footer = () => {
   const phone = company?.phone || "+880 1712-345678"; // Fallback phone
 
   return (
-    <footer className="bg-slate-900 text-slate-200 relative overflow-hidden border-t border-slate-800">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-blue-900/10 rounded-full blur-[100px]"></div>
-        <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-indigo-900/10 rounded-full blur-[100px]"></div>
-      </div>
-
-      <div className="relative container mx-auto px-6 pt-14 pb-10">
+    <footer className="bg-slate-900 text-slate-200 border-t border-slate-800">
+      <div className="container mx-auto px-6 pt-14 pb-10">
         {/* Newsletter */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-14 mb-14 border-b border-slate-800">
           <div>
