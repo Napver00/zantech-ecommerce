@@ -191,7 +191,7 @@ const OrderDetails = () => {
                         <TableRow key={item.product_id}>
                             <TableCell>
                                 <div className="flex items-center gap-3">
-                                    <img src={item.image} alt={item.name} className="w-12 h-12 object-contain rounded-md bg-gray-50" />
+                                    <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="w-12 h-12 object-contain rounded-md bg-gray-50" />
                                     <Link to={`/product/${item.slug}`} className="font-medium text-gray-800 hover:text-blue-600 transition-colors">{item.name}</Link>
                                 </div>
                             </TableCell>

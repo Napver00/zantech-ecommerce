@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Mail,
   MapPin,
@@ -12,8 +12,8 @@ import {
   Youtube,
   Send,
 } from "lucide-react";
-import { config } from "@/config";
 import { toast } from "sonner";
+import { useCompany } from "@/context/CompanyContext";
 
 const iconForPlatform = (platform) => {
   const p = platform?.toLowerCase?.();
@@ -27,29 +27,8 @@ const iconForPlatform = (platform) => {
 };
 
 const Footer = () => {
-  const [company, setCompany] = useState(null);
+  const company = useCompany();
   const [newsletterEmail, setNewsletterEmail] = useState("");
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchCompany = async () => {
-      try {
-        const res = await fetch(`${config.baseURL}/company`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && json.data) {
-          if (mounted) setCompany(json.data);
-        }
-      } catch (err) {
-        console.error("Failed to load company info:", err);
-      }
-    };
-
-    fetchCompany();
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

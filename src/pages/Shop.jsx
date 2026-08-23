@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { config } from "@/config";
+import { useCategories } from "@/context/CategoriesContext";
 import {
   Search,
   Filter,
@@ -63,8 +64,8 @@ const getCategoryIcon = (name = "") => {
 };
 
 const Shop = () => {
+  const { categories } = useCategories();
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
@@ -86,20 +87,6 @@ const Shop = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(`${config.baseURL}/categories`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data)) setCategories(json.data);
-      } catch (err) {
-        console.error("Failed to fetch categories:", err);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   const fetchProducts = useCallback(async (currentFilters = filters) => {
     setIsLoading(true);

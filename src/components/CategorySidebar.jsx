@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { config } from '@/config';
+import { useCategories } from '@/context/CategoriesContext';
 import {
   ChevronRight, AlertTriangle, Grid3X3, Search, X,
   Cpu, Zap, Package, Trophy, Layers, Circle, Tag,
@@ -31,37 +31,13 @@ const getCategoryIcon = (name = '') => {
 };
 
 const CategorySidebar = () => {
-  const [categories, setCategories] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { categories, isLoading, error, refetch } = useCategories();
+  const [filtered, setFiltered] = useState(categories);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
   const activeSlug = new URLSearchParams(location.search).get('category_slug') || '';
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`${config.baseURL}/categories`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const result = await response.json();
-        if (result.success && Array.isArray(result.data)) {
-          setCategories(result.data);
-          setFiltered(result.data);
-        } else {
-          throw new Error('API response format is incorrect.');
-        }
-      } catch (e) {
-        setError(e.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     if (!searchTerm.trim()) {
@@ -135,7 +111,7 @@ const CategorySidebar = () => {
               <AlertTriangle className="h-6 w-6 text-red-500" />
             </div>
             <p className="text-sm text-red-600 font-medium mb-2">Failed to load</p>
-            <button onClick={() => window.location.reload()} className="text-xs text-blue-600 hover:underline">
+            <button onClick={refetch} className="text-xs text-blue-600 hover:underline">
               Try Again
             </button>
           </div>

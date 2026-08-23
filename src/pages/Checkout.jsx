@@ -671,6 +671,8 @@ const Checkout = () => {
                       <img
                         src={item.image}
                         alt={item.name}
+                        loading="lazy"
+                        decoding="async"
                         className="w-11 h-11 object-contain rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">

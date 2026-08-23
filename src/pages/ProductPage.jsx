@@ -57,7 +57,7 @@ const Gallery = ({ images = [], alt = "" }) => {
               : "border-gray-100 bg-white hover:border-gray-300"
           }`}
         >
-          <img src={src} alt={`${alt}-${idx}`} className="w-full h-full object-contain" />
+          <img src={src} alt={`${alt}-${idx}`} loading="lazy" decoding="async" className="w-full h-full object-contain" />
         </button>
       ))}
     </div>
@@ -77,6 +77,8 @@ const Gallery = ({ images = [], alt = "" }) => {
           <img
             src={imgs[index]}
             alt={alt}
+            loading="eager"
+            fetchPriority="high"
             className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
 
@@ -523,7 +525,7 @@ const ProductPage = () => {
                     className="group bg-gray-50 hover:bg-gray-100 rounded-2xl p-3 md:p-4 transition-colors"
                   >
                     <div className="relative aspect-square bg-white rounded-xl mb-3 overflow-hidden p-2 md:p-3 border border-gray-100">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300" />
+                      <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300" />
                       <div className="absolute top-1 right-1 bg-gray-900 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
                         ×{item.bundle_quantity}
                       </div>

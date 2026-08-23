@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { config } from '@/config';
+import { useCategories } from '@/context/CategoriesContext';
 import {
   Target,
   Globe,
@@ -17,9 +18,10 @@ import {
 import Seo from '@/components/Seo';
 
 const About = () => {
+  const { categories } = useCategories();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ products: null, categories: null });
+  const [productCount, setProductCount] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -51,25 +53,16 @@ const About = () => {
 
   useEffect(() => {
     let mounted = true;
-    const fetchStats = async () => {
+    const fetchProductCount = async () => {
       try {
-        const [productsRes, categoriesRes] = await Promise.all([
-          fetch(`${config.baseURL}/products?page=1&limit=1`),
-          fetch(`${config.baseURL}/categories`),
-        ]);
-        const productsJson = await productsRes.json();
-        const categoriesJson = await categoriesRes.json();
-        if (mounted) {
-          setStats({
-            products: productsJson?.pagination?.total_rows ?? null,
-            categories: Array.isArray(categoriesJson?.data) ? categoriesJson.data.length : null,
-          });
-        }
+        const res = await fetch(`${config.baseURL}/products?page=1&limit=1`);
+        const json = await res.json();
+        if (mounted) setProductCount(json?.pagination?.total_rows ?? null);
       } catch (err) {
-        console.error('Failed to load stats:', err);
+        console.error('Failed to load product count:', err);
       }
     };
-    fetchStats();
+    fetchProductCount();
     return () => {
       mounted = false;
     };
@@ -91,8 +84,8 @@ const About = () => {
   );
 
   const statItems = [
-    { label: 'Products', value: stats.products != null ? `${stats.products}+` : '—', icon: Package },
-    { label: 'Categories', value: stats.categories != null ? `${stats.categories}+` : '—', icon: LayoutGrid },
+    { label: 'Products', value: productCount != null ? `${productCount}+` : '—', icon: Package },
+    { label: 'Categories', value: categories.length > 0 ? `${categories.length}+` : '—', icon: LayoutGrid },
     { label: 'Delivery', value: 'Bangladesh-wide', icon: Truck },
     { label: 'Components', value: '100% Genuine', icon: ShieldCheck },
   ];

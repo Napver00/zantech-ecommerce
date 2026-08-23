@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import { HelmetProvider } from "react-helmet-async";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
+import { CategoriesProvider } from "./context/CategoriesContext";
+import { CompanyProvider } from "./context/CompanyContext";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedRoute";
 import QuickSupport from "./components/QuickSupport";
@@ -65,6 +67,8 @@ function App() {
   return (
     <HelmetProvider>
       <AuthProvider>
+        <CategoriesProvider>
+        <CompanyProvider>
         <CartProvider>
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
@@ -123,6 +127,8 @@ function App() {
             }}
           />
         </CartProvider>
+        </CompanyProvider>
+        </CategoriesProvider>
       </AuthProvider>
       <QuickSupport />
     </HelmetProvider>

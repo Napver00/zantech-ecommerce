@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { config } from "@/config";
+import { useCompany } from "@/context/CompanyContext";
 import {
   MapPin,
   Phone,
@@ -26,25 +27,7 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
-  const [company, setCompany] = useState(null);
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchCompany = async () => {
-      try {
-        const res = await fetch(`${config.baseURL}/company`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && json.data && mounted) setCompany(json.data);
-      } catch (err) {
-        console.error("Failed to load company info in contact page:", err);
-      }
-    };
-    fetchCompany();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const company = useCompany();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

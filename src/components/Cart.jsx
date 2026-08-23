@@ -38,6 +38,8 @@ const CartItem = ({ item }) => {
         <img
           src={item.image}
           alt={item.name}
+          loading="lazy"
+          decoding="async"
           className="w-16 h-16 object-contain rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0"
         />
 

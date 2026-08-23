@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { config } from "@/config";
+import { useCategories } from "@/context/CategoriesContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import SectionHeader from "./SectionHeader";
 import {
@@ -31,32 +31,8 @@ const getCategoryIcon = (name = "") => {
 };
 
 const CategoryShowcase = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { categories, isLoading: loading } = useCategories();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${config.baseURL}/categories`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data) && mounted) {
-          setCategories(json.data);
-        }
-      } catch (err) {
-        console.error("Failed to load categories:", err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-    fetchCategories();
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   if (!loading && categories.length === 0) return null;
 

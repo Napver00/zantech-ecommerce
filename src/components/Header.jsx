@@ -39,6 +39,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { Cart } from "@/components/Cart";
 import { useAuth } from "@/context/AuthContext";
+import { useCategories } from "@/context/CategoriesContext";
+import { useCompany } from "@/context/CompanyContext";
 import { AuthSheet } from "@/components/AuthSheet";
 
 const YouTubeIcon = ({ size = 16 }) => (
@@ -58,10 +60,8 @@ const YouTubeIcon = ({ size = 16 }) => (
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [company, setCompany] = useState(null);
+  const { categories, isLoading } = useCategories();
+  const company = useCompany();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -73,49 +73,6 @@ const Header = () => {
     useAuth(); // Get userInfo from context
 
   const wishlistCount = userInfo?.total_wishlist || 0;
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`${config.baseURL}/categories`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        if (result.success && Array.isArray(result.data)) {
-          setCategories(result.data);
-        } else {
-          throw new Error("API response format is incorrect.");
-        }
-      } catch (e) {
-        console.error("Failed to fetch categories:", e);
-        setError(e.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchCompany = async () => {
-      try {
-        const res = await fetch(`${config.baseURL}/company`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && json.data && mounted) setCompany(json.data);
-      } catch (err) {
-        console.error("Failed to load company info in header:", err);
-      }
-    };
-    fetchCompany();
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -468,6 +425,7 @@ const Header = () => {
                             className="flex items-center gap-3 p-2 hover:bg-blue-50 cursor-pointer rounded-xl transition-colors group">
                             <div className="relative flex-shrink-0">
                               <img src={product.image || "/placeholder-product.jpg"} alt={product.name}
+                                loading="lazy" decoding="async"
                                 className="w-12 h-12 object-cover rounded-lg bg-gray-100" />
                               {product.discountPercentage && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full leading-none">

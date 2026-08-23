@@ -76,7 +76,14 @@ const HeroSection = () => {
               index === currentIndex ? "opacity-100" : "opacity-0"
             }`}
           >
-            <img src={image.path} alt={`Hero slide ${index + 1}`} className="w-full h-full object-cover" />
+            <img
+              src={image.path}
+              alt={`Hero slide ${index + 1}`}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+              className="w-full h-full object-cover"
+            />
 
             {/* Overlay for text contrast */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
