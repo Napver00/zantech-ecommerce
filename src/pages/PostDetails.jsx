@@ -72,10 +72,13 @@ const PostDetails = () => {
         domNode.name === "iframe" &&
         domNode.attribs.src?.includes("youtube")
       ) {
+        const { frameborder, allowfullscreen, ...iframeAttribs } = domNode.attribs;
         return (
-          <div className="relative w-full aspect-video my-8 rounded-2xl overflow-hidden shadow-xl border-4 border-blue-100">
+          <div className="relative w-full aspect-video my-8 rounded-2xl overflow-hidden border border-gray-100">
             <iframe
-              {...domNode.attribs}
+              {...iframeAttribs}
+              frameBorder={frameborder}
+              allowFullScreen={allowfullscreen !== undefined}
               className="absolute top-0 left-0 w-full h-full"
               title="Video content"
             />

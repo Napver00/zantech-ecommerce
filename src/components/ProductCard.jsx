@@ -175,7 +175,7 @@ const ProductCard = ({ product, isNew = false }) => {
 
           <Link
             to={`/product/${product.slug}`}
-            className="flex items-center justify-center border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-500 px-3 rounded-xl transition-colors"
+            className="hidden sm:flex items-center justify-center border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-500 px-3 rounded-xl transition-colors flex-shrink-0"
             title="View Details"
           >
             <Eye className="w-4 h-4" />

@@ -11,31 +11,26 @@ const PostCard = ({ post, linkState }) => {
     });
   };
 
-  // Determine category color scheme
   const getCategoryStyle = (category) => {
     const lowerCategory = category?.toLowerCase() || "";
-    if (lowerCategory.includes("tutorial")) {
-      return "bg-gradient-to-r from-purple-600 to-pink-600 shadow-purple-500/30";
-    }
-    if (lowerCategory.includes("blog")) {
-      return "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-500/30";
-    }
-    return "bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-500/30";
+    if (lowerCategory.includes("tutorial")) return "bg-purple-600";
+    if (lowerCategory.includes("blog")) return "bg-blue-600";
+    return "bg-emerald-600";
   };
 
   return (
     <Link
       to={`/postdetails/${post.slug}`}
       state={linkState}
-      className="group flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden h-full"
+      className="group flex flex-col bg-white rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden h-full"
     >
       {/* Image Section */}
       <div className="relative overflow-hidden shrink-0">
-        <div className="aspect-[16/10] overflow-hidden bg-slate-100">
+        <div className="aspect-[16/10] overflow-hidden bg-gray-100">
           <img
             src={post.thumbnail || "/placeholder-post.jpg"}
             alt={post.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
         </div>
@@ -43,35 +38,24 @@ const PostCard = ({ post, linkState }) => {
         {/* Category Badge */}
         {post.category && (
           <div
-            className={`absolute top-4 left-4 ${getCategoryStyle(
-              post.category
-            )} text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm border border-white/10`}
+            className={`absolute top-3 left-3 ${getCategoryStyle(post.category)} text-white text-xs font-bold px-2.5 py-1 rounded-md`}
           >
             {post.category}
           </div>
         )}
-
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="absolute bottom-4 right-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-            <div className="bg-white/90 backdrop-blur-md rounded-full p-2.5 shadow-lg">
-              <ArrowRight className="h-5 w-5 text-blue-600" />
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Content Section */}
-      <div className="flex flex-col flex-grow p-6">
+      <div className="flex flex-col flex-grow p-5">
         {/* Meta Top */}
-        <div className="flex items-center gap-3 text-xs font-medium text-slate-500 mb-3">
+        <div className="flex items-center gap-3 text-xs font-medium text-gray-400 mb-2.5">
           <div className="flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5" />
             <span>{formatDate(post.created_at)}</span>
           </div>
           {post.read_time && (
             <>
-              <span className="w-1 h-1 rounded-full bg-slate-300" />
+              <span className="w-1 h-1 rounded-full bg-gray-300" />
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5" />
                 <span>{post.read_time} min read</span>
@@ -81,46 +65,35 @@ const PostCard = ({ post, linkState }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-bold text-slate-900 mb-3 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors duration-300">
+        <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
           {post.title}
         </h3>
 
         {/* Excerpt */}
         {post.excerpt && (
-          <p className="text-slate-600 text-sm mb-6 line-clamp-3 leading-relaxed flex-grow">
+          <p className="text-gray-500 text-sm mb-5 line-clamp-3 leading-relaxed flex-grow">
             {post.excerpt}
           </p>
         )}
 
         {/* Footer Meta */}
-        <div className="pt-4 mt-auto border-t border-slate-100 flex items-center justify-between">
-          {post.author_name ? (
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                <User className="h-3.5 w-3.5" />
-              </div>
-              <span className="text-xs font-medium text-slate-600">
-                {post.author_name}
-              </span>
+        <div className="pt-3.5 mt-auto border-t border-gray-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+              <User className="h-3.5 w-3.5" />
+            </div>
+            <span className="text-xs font-medium text-gray-600 truncate">
+              {post.author_name || "ZAN Tech Team"}
+            </span>
+          </div>
+
+          {post.tags && post.tags.length > 0 ? (
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <Tag className="h-3.5 w-3.5 text-gray-400" />
+              <span className="text-xs font-medium text-gray-500">{post.tags[0]}</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                <User className="h-3.5 w-3.5" />
-              </div>
-              <span className="text-xs font-medium text-slate-600">
-                Zantech Team
-              </span>
-            </div>
-          )}
-
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex items-center gap-1.5">
-              <Tag className="h-3.5 w-3.5 text-slate-400" />
-              <span className="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-md border border-slate-100">
-                {post.tags[0]}
-              </span>
-            </div>
+            <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
           )}
         </div>
       </div>
