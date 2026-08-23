@@ -85,10 +85,10 @@ const Contact = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <Seo
-        title="Contact Zantech Store - Robotics & IoT Support in Bangladesh"
-        description="Get in touch with Zantech Store for product queries, orders, technical support, or project consultation."
+        title="Contact ZAN Tech Store - Robotics & IoT Support in Bangladesh"
+        description="Get in touch with ZAN Tech Store for product queries, orders, technical support, or project consultation."
         url="https://store.zantechbd.com/contact"
         type="website"
       />
@@ -97,56 +97,53 @@ const Contact = () => {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-[50%] -right-[20%] w-[80%] h-[80%] bg-blue-600/10 rounded-full blur-[100px]"></div>
-            <div className="absolute -bottom-[50%] -left-[20%] w-[80%] h-[80%] bg-purple-600/10 rounded-full blur-[100px]"></div>
-          </div>
-
-          <div className="container mx-auto px-4 relative z-10 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-6">
-              <MessageSquare className="w-8 h-8 text-blue-400" />
+        <section className="bg-gray-900 text-white py-16">
+          <div className="container mx-auto px-4 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 mb-5">
+              <MessageSquare className="w-5 h-5 text-blue-300" />
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tight">
               Let's Start a Conversation
             </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-300 max-w-xl mx-auto leading-relaxed">
               Have a question about our products or need technical support?
               We're here to help you build the future.
             </p>
           </div>
         </section>
 
-        <div className="container mx-auto px-4 py-16 -mt-10 relative z-20">
-          <div className="grid lg:grid-cols-3 gap-8">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Contact Info Cards */}
-            <div className="lg:col-span-1 space-y-6">
+            <div className="lg:col-span-1 space-y-4">
               {/* Location Card */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4 text-blue-600">
-                  <MapPin size={24} />
+              <div className="bg-white p-6 rounded-2xl border border-gray-100">
+                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4 text-gray-600">
+                  <MapPin size={20} />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
                   Visit Us
                 </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  {company?.location || "Barishal, Barisal Division Bangladesh"}
-                </p>
+                {company?.location ? (
+                  <p className="text-gray-600 text-sm leading-relaxed">{company.location}</p>
+                ) : (
+                  <div className="h-4 w-3/4 bg-gray-100 rounded animate-pulse" />
+                )}
               </div>
 
               {/* Contact Card */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-4 text-green-600">
-                  <Phone size={24} />
+              <div className="bg-white p-6 rounded-2xl border border-gray-100">
+                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4 text-gray-600">
+                  <Phone size={20} />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
                   Call Us
                 </h3>
-                <p className="text-slate-600 mb-2">Mon-Fri from 9am to 6pm</p>
+                <p className="text-gray-500 text-sm mb-2">We're happy to help by phone</p>
                 {company?.phone && (
                   <a
                     href={`tel:${company.phone}`}
-                    className="text-lg font-medium text-slate-900 hover:text-blue-600 transition-colors"
+                    className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors"
                   >
                     {company.phone}
                   </a>
@@ -154,20 +151,20 @@ const Contact = () => {
               </div>
 
               {/* Email Card */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-4 text-purple-600">
-                  <Mail size={24} />
+              <div className="bg-white p-6 rounded-2xl border border-gray-100">
+                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4 text-gray-600">
+                  <Mail size={20} />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
                   Email Us
                 </h3>
-                <p className="text-slate-600 mb-2">
+                <p className="text-gray-500 text-sm mb-2">
                   We'll respond within 24 hours
                 </p>
                 {company?.email && (
                   <a
                     href={`mailto:${company.email}`}
-                    className="text-lg font-medium text-slate-900 hover:text-blue-600 transition-colors"
+                    className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors"
                   >
                     {company.email}
                   </a>
@@ -177,8 +174,8 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-10">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">
+              <div className="bg-white rounded-2xl border border-gray-100 p-6 md:p-10">
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
                   Send us a Message
                 </h2>
 
@@ -209,7 +206,7 @@ const Contact = () => {
                     <div className="space-y-2">
                       <label
                         htmlFor="f_name"
-                        className="text-sm font-medium text-slate-700"
+                        className="text-sm font-medium text-gray-700"
                       >
                         First Name
                       </label>
@@ -218,7 +215,7 @@ const Contact = () => {
                         name="f_name"
                         value={form.f_name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-slate-50 focus:bg-white"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
                         placeholder="John"
                         required
                       />
@@ -226,7 +223,7 @@ const Contact = () => {
                     <div className="space-y-2">
                       <label
                         htmlFor="l_name"
-                        className="text-sm font-medium text-slate-700"
+                        className="text-sm font-medium text-gray-700"
                       >
                         Last Name
                       </label>
@@ -235,7 +232,7 @@ const Contact = () => {
                         name="l_name"
                         value={form.l_name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-slate-50 focus:bg-white"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
                         placeholder="Doe"
                         required
                       />
@@ -245,7 +242,7 @@ const Contact = () => {
                   <div className="space-y-2">
                     <label
                       htmlFor="email"
-                      className="text-sm font-medium text-slate-700"
+                      className="text-sm font-medium text-gray-700"
                     >
                       Email Address
                     </label>
@@ -255,7 +252,7 @@ const Contact = () => {
                       type="email"
                       value={form.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-slate-50 focus:bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
                       placeholder="john@example.com"
                       required
                     />
@@ -264,7 +261,7 @@ const Contact = () => {
                   <div className="space-y-2">
                     <label
                       htmlFor="project_type"
-                      className="text-sm font-medium text-slate-700"
+                      className="text-sm font-medium text-gray-700"
                     >
                       Subject
                     </label>
@@ -273,7 +270,7 @@ const Contact = () => {
                       name="project_type"
                       value={form.project_type}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-slate-50 focus:bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
                       placeholder="Product Inquiry, Support, etc."
                     />
                   </div>
@@ -281,7 +278,7 @@ const Contact = () => {
                   <div className="space-y-2">
                     <label
                       htmlFor="message"
-                      className="text-sm font-medium text-slate-700"
+                      className="text-sm font-medium text-gray-700"
                     >
                       Message
                     </label>
@@ -291,7 +288,7 @@ const Contact = () => {
                       rows={5}
                       value={form.message}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-slate-50 focus:bg-white resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white resize-none"
                       placeholder="How can we help you?"
                       required
                     />
@@ -300,7 +297,7 @@ const Contact = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <>
@@ -319,10 +316,9 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Map Section (Optional Placeholder) */}
-          <div className="mt-16 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-            <div className="aspect-video w-full bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
-              {/* You can embed a Google Map iframe here */}
+          {/* Map */}
+          <div className="mt-8 bg-white p-2 rounded-2xl border border-gray-100">
+            <div className="aspect-video w-full bg-gray-100 rounded-xl overflow-hidden">
               <iframe
                 src="https://maps.google.com/maps?q=23.863472,90.387222&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"

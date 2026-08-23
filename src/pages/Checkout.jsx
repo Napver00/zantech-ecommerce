@@ -273,9 +273,9 @@ const Checkout = () => {
       <div className="flex flex-col min-h-screen bg-gray-50">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-16 flex items-center justify-center">
-          <div className="text-center bg-white p-12 rounded-xl shadow-lg max-w-lg w-full border border-gray-200">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-              <CheckCircle className="h-12 w-12 text-green-600" />
+          <div className="text-center bg-white p-12 rounded-2xl border border-gray-100 max-w-lg w-full">
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
+              <CheckCircle className="h-12 w-12 text-emerald-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-3">
               Order Placed!
@@ -283,8 +283,8 @@ const Checkout = () => {
             <p className="text-gray-600 mb-6">
               Thank you for your purchase. We'll process your order shortly.
             </p>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-5">
-              <p className="text-sm text-green-800">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-5">
+              <p className="text-sm text-emerald-800">
                 Redirecting to homepage in 5 seconds...
               </p>
             </div>
@@ -313,7 +313,7 @@ const Checkout = () => {
               Checkout
             </h1>
             <p className="text-sm text-gray-600 flex items-center justify-center gap-2">
-              <Shield className="h-4 w-4 text-green-600" />
+              <Shield className="h-4 w-4 text-emerald-600" />
               Secure checkout process
             </p>
           </div>
@@ -326,7 +326,7 @@ const Checkout = () => {
           {/* Left Column - Forms */}
           <div className="lg:col-span-2 space-y-6">
             {/* Shipping Information Card */}
-            <div className="bg-white rounded-xl shadow-md border border-gray-200">
+            <div className="bg-white rounded-xl border border-gray-100">
               <div className="border-b border-gray-200 p-5">
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 text-blue-600" />
@@ -536,7 +536,7 @@ const Checkout = () => {
             </div>
 
             {/* Payment Method Card */}
-            <div className="bg-white rounded-xl shadow-md border border-gray-200">
+            <div className="bg-white rounded-xl border border-gray-100">
               <div className="border-b border-gray-200 p-5">
                 <div className="flex items-center gap-3">
                   <CreditCard className="h-5 w-5 text-purple-600" />
@@ -566,7 +566,7 @@ const Checkout = () => {
                       >
                         Cash on Delivery
                       </Label>
-                      <div className="px-2.5 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded">
+                      <div className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">
                         Popular
                       </div>
                     </div>
@@ -656,7 +656,7 @@ const Checkout = () => {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 sticky top-24">
+            <div className="bg-white rounded-xl border border-gray-100 sticky top-24">
               <div className="border-b border-gray-200 p-5">
                 <h2 className="text-xl font-semibold text-gray-900">
                   Order Summary
@@ -665,20 +665,22 @@ const Checkout = () => {
 
               <div className="p-5 space-y-5">
                 {/* Cart Items */}
-                <div className="space-y-3 max-h-56 overflow-y-auto">
+                <div className="scroll-strip space-y-3 max-h-56 overflow-y-auto -mx-1 px-1">
                   {cartItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex justify-between items-start gap-3 text-sm"
-                    >
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{item.name}</p>
+                    <div key={item.id} className="flex items-start gap-3 text-sm">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-11 h-11 object-contain rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 line-clamp-2">{item.name}</p>
                         <p className="text-xs text-gray-500 mt-0.5">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <p className="font-semibold text-gray-900">
-                        ৳{(item.price * item.quantity).toLocaleString()}
+                      <p className="font-semibold text-gray-900 flex-shrink-0">
+                        ৳{((item.discountedPrice || item.price) * item.quantity).toLocaleString()}
                       </p>
                     </div>
                   ))}
@@ -721,7 +723,7 @@ const Checkout = () => {
                     </p>
                   )}
                   {coupon && (
-                    <p className="text-green-600 text-xs mt-1.5 flex items-center gap-1">
+                    <p className="text-emerald-600 text-xs mt-1.5 flex items-center gap-1">
                       <CheckCircle className="h-3 w-3" />
                       Coupon applied!
                     </p>
@@ -744,7 +746,7 @@ const Checkout = () => {
                     <div
                       className={`p-3 border-2 rounded-lg cursor-pointer transition ${
                         shippingOption === "localPickup"
-                          ? "border-green-600 bg-green-50"
+                          ? "border-blue-600 bg-blue-50"
                           : "border-gray-200"
                       }`}
                     >
@@ -760,7 +762,7 @@ const Checkout = () => {
                             className="font-medium cursor-pointer text-gray-900 text-sm flex items-center gap-2"
                           >
                             Local Pickup
-                            <span className="px-1.5 py-0.5 bg-green-600 text-white text-xs font-semibold rounded">
+                            <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-xs font-semibold rounded">
                               FREE
                             </span>
                           </Label>
@@ -841,7 +843,7 @@ const Checkout = () => {
                     </span>
                   </div>
                   {coupon && (
-                    <div className="flex justify-between text-green-600">
+                    <div className="flex justify-between text-emerald-600">
                       <span>Discount</span>
                       <span className="font-medium">
                         - ৳{discountAmount.toLocaleString()}
@@ -864,7 +866,7 @@ const Checkout = () => {
                     <span className="text-lg font-bold text-gray-900">
                       Total
                     </span>
-                    <span className="text-2xl font-bold text-blue-600">
+                    <span className="text-2xl font-black text-gray-900">
                       ৳
                       {grandTotal.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
@@ -910,7 +912,7 @@ const Checkout = () => {
                 {/* Trust Badge */}
                 <div className="text-center">
                   <p className="text-xs text-gray-500 flex items-center justify-center gap-1.5">
-                    <Shield className="h-3.5 w-3.5 text-green-600" />
+                    <Shield className="h-3.5 w-3.5 text-emerald-600" />
                     Secure checkout
                   </p>
                 </div>
