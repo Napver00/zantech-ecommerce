@@ -197,9 +197,9 @@ const Header = () => {
   const trendingSearches = ["Arduino", "ESP32", "Robot Kit", "Servo Motor", "Ultrasonic Sensor"];
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
+    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 text-white text-xs py-3">
+      <div className="bg-gray-900 text-white text-xs py-3">
         <div className="container mx-auto flex justify-between items-center px-4">
           <div className="flex items-center space-x-6">
             <span className="text-blue-100 font-medium">
@@ -300,7 +300,7 @@ const Header = () => {
                       to="/shop"
                       className={cn(
                         "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative",
-                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-red-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
+                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
                         location.pathname === "/shop"
                           ? "text-blue-600 bg-blue-50 after:w-8"
                           : "text-gray-700 after:w-0 hover:after:w-4",
@@ -318,7 +318,7 @@ const Header = () => {
                       <button
                         className={cn(
                           "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative flex items-center gap-1",
-                          'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-red-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
+                          'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
                           isResourcesActive
                             ? "text-blue-600 bg-blue-50 after:w-8"
                             : "text-gray-700 after:w-0 hover:after:w-4",
@@ -352,7 +352,7 @@ const Header = () => {
                       to="/about"
                       className={cn(
                         "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative",
-                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-red-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
+                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
                         location.pathname === "/about"
                           ? "text-blue-600 bg-blue-50 after:w-8"
                           : "text-gray-700 after:w-0 hover:after:w-4",
@@ -369,7 +369,7 @@ const Header = () => {
                       to="/contact"
                       className={cn(
                         "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative",
-                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-red-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
+                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
                         location.pathname === "/contact"
                           ? "text-blue-600 bg-blue-50 after:w-8"
                           : "text-gray-700 after:w-0 hover:after:w-4",
@@ -411,7 +411,7 @@ const Header = () => {
 
               {/* Search Results Dropdown */}
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-lg z-50 overflow-hidden">
                   {/* Trending (no query) */}
                   {!searchQuery && (
                     <div className="p-3">
@@ -572,7 +572,7 @@ const Header = () => {
               ) : (
                 <Sheet open={isAuthSheetOpen} onOpenChange={setIsAuthSheetOpen}>
                   <SheetTrigger asChild>
-                    <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg hidden sm:flex">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors hidden sm:flex">
                       <User className="mr-2 h-4 w-4" />
                       Login
                     </Button>
@@ -594,7 +594,7 @@ const Header = () => {
                     <Menu className="text-gray-600" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="w-[320px] sm:w-[400px] overflow-y-auto p-0 border-l border-gray-100 shadow-2xl">
+                <SheetContent className="w-[320px] sm:w-[400px] overflow-y-auto p-0 border-l border-gray-100 shadow-lg">
                   {/* Tabs Header */}
                   <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
                     <div className="p-4">
@@ -637,9 +637,9 @@ const Header = () => {
                       <>
                         {/* User Info & Dashboard Link - Mobile */}
                         {user ? (
-                          <div className="mb-6 p-4 bg-blue-50/50 backdrop-blur-sm rounded-2xl border border-blue-100/50">
+                          <div className="mb-6 p-4 bg-blue-50 rounded-2xl border border-blue-100">
                             <div className="flex items-center gap-3 mb-4">
-                              <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-md">
+                              <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
                                 {user.name?.charAt(0) || user.email?.charAt(0)}
                               </div>
                               <div className="min-w-0">
@@ -663,7 +663,7 @@ const Header = () => {
                         ) : (
                           <div className="mb-6">
                             <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 font-bold shadow-lg shadow-blue-600/20">
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 font-bold">
                                 Login / Sign Up
                               </Button>
                             </Link>
@@ -777,7 +777,7 @@ const Header = () => {
                         {user ? (
                           <div className="space-y-2 mt-6">
                             <Link to="/dashboard">
-                              <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg">
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                                 <User className="mr-2 h-4 w-4" /> Dashboard
                               </Button>
                             </Link>
@@ -795,7 +795,7 @@ const Header = () => {
                             onOpenChange={setIsAuthSheetOpen}
                           >
                             <SheetTrigger asChild>
-                              <Button className="mt-6 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg">
+                              <Button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                                 <User className="mr-2 h-4 w-4" /> Login
                               </Button>
                             </SheetTrigger>
