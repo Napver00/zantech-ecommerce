@@ -17,7 +17,6 @@ const ProductCard = ({ product, isNew = false }) => {
     reviews,
     is_bundle,
   } = product;
-  const isBundle = Number(is_bundle) === 1;
   const { addToCart } = useCart();
   const { addToWishlist, wishlist } = useAuth();
 
@@ -72,7 +71,7 @@ const ProductCard = ({ product, isNew = false }) => {
             {discountPercentage ? `-${Math.round(discountPercentage)}%` : "SALE"}
           </div>
         )}
-        {isBundle && (
+        {is_bundle === 1 && (
           <div className="bg-gray-900 text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
             <Package className="w-2.5 h-2.5" />
             KIT
