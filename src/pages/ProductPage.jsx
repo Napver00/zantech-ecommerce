@@ -211,6 +211,7 @@ const ProductPage = () => {
           const p = json.data;
           if (mounted) setProduct({
             ...p,
+            is_bundle: Number(p.is_bundle) === 1 ? 1 : 0,
             image: p.image || p.image_path || (Array.isArray(p.images) && p.images[0]?.path) || "",
             description: p.description || "",
             discountedPrice: p.discountedPrice ?? p.discounted_price ?? p.price,
