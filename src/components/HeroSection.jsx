@@ -58,7 +58,7 @@ const HeroSection = () => {
               Shop Now
             </Link>
             <Link to="/shop?category_slug=starter-kit" className="bg-white/10 border border-white/20 text-white hover:bg-white/15 px-7 py-3 rounded-xl font-semibold transition-colors">
-              Starter Kits
+              ZAN Tech kit
             </Link>
           </div>
         </div>
@@ -114,7 +114,7 @@ const HeroSection = () => {
                     to="/shop?category_slug=starter-kit"
                     className="bg-white/10 border border-white/20 text-white hover:bg-white/15 px-7 py-3 rounded-xl font-semibold transition-colors text-sm md:text-base"
                   >
-                    Starter Kits
+                    ZAN Tech kit
                   </Link>
                 </div>
               </div>
