@@ -18,6 +18,7 @@ const ReturnPolicy = lazy(() => import("./pages/ReturnPolicy"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ProductPage = lazy(() => import("./pages/ProductPage"));
 const Shop = lazy(() => import("./pages/Shop"));
+const ZanTechKits = lazy(() => import("./pages/ZanTechKits"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const Faq = lazy(() => import("./pages/Faq"));
 const Blog = lazy(() => import("./pages/Blog"));
@@ -75,6 +76,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/shop" element={<Shop />} />
+                <Route path="/zantech-kits" element={<ZanTechKits />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/tutorials" element={<Tutorials />} />
                 <Route path="/postdetails/:slug" element={<PostDetails />} />

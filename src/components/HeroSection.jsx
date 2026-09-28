@@ -57,7 +57,7 @@ const HeroSection = () => {
             <Link to="/shop" className="bg-white text-gray-900 hover:bg-gray-100 px-7 py-3 rounded-xl font-bold transition-colors">
               Shop Now
             </Link>
-            <Link to="/shop?category_slug=starter-kit" className="bg-white/10 border border-white/20 text-white hover:bg-white/15 px-7 py-3 rounded-xl font-semibold transition-colors">
+            <Link to="/zantech-kits" className="bg-white/10 border border-white/20 text-white hover:bg-white/15 px-7 py-3 rounded-xl font-semibold transition-colors">
               ZAN Tech kit
             </Link>
           </div>
@@ -111,7 +111,7 @@ const HeroSection = () => {
                     Shop Now
                   </Link>
                   <Link
-                    to="/shop?category_slug=starter-kit"
+                    to="/zantech-kits"
                     className="bg-white/10 border border-white/20 text-white hover:bg-white/15 px-7 py-3 rounded-xl font-semibold transition-colors text-sm md:text-base"
                   >
                     ZAN Tech kit

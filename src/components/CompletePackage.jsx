@@ -41,7 +41,7 @@ const CompletePackage = () => {
         eyebrow="Beginner friendly"
         title="Starter Kits"
         subtitle="Complete packages to kickstart your projects"
-        viewAllHref="/shop?category_slug=starter-kit"
+        viewAllHref="/zantech-kits"
       />
 
       {loading ? (
@@ -79,8 +79,8 @@ const CompletePackage = () => {
 
       {!loading && !error && products.length > 0 && (
         <div className="mt-6 text-center sm:hidden">
-          <Link to="/shop?category_slug=starter-kit" className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold text-sm">
-            View All Starter Kits <ArrowRight className="h-4 w-4" />
+          <Link to="/zantech-kits" className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold text-sm">
+            View All ZAN Tech Kits <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       )}
