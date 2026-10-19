@@ -103,10 +103,10 @@ const RelatedProducts = ({ categorySlug, currentProductId }) => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-gray-200">
+      <div className="bg-card rounded-2xl p-8 border border-white/10">
         <div className="flex items-center gap-3 mb-6">
-          <Compass className="h-6 w-6 text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-900">Related Products</h2>
+          <Compass className="h-6 w-6 text-zan-cyan" />
+          <h2 className="text-2xl font-bold text-white">Related Products</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
@@ -122,23 +122,23 @@ const RelatedProducts = ({ categorySlug, currentProductId }) => {
   const canScroll = products.length > itemsPerPage;
 
   return (
-    <div className="bg-white rounded-2xl p-8 border border-gray-200">
+    <div className="bg-card rounded-2xl p-8 border border-white/10">
       <div className="flex items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-3">
-          <Compass className="h-6 w-6 text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-900">Related Products</h2>
+          <Compass className="h-6 w-6 text-zan-cyan" />
+          <h2 className="text-2xl font-bold text-white">Related Products</h2>
         </div>
         {canScroll && (
           <div className="flex gap-2">
             <button
               onClick={handlePrev}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={handleNext}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition"
             >
               <ChevronRight className="h-5 w-5" />
             </button>

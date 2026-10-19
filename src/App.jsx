@@ -37,12 +37,12 @@ const Wishlist = lazy(() => import("./pages/Dashboard/Wishlist"));
 
 // 404 page
 const NotFound = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+  <div className="min-h-screen bg-background flex items-center justify-center px-4">
     <div className="text-center max-w-md">
       <div className="text-8xl font-black text-gray-200 mb-4">404</div>
-      <h1 className="text-2xl font-black text-gray-900 mb-2">Page Not Found</h1>
-      <p className="text-gray-500 mb-8">The page you're looking for doesn't exist or has been moved.</p>
-      <a href="/" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-colors">
+      <h1 className="text-2xl font-black text-white mb-2">Page Not Found</h1>
+      <p className="text-gray-400 mb-8">The page you're looking for doesn't exist or has been moved.</p>
+      <a href="/" className="inline-flex items-center gap-2 bg-zan-cyan hover:bg-cyan-300 text-zan-dark font-bold px-6 py-3 rounded-xl transition-colors">
         Back to Home
       </a>
     </div>
@@ -60,7 +60,7 @@ const SearchRedirect = () => {
 // Simple loading fallback
 const PageLoader = () => (
   <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
-    <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
+    <div className="w-10 h-10 border-4 border-zan-cyan/20 border-t-zan-cyan rounded-full animate-spin" />
   </div>
 );
 

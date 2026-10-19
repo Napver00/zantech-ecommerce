@@ -84,17 +84,17 @@ const Orders = () => {
   const getStatusInfo = (status) => {
     switch (String(status)) {
       case "0":
-        return { text: "Processing", className: "bg-blue-100 text-blue-800" };
+        return { text: "Processing", className: "bg-zan-cyan/15 text-zan-cyan" };
       case "1":
-        return { text: "Completed", className: "bg-green-100 text-green-800" };
+        return { text: "Completed", className: "bg-emerald-500/15 text-emerald-400" };
       case "2":
-        return { text: "On Hold", className: "bg-yellow-100 text-yellow-800" };
+        return { text: "On Hold", className: "bg-amber-500/15 text-amber-300" };
       case "3":
-        return { text: "Cancelled", className: "bg-red-100 text-red-800" };
+        return { text: "Cancelled", className: "bg-red-500/15 text-red-300" };
       case "4":
-        return { text: "Refunded", className: "bg-gray-100 text-gray-800" };
+        return { text: "Refunded", className: "bg-white/5 text-white" };
       default:
-        return { text: "Unknown", className: "bg-gray-100 text-gray-800" };
+        return { text: "Unknown", className: "bg-white/5 text-white" };
     }
   };
 
@@ -200,12 +200,12 @@ const Orders = () => {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
+          <div className="p-2 bg-zan-cyan/15 text-zan-cyan rounded-lg shadow-md">
             <Package className="h-6 w-6 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">My Orders</h2>
+          <h2 className="text-3xl font-bold text-white">My Orders</h2>
         </div>
-        <p className="text-gray-600 ml-14">
+        <p className="text-gray-300 ml-14">
           Track and manage all your orders in one place
         </p>
       </div>
@@ -213,31 +213,31 @@ const Orders = () => {
       {loading && renderSkeleton()}
 
       {!loading && error && (
-        <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-8 text-center shadow-sm">
-          <div className="inline-flex p-3 bg-red-100 rounded-full mb-4">
-            <AlertTriangle className="h-8 w-8 text-red-600" />
+        <div className="bg-red-500/10 border-2 border-red-500/25 rounded-2xl p-8 text-center shadow-sm">
+          <div className="inline-flex p-3 bg-red-500/15 rounded-full mb-4">
+            <AlertTriangle className="h-8 w-8 text-red-400" />
           </div>
-          <p className="text-xl font-semibold text-red-900 mb-2">
+          <p className="text-xl font-semibold text-red-300 mb-2">
             Could not load your orders
           </p>
-          <p className="text-red-700">{error}</p>
+          <p className="text-red-300">{error}</p>
         </div>
       )}
 
       {!loading && !error && orders.length === 0 && (
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center">
-          <div className="inline-flex p-4 bg-white rounded-full shadow-sm mb-6">
+        <div className="bg-card border-2 border-dashed border-white/10 rounded-2xl p-16 text-center">
+          <div className="inline-flex p-4 bg-card rounded-full shadow-sm mb-6">
             <Package className="h-16 w-16 text-gray-400" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+          <h3 className="text-2xl font-bold text-white mb-3">
             No Orders Yet
           </h3>
-          <p className="text-gray-600 text-lg mb-8">
+          <p className="text-gray-300 text-lg mb-8">
             Start shopping to see your orders here
           </p>
           <Button
             asChild
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all"
+            className="bg-zan-cyan hover:bg-white text-zan-dark font-bold px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all"
           >
             <a href="/shop">Browse Products</a>
           </Button>
@@ -246,23 +246,23 @@ const Orders = () => {
 
       {!loading && !error && orders.length > 0 && (
         <>
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="bg-card border border-white/10 rounded-2xl shadow-sm overflow-hidden">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
-                  <TableHead className="font-semibold text-gray-700">
+                <TableRow className="bg-white/5 border-b-2 border-white/10">
+                  <TableHead className="font-semibold text-gray-200">
                     Order Details
                   </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
+                  <TableHead className="font-semibold text-gray-200">
                     Date
                   </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
+                  <TableHead className="font-semibold text-gray-200">
                     Status
                   </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
+                  <TableHead className="font-semibold text-gray-200">
                     Amount
                   </TableHead>
-                  <TableHead className="text-right font-semibold text-gray-700">
+                  <TableHead className="text-right font-semibold text-gray-200">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -273,17 +273,17 @@ const Orders = () => {
                   return (
                     <TableRow
                       key={order.order_id}
-                      className="hover:bg-gray-50 transition-colors border-b border-gray-100"
+                      className="hover:bg-background transition-colors border-b border-white/10"
                     >
                       <TableCell className="py-4">
-                        <div className="font-bold text-gray-900 text-base">
+                        <div className="font-bold text-white text-base">
                           {order.invoice_code}
                         </div>
-                        <div className="text-sm text-gray-500 mt-1">
+                        <div className="text-sm text-gray-400 mt-1">
                           {order.totalProduct} item(s)
                         </div>
                       </TableCell>
-                      <TableCell className="text-gray-700">
+                      <TableCell className="text-gray-200">
                         {formatDate(order.order_placed_date)}
                       </TableCell>
                       <TableCell>
@@ -294,7 +294,7 @@ const Orders = () => {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <div className="font-bold text-gray-900 text-base">
+                        <div className="font-bold text-white text-base">
                           ৳{Number(order.total_amount).toLocaleString()}
                         </div>
                       </TableCell>
@@ -303,7 +303,7 @@ const Orders = () => {
                           asChild
                           variant="outline"
                           size="sm"
-                          className="font-semibold border-2 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-400 transition-all shadow-sm hover:shadow"
+                          className="font-semibold border-2 border-zan-cyan/20 text-zan-cyan hover:bg-zan-cyan/10 hover:border-zan-cyan/40 transition-all shadow-sm hover:shadow"
                         >
                           <Link to={`/dashboard/orders/${order.invoice_code}`}>View Details</Link>
                         </Button>

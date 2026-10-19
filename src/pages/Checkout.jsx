@@ -270,28 +270,28 @@ const Checkout = () => {
 
   if (orderSuccess) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="flex flex-col min-h-screen bg-background">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-16 flex items-center justify-center">
-          <div className="text-center bg-white p-12 rounded-2xl border border-gray-100 max-w-lg w-full">
-            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
-              <CheckCircle className="h-12 w-12 text-emerald-600" />
+          <div className="text-center bg-card p-12 rounded-2xl border border-white/10 max-w-lg w-full">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
+              <CheckCircle className="h-12 w-12 text-emerald-400" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl font-bold text-white mb-3">
               Order Placed!
             </h1>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-300 mb-6">
               Thank you for your purchase. We'll process your order shortly.
             </p>
-            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-5">
-              <p className="text-sm text-emerald-800">
+            <div className="bg-emerald-500/10 border border-emerald-500/25 rounded-lg p-3 mb-5">
+              <p className="text-sm text-emerald-400">
                 Redirecting to homepage in 5 seconds...
               </p>
             </div>
             <Button
               onClick={() => navigate("/")}
               size="lg"
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-zan-cyan hover:bg-cyan-300"
             >
               Continue Shopping
             </Button>
@@ -303,17 +303,17 @@ const Checkout = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8 sm:py-12">
         {/* Header */}
         <div className="max-w-7xl mx-auto mb-8">
           <div className="text-center mb-6">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               Checkout
             </h1>
-            <p className="text-sm text-gray-600 flex items-center justify-center gap-2">
-              <Shield className="h-4 w-4 text-emerald-600" />
+            <p className="text-sm text-gray-300 flex items-center justify-center gap-2">
+              <Shield className="h-4 w-4 text-emerald-400" />
               Secure checkout process
             </p>
           </div>
@@ -326,11 +326,11 @@ const Checkout = () => {
           {/* Left Column - Forms */}
           <div className="lg:col-span-2 space-y-6">
             {/* Shipping Information Card */}
-            <div className="bg-white rounded-xl border border-gray-100">
-              <div className="border-b border-gray-200 p-5">
+            <div className="bg-card rounded-xl border border-white/10">
+              <div className="border-b border-white/10 p-5">
                 <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <MapPin className="h-5 w-5 text-zan-cyan" />
+                  <h2 className="text-xl font-semibold text-white">
                     Shipping Information
                   </h2>
                 </div>
@@ -340,15 +340,15 @@ const Checkout = () => {
                   <div className="space-y-4">
                     {isLoadingAddresses ? (
                       <div className="flex items-center justify-center py-8">
-                        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+                        <Loader2 className="h-6 w-6 animate-spin text-zan-cyan" />
                       </div>
                     ) : shippingAddresses.length > 0 ? (
                       <>
                         <div className="mb-4">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-white">
                             Select Shipping Address *
                           </p>
-                          <p className="text-xs text-gray-600 mt-1">
+                          <p className="text-xs text-gray-300 mt-1">
                             Choose where you want your order delivered
                           </p>
                         </div>
@@ -360,8 +360,8 @@ const Checkout = () => {
                               htmlFor={`addr-${addr.id}`}
                               className={`flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition ${
                                 selectedAddressId === addr.id
-                                  ? "border-blue-600 bg-blue-50"
-                                  : "border-gray-200 hover:border-blue-300"
+                                  ? "border-zan-cyan bg-zan-cyan/10"
+                                  : "border-white/10 hover:border-zan-cyan/40"
                               }`}
                             >
                               <input
@@ -371,17 +371,17 @@ const Checkout = () => {
                                 value={addr.id}
                                 checked={selectedAddressId === addr.id}
                                 onChange={() => setSelectedAddressId(addr.id)}
-                                className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500"
+                                className="mt-1 h-4 w-4 text-zan-cyan focus:ring-zan-cyan/40"
                               />
                               <div className="flex-1 min-w-0">
-                                <div className="font-medium text-gray-900 mb-1">
+                                <div className="font-medium text-white mb-1">
                                   {addr.f_name} {addr.l_name}
                                 </div>
-                                <div className="text-sm text-gray-600">
+                                <div className="text-sm text-gray-300">
                                   <p>
                                     {addr.address}, {addr.city} - {addr.zip}
                                   </p>
-                                  <p className="mt-1 font-medium text-gray-900">
+                                  <p className="mt-1 font-medium text-white">
                                     {addr.phone}
                                   </p>
                                 </div>
@@ -392,22 +392,22 @@ const Checkout = () => {
 
                         <Link
                           to="/dashboard/addresses"
-                          className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium hover:text-blue-700 mt-2"
+                          className="inline-flex items-center gap-1 text-sm text-zan-cyan font-medium hover:text-zan-cyan mt-2"
                         >
                           Manage Addresses →
                         </Link>
                       </>
                     ) : (
-                      <div className="text-center py-8 bg-orange-50 rounded-lg border-2 border-orange-200">
-                        <AlertCircle className="h-12 w-12 text-orange-600 mx-auto mb-3" />
-                        <h3 className="text-base font-medium text-gray-900 mb-2">
+                      <div className="text-center py-8 bg-amber-500/10 rounded-lg border-2 border-amber-500/25">
+                        <AlertCircle className="h-12 w-12 text-amber-300 mx-auto mb-3" />
+                        <h3 className="text-base font-medium text-white mb-2">
                           No Shipping Address Found
                         </h3>
-                        <p className="text-sm text-gray-600 mb-4">
+                        <p className="text-sm text-gray-300 mb-4">
                           Please add a shipping address to place your order
                         </p>
                         <Link to="/dashboard/addresses">
-                          <Button className="bg-blue-600 hover:bg-blue-700">
+                          <Button className="bg-zan-cyan hover:bg-cyan-300">
                             <MapPin className="h-4 w-4 mr-2" />
                             Add Shipping Address
                           </Button>
@@ -419,21 +419,21 @@ const Checkout = () => {
                   <div>
                     {!isGuestCheckout ? (
                       <div className="text-center space-y-5 py-6">
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                          <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <div className="bg-zan-cyan/10 border border-zan-cyan/20 rounded-lg p-6">
+                          <div className="w-16 h-16 bg-zan-cyan rounded-full flex items-center justify-center mx-auto mb-3">
                             <User className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          <h3 className="text-lg font-semibold text-white mb-2">
                             Sign in for faster checkout
                           </h3>
-                          <p className="text-sm text-gray-600 mb-4">
+                          <p className="text-sm text-gray-300 mb-4">
                             Access saved addresses and track orders
                           </p>
                           <Button
                             type="button"
                             onClick={() => setIsAuthSheetOpen(true)}
                             size="lg"
-                            className="w-full bg-blue-600 hover:bg-blue-700"
+                            className="w-full bg-zan-cyan hover:bg-cyan-300"
                           >
                             <User className="mr-2 h-4 w-4" />
                             Sign In
@@ -442,10 +442,10 @@ const Checkout = () => {
 
                         <div className="relative">
                           <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300"></div>
+                            <div className="w-full border-t border-white/10"></div>
                           </div>
                           <div className="relative flex justify-center">
-                            <span className="px-4 bg-white text-sm text-gray-500">
+                            <span className="px-4 bg-card text-sm text-gray-400">
                               or
                             </span>
                           </div>
@@ -454,7 +454,7 @@ const Checkout = () => {
                         <button
                           type="button"
                           onClick={() => setIsGuestCheckout(true)}
-                          className="text-sm text-gray-600 hover:text-blue-600 font-medium underline"
+                          className="text-sm text-gray-300 hover:text-zan-cyan font-medium underline"
                         >
                           Continue as Guest
                         </button>
@@ -462,13 +462,13 @@ const Checkout = () => {
                     ) : (
                       <div className="space-y-4">
                         <div className="flex items-center justify-between pb-3 border-b">
-                          <p className="font-medium text-gray-900">
+                          <p className="font-medium text-white">
                             Guest Checkout
                           </p>
                           <button
                             type="button"
                             onClick={() => setIsGuestCheckout(false)}
-                            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                            className="text-sm text-zan-cyan hover:text-zan-cyan font-medium"
                           >
                             ← Sign In
                           </button>
@@ -477,7 +477,7 @@ const Checkout = () => {
                           <div>
                             <Label
                               htmlFor="user_name"
-                              className="text-gray-700 font-medium"
+                              className="text-gray-200 font-medium"
                             >
                               Full Name <span className="text-red-500">*</span>
                             </Label>
@@ -494,7 +494,7 @@ const Checkout = () => {
                           <div>
                             <Label
                               htmlFor="userphone"
-                              className="text-gray-700 font-medium"
+                              className="text-gray-200 font-medium"
                             >
                               Phone Number{" "}
                               <span className="text-red-500">*</span>
@@ -512,7 +512,7 @@ const Checkout = () => {
                           <div>
                             <Label
                               htmlFor="address"
-                              className="text-gray-700 font-medium"
+                              className="text-gray-200 font-medium"
                             >
                               Full Address{" "}
                               <span className="text-red-500">*</span>
@@ -536,11 +536,11 @@ const Checkout = () => {
             </div>
 
             {/* Payment Method Card */}
-            <div className="bg-white rounded-xl border border-gray-100">
-              <div className="border-b border-gray-200 p-5">
+            <div className="bg-card rounded-xl border border-white/10">
+              <div className="border-b border-white/10 p-5">
                 <div className="flex items-center gap-3">
-                  <CreditCard className="h-5 w-5 text-purple-600" />
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <CreditCard className="h-5 w-5 text-purple-300" />
+                  <h2 className="text-xl font-semibold text-white">
                     Payment Method
                   </h2>
                 </div>
@@ -554,19 +554,19 @@ const Checkout = () => {
                   <div
                     className={`p-4 border-2 rounded-lg cursor-pointer transition ${
                       paymentMethod === "1"
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-zan-cyan bg-zan-cyan/10"
+                        : "border-white/10 hover:border-white/10"
                     }`}
                   >
                     <div className="flex items-center space-x-3">
                       <RadioGroupItem value="1" id="cash" />
                       <Label
                         htmlFor="cash"
-                        className="flex-1 cursor-pointer font-medium text-gray-900"
+                        className="flex-1 cursor-pointer font-medium text-white"
                       >
                         Cash on Delivery
                       </Label>
-                      <div className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">
+                      <div className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 text-xs font-medium rounded">
                         Popular
                       </div>
                     </div>
@@ -574,8 +574,8 @@ const Checkout = () => {
                   <div
                     className={`p-4 border-2 rounded-lg cursor-pointer transition ${
                       paymentMethod === "2"
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-zan-cyan bg-zan-cyan/10"
+                        : "border-white/10 hover:border-white/10"
                     }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -583,7 +583,7 @@ const Checkout = () => {
                       <div className="flex-1">
                         <Label
                           htmlFor="bkash"
-                          className="cursor-pointer font-medium text-gray-900 flex items-center gap-2"
+                          className="cursor-pointer font-medium text-white flex items-center gap-2"
                         >
                           bKash Payment
                           <img
@@ -592,7 +592,7 @@ const Checkout = () => {
                             className="h-4 object-contain"
                           />
                         </Label>
-                        <p className="text-xs text-orange-600 mt-1">
+                        <p className="text-xs text-amber-300 mt-1">
                           + {bkashChargePercentage}% fee
                         </p>
                       </div>
@@ -601,14 +601,14 @@ const Checkout = () => {
                 </RadioGroup>
 
                 {paymentMethod === "2" && (
-                  <div className="mt-5 p-4 bg-orange-50 rounded-lg space-y-4 border border-orange-200">
+                  <div className="mt-5 p-4 bg-amber-500/10 rounded-lg space-y-4 border border-amber-500/25">
                     <div className="flex items-start gap-3">
-                      <AlertCircle className="h-5 w-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                      <AlertCircle className="h-5 w-5 text-amber-300 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-white">
                           Payment Instructions
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <p className="text-xs text-gray-300 mt-1">
                           Send money to <strong>01627199815</strong> and enter
                           details below
                         </p>
@@ -617,7 +617,7 @@ const Checkout = () => {
                     <div>
                       <Label
                         htmlFor="paymentphone"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-sm font-medium text-gray-200"
                       >
                         Your bKash Number
                       </Label>
@@ -634,7 +634,7 @@ const Checkout = () => {
                     <div>
                       <Label
                         htmlFor="trxed"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-sm font-medium text-gray-200"
                       >
                         Transaction ID (TrxID)
                       </Label>
@@ -656,9 +656,9 @@ const Checkout = () => {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-gray-100 sticky top-24">
-              <div className="border-b border-gray-200 p-5">
-                <h2 className="text-xl font-semibold text-gray-900">
+            <div className="bg-card rounded-xl border border-white/10 sticky top-24">
+              <div className="border-b border-white/10 p-5">
+                <h2 className="text-xl font-semibold text-white">
                   Order Summary
                 </h2>
               </div>
@@ -673,15 +673,15 @@ const Checkout = () => {
                         alt={item.name}
                         loading="lazy"
                         decoding="async"
-                        className="w-11 h-11 object-contain rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0"
+                        className="w-11 h-11 object-contain rounded-lg bg-background border border-white/10 flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 line-clamp-2">{item.name}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="font-medium text-white line-clamp-2">{item.name}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <p className="font-semibold text-gray-900 flex-shrink-0">
+                      <p className="font-semibold text-white flex-shrink-0">
                         ৳{((item.discountedPrice || item.price) * item.quantity).toLocaleString()}
                       </p>
                     </div>
@@ -692,7 +692,7 @@ const Checkout = () => {
                 <div className="pt-4 border-t">
                   <Label
                     htmlFor="coupon"
-                    className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                    className="text-sm font-medium text-gray-200 flex items-center gap-2"
                   >
                     <Tag className="h-4 w-4" />
                     Coupon Code
@@ -709,7 +709,7 @@ const Checkout = () => {
                       type="button"
                       onClick={handleApplyCoupon}
                       disabled={isCouponLoading}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-zan-cyan hover:bg-cyan-300"
                     >
                       {isCouponLoading ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -719,13 +719,13 @@ const Checkout = () => {
                     </Button>
                   </div>
                   {couponError && (
-                    <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1">
+                    <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
                       {couponError}
                     </p>
                   )}
                   {coupon && (
-                    <p className="text-emerald-600 text-xs mt-1.5 flex items-center gap-1">
+                    <p className="text-emerald-400 text-xs mt-1.5 flex items-center gap-1">
                       <CheckCircle className="h-3 w-3" />
                       Coupon applied!
                     </p>
@@ -735,8 +735,8 @@ const Checkout = () => {
                 {/* Shipping Options */}
                 <div className="pt-4 border-t">
                   <div className="flex items-center gap-2 mb-3">
-                    <Truck className="h-4 w-4 text-gray-600" />
-                    <h3 className="text-sm font-medium text-gray-700">
+                    <Truck className="h-4 w-4 text-gray-300" />
+                    <h3 className="text-sm font-medium text-gray-200">
                       Shipping
                     </h3>
                   </div>
@@ -748,8 +748,8 @@ const Checkout = () => {
                     <div
                       className={`p-3 border-2 rounded-lg cursor-pointer transition ${
                         shippingOption === "localPickup"
-                          ? "border-blue-600 bg-blue-50"
-                          : "border-gray-200"
+                          ? "border-zan-cyan bg-zan-cyan/10"
+                          : "border-white/10"
                       }`}
                     >
                       <div className="flex items-start gap-2">
@@ -761,14 +761,14 @@ const Checkout = () => {
                         <div className="flex-1">
                           <Label
                             htmlFor="localPickup"
-                            className="font-medium cursor-pointer text-gray-900 text-sm flex items-center gap-2"
+                            className="font-medium cursor-pointer text-white text-sm flex items-center gap-2"
                           >
                             Local Pickup
                             <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-xs font-semibold rounded">
                               FREE
                             </span>
                           </Label>
-                          <p className="text-xs text-gray-600 mt-1">
+                          <p className="text-xs text-gray-300 mt-1">
                             House 48, Road 9/C, Sector 5, Uttara, Dhaka - 1230,
                             Bangladesh
                           </p>
@@ -778,8 +778,8 @@ const Checkout = () => {
                     <div
                       className={`p-3 border-2 rounded-lg cursor-pointer transition ${
                         shippingOption === "insideDhaka"
-                          ? "border-blue-600 bg-blue-50"
-                          : "border-gray-200"
+                          ? "border-zan-cyan bg-zan-cyan/10"
+                          : "border-white/10"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -790,12 +790,12 @@ const Checkout = () => {
                           />
                           <Label
                             htmlFor="insideDhaka"
-                            className="cursor-pointer font-medium text-gray-900 text-sm truncate"
+                            className="cursor-pointer font-medium text-white text-sm truncate"
                           >
                             Inside Dhaka
                           </Label>
                         </div>
-                        <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
+                        <span className="font-semibold text-white text-sm whitespace-nowrap">
                           ৳{orderInfo?.insideDhaka || "..."}
                         </span>
                       </div>
@@ -803,8 +803,8 @@ const Checkout = () => {
                     <div
                       className={`p-3 border-2 rounded-lg cursor-pointer transition ${
                         shippingOption === "outsideDhaka"
-                          ? "border-blue-600 bg-blue-50"
-                          : "border-gray-200"
+                          ? "border-zan-cyan bg-zan-cyan/10"
+                          : "border-white/10"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -815,12 +815,12 @@ const Checkout = () => {
                           />
                           <Label
                             htmlFor="outsideDhaka"
-                            className="cursor-pointer font-medium text-gray-900 text-sm truncate"
+                            className="cursor-pointer font-medium text-white text-sm truncate"
                           >
                             Outside Dhaka
                           </Label>
                         </div>
-                        <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
+                        <span className="font-semibold text-white text-sm whitespace-nowrap">
                           ৳{orderInfo?.outsideDhaka || "..."}
                         </span>
                       </div>
@@ -830,13 +830,13 @@ const Checkout = () => {
 
                 {/* Price Breakdown */}
                 <div className="space-y-2 pt-4 border-t text-sm">
-                  <div className="flex justify-between text-gray-700">
+                  <div className="flex justify-between text-gray-200">
                     <span>Subtotal</span>
                     <span className="font-medium">
                       ৳{cartTotal.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between text-gray-700">
+                  <div className="flex justify-between text-gray-200">
                     <span>Shipping</span>
                     <span className="font-medium">
                       {shippingCharge === 0
@@ -845,7 +845,7 @@ const Checkout = () => {
                     </span>
                   </div>
                   {coupon && (
-                    <div className="flex justify-between text-emerald-600">
+                    <div className="flex justify-between text-emerald-400">
                       <span>Discount</span>
                       <span className="font-medium">
                         - ৳{discountAmount.toLocaleString()}
@@ -853,7 +853,7 @@ const Checkout = () => {
                     </div>
                   )}
                   {paymentMethod === "2" && bkashCharge > 0 && (
-                    <div className="flex justify-between text-orange-600">
+                    <div className="flex justify-between text-amber-300">
                       <span>bKash Fee ({bkashChargePercentage}%)</span>
                       <span className="font-medium">
                         ৳{bkashCharge.toFixed(2)}
@@ -865,10 +865,10 @@ const Checkout = () => {
                 {/* Grand Total */}
                 <div className="pt-3 border-t-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-lg font-bold text-white">
                       Total
                     </span>
-                    <span className="text-2xl font-black text-gray-900">
+                    <span className="text-2xl font-black text-white">
                       ৳
                       {grandTotal.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
@@ -882,7 +882,7 @@ const Checkout = () => {
                 {orderError && (
                   <Alert
                     variant="destructive"
-                    className="border-red-400 bg-red-50"
+                    className="border-red-400 bg-red-500/10"
                   >
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription className="text-sm font-medium">
@@ -895,7 +895,7 @@ const Checkout = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full h-12 font-semibold bg-blue-600 hover:bg-blue-700"
+                  className="w-full h-12 font-semibold bg-zan-cyan hover:bg-cyan-300"
                   disabled={isPlacingOrder || cartItems.length === 0}
                 >
                   {isPlacingOrder ? (
@@ -913,8 +913,8 @@ const Checkout = () => {
 
                 {/* Trust Badge */}
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 flex items-center justify-center gap-1.5">
-                    <Shield className="h-3.5 w-3.5 text-emerald-600" />
+                  <p className="text-xs text-gray-400 flex items-center justify-center gap-1.5">
+                    <Shield className="h-3.5 w-3.5 text-emerald-400" />
                     Secure checkout
                   </p>
                 </div>

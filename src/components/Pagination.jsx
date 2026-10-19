@@ -11,10 +11,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg border border-white/10 hover:bg-background disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Previous page"
       >
-        <ChevronLeft className="w-5 h-5 text-gray-600" />
+        <ChevronLeft className="w-5 h-5 text-gray-300" />
       </button>
 
       <div className="flex gap-1">
@@ -28,8 +28,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
               onClick={() => onPageChange(page)}
               className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
                 currentPage === page
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-600 hover:bg-gray-50 border border-gray-200"
+                  ? "bg-zan-cyan text-zan-dark"
+                  : "text-gray-300 hover:bg-background border border-white/10"
               }`}
             >
               {page}
@@ -41,10 +41,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg border border-white/10 hover:bg-background disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Next page"
       >
-        <ChevronRight className="w-5 h-5 text-gray-600" />
+        <ChevronRight className="w-5 h-5 text-gray-300" />
       </button>
     </div>
   );

@@ -188,7 +188,7 @@ const Addresses = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-zan-cyan" />
       </div>
     );
   }
@@ -196,18 +196,18 @@ const Addresses = () => {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <MapPin className="h-6 w-6 text-blue-600" />
+          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <MapPin className="h-6 w-6 text-zan-cyan" />
             Shipping Addresses
           </h2>
-          <p className="text-sm text-gray-600 mt-1">Manage your delivery addresses</p>
+          <p className="text-sm text-gray-300 mt-1">Manage your delivery addresses</p>
         </div>
         {!showForm && (
           <Button 
             onClick={() => setShowForm(true)}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-zan-cyan hover:bg-cyan-300"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add New
@@ -217,9 +217,9 @@ const Addresses = () => {
 
       {/* Success Message */}
       {success && (
-        <Alert className="mb-6 border-green-400 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">{success}</AlertDescription>
+        <Alert className="mb-6 border-green-400 bg-emerald-500/10">
+          <CheckCircle className="h-4 w-4 text-emerald-400" />
+          <AlertDescription className="text-emerald-400">{success}</AlertDescription>
         </Alert>
       )}
 
@@ -233,9 +233,9 @@ const Addresses = () => {
 
       {/* Add/Edit Address Form */}
       {showForm && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+        <div className="bg-background border border-white/10 rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-white">
               {editingId ? 'Edit Address' : 'Add New Address'}
             </h3>
             <Button 
@@ -339,7 +339,7 @@ const Addresses = () => {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-zan-cyan hover:bg-cyan-300"
               >
                 {isSubmitting ? (
                   <>
@@ -357,14 +357,14 @@ const Addresses = () => {
 
       {/* Addresses List */}
       {addresses.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="text-center py-12 bg-background rounded-lg border border-white/10">
           <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">No addresses yet</h3>
-          <p className="text-gray-600 mb-4">Add your first shipping address to get started</p>
+          <h3 className="text-lg font-medium text-white mb-1">No addresses yet</h3>
+          <p className="text-gray-300 mb-4">Add your first shipping address to get started</p>
           {!showForm && (
             <Button 
               onClick={() => setShowForm(true)}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-zan-cyan hover:bg-cyan-300"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Address
@@ -376,12 +376,12 @@ const Addresses = () => {
           {addresses.map((addr) => (
             <div 
               key={addr.id} 
-              className="bg-white border border-gray-200 rounded-lg p-5 hover:border-blue-300 transition-colors"
+              className="bg-card border border-white/10 rounded-lg p-5 hover:border-zan-cyan/40 transition-colors"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-blue-600" />
-                  <h4 className="font-semibold text-gray-900">
+                  <MapPin className="h-5 w-5 text-zan-cyan" />
+                  <h4 className="font-semibold text-white">
                     {addr.f_name} {addr.l_name}
                   </h4>
                 </div>
@@ -390,7 +390,7 @@ const Addresses = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleEdit(addr)}
-                    className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+                    className="h-8 w-8 p-0 hover:bg-zan-cyan/10 hover:text-zan-cyan"
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -399,7 +399,7 @@ const Addresses = () => {
                     size="sm"
                     onClick={() => handleDelete(addr.id)}
                     disabled={isDeleting === addr.id}
-                    className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                    className="h-8 w-8 p-0 hover:bg-red-500/10 hover:text-red-400"
                   >
                     {isDeleting === addr.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -409,10 +409,10 @@ const Addresses = () => {
                   </Button>
                 </div>
               </div>
-              <div className="space-y-1 text-sm text-gray-600">
+              <div className="space-y-1 text-sm text-gray-300">
                 <p>{addr.address}</p>
                 <p>{addr.city}, {addr.zip}</p>
-                <p className="font-medium text-gray-900">{addr.phone}</p>
+                <p className="font-medium text-white">{addr.phone}</p>
               </div>
             </div>
           ))}

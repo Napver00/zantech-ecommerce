@@ -149,23 +149,23 @@ const AccountDetails = () => {
     return (
         <div>
             {/* Header */}
-            <div className="mb-6 pb-4 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <User className="h-6 w-6 text-blue-600" />
+            <div className="mb-6 pb-4 border-b border-white/10">
+                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                    <User className="h-6 w-6 text-zan-cyan" />
                     Account Details
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">Update your personal information and password</p>
+                <p className="text-sm text-gray-300 mt-1">Update your personal information and password</p>
             </div>
 
             <div className="space-y-8">
                 {/* Personal Information Form */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
+                <div className="bg-card border border-white/10 rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">Personal Information</h3>
                     
                     {infoSuccess && (
-                        <Alert className="mb-4 border-green-400 bg-green-50">
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                            <AlertDescription className="text-green-800">{infoSuccess}</AlertDescription>
+                        <Alert className="mb-4 border-green-400 bg-emerald-500/10">
+                            <CheckCircle className="h-4 w-4 text-emerald-400" />
+                            <AlertDescription className="text-emerald-400">{infoSuccess}</AlertDescription>
                         </Alert>
                     )}
 
@@ -227,7 +227,7 @@ const AccountDetails = () => {
                             <Button 
                                 type="submit"
                                 disabled={isUpdatingInfo}
-                                className="bg-blue-600 hover:bg-blue-700"
+                                className="bg-zan-cyan hover:bg-cyan-300"
                             >
                                 {isUpdatingInfo ? (
                                     <>
@@ -243,13 +243,13 @@ const AccountDetails = () => {
                 </div>
 
                 {/* Password Change Form */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
+                <div className="bg-card border border-white/10 rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">Change Password</h3>
                     
                     {passwordSuccess && (
-                        <Alert className="mb-4 border-green-400 bg-green-50">
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                            <AlertDescription className="text-green-800">{passwordSuccess}</AlertDescription>
+                        <Alert className="mb-4 border-green-400 bg-emerald-500/10">
+                            <CheckCircle className="h-4 w-4 text-emerald-400" />
+                            <AlertDescription className="text-emerald-400">{passwordSuccess}</AlertDescription>
                         </Alert>
                     )}
 
@@ -301,7 +301,7 @@ const AccountDetails = () => {
                             <Button 
                                 type="submit"
                                 disabled={isChangingPassword}
-                                className="bg-blue-600 hover:bg-blue-700"
+                                className="bg-zan-cyan hover:bg-cyan-300"
                             >
                                 {isChangingPassword ? (
                                     <>

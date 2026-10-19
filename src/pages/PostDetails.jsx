@@ -74,7 +74,7 @@ const PostDetails = () => {
       ) {
         const { frameborder, allowfullscreen, ...iframeAttribs } = domNode.attribs;
         return (
-          <div className="relative w-full aspect-video my-8 rounded-2xl overflow-hidden border border-gray-100">
+          <div className="relative w-full aspect-video my-8 rounded-2xl overflow-hidden border border-white/10">
             <iframe
               {...iframeAttribs}
               frameBorder={frameborder}
@@ -91,7 +91,7 @@ const PostDetails = () => {
         return (
           <img
             {...domNode.attribs}
-            className="w-full h-auto rounded-xl shadow-lg my-6 mx-auto border-2 border-gray-100"
+            className="w-full h-auto rounded-xl shadow-lg my-6 mx-auto border-2 border-white/10"
           />
         );
       }
@@ -121,7 +121,7 @@ const PostDetails = () => {
   // --- Render Loading State ---
   if (loading)
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-card">
         <Header />
         <div className="h-screen flex justify-center items-center">
           <Skeleton className="h-12 w-1/2" />
@@ -133,7 +133,7 @@ const PostDetails = () => {
   // --- Render Error State ---
   if (error || !post)
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
         <div className="flex-grow flex justify-center items-center p-4">
           <div className="text-center">
@@ -141,7 +141,7 @@ const PostDetails = () => {
             <h2 className="text-2xl font-bold">Post Not Found</h2>
             <Link
               to="/blog"
-              className="text-blue-500 hover:underline mt-4 block"
+              className="text-zan-cyan hover:underline mt-4 block"
             >
               Go Back
             </Link>
@@ -157,9 +157,9 @@ const PostDetails = () => {
   const seoImage = post.thumbnail_url || `${siteUrl}/zantech-logo.webp`;
 
   return (
-    <div className="flex flex-col min-h-screen bg-white font-sans">
+    <div className="flex flex-col min-h-screen bg-card font-sans">
       <Seo
-        title={`${post.title} | Zantech`}
+        title={`${post.title} | ZAN Tech`}
         description={post.title}
         image={seoImage}
         url={postUrl}
@@ -170,7 +170,7 @@ const PostDetails = () => {
 
       <main className="flex-grow">
         {/* HERO SECTION */}
-        <div className="relative w-full min-h-[50vh] flex items-end bg-gray-900">
+        <div className="relative w-full min-h-[50vh] flex items-end bg-surface-2">
           {/* Background Image */}
           <div className="absolute inset-0 opacity-60">
             {post.thumbnail_url && (
@@ -186,7 +186,7 @@ const PostDetails = () => {
           {/* Title Content */}
           <div className="relative container mx-auto px-4 pb-12 pt-32 max-w-5xl z-10 text-white">
             {post.category && (
-              <span className="inline-block bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
+              <span className="inline-block bg-zan-cyan text-zan-dark text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
                 {post.category}
               </span>
             )}
@@ -207,12 +207,12 @@ const PostDetails = () => {
         </div>
 
         {/* MAIN CONTENT AREA */}
-        <div className="relative bg-white z-20 px-4 py-12">
+        <div className="relative bg-card z-20 px-4 py-12">
           <div className="container mx-auto max-w-4xl">
             {/* Back Link */}
             <Link
               to={backLink}
-              className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-8 font-bold transition-colors"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-zan-cyan mb-8 font-bold transition-colors"
             >
               <ArrowLeft size={20} /> {backText}
             </Link>
@@ -220,9 +220,9 @@ const PostDetails = () => {
             {/* 4. THE CONTENT CONTAINER */}
             {/* The 'prose' class automates all the typography styling */}
             <article
-              className="prose prose-lg prose-blue md:prose-xl max-w-none 
-                prose-headings:font-black prose-headings:text-gray-900 
-                prose-p:text-gray-700 prose-li:text-gray-700
+              className="prose prose-lg prose-invert md:prose-xl max-w-none 
+                prose-headings:font-black prose-headings:text-white 
+                prose-p:text-gray-300 prose-li:text-gray-300
                 prose-img:rounded-xl"
             >
               {/* This replaces {post.content} */}
@@ -231,7 +231,7 @@ const PostDetails = () => {
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="mt-12 pt-8 border-t border-gray-100">
+              <div className="mt-12 pt-8 border-t border-white/10">
                 <h4 className="text-sm font-bold text-gray-400 uppercase mb-3">
                   Tags
                 </h4>
@@ -239,7 +239,7 @@ const PostDetails = () => {
                   {post.tags.map((tag, i) => (
                     <span
                       key={i}
-                      className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-sm font-bold"
+                      className="bg-white/5 text-gray-300 px-3 py-1 rounded-lg text-sm font-bold"
                     >
                       #{tag}
                     </span>
@@ -251,11 +251,11 @@ const PostDetails = () => {
         </div>
 
         {/* Share Section */}
-        <div className="bg-blue-600 py-16 text-center text-white">
+        <div className="bg-zan-cyan py-16 text-center text-zan-dark">
           <h3 className="text-2xl font-bold mb-6">Found this helpful?</h3>
           <button
             onClick={handleShare}
-            className="bg-white text-blue-600 px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform flex items-center gap-2 mx-auto"
+            className="bg-card text-zan-cyan px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform flex items-center gap-2 mx-auto"
           >
             <Share2 size={20} /> Share with Friends
           </button>

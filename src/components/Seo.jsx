@@ -11,10 +11,10 @@ const Seo = ({
   keywords,
 }) => {
   const baseURL = "https://store.zantechbd.com";
-  const siteName = "Zantech Store";
+  const siteName = "ZAN Tech Store";
 
   const defaultTitle =
-    "Zantech Store - Robotics and IoT Solutions in Bangladesh";
+    "ZAN Tech Store - Robotics and IoT Solutions in Bangladesh";
   const defaultDescription =
     "Buy Arduino Uno, ESP32, Raspberry Pi, robotics kits, sensors, and electronics components in Bangladesh. Innovation starter kits, competition robot kits, IoT modules, and DIY electronics for students, hobbyists, and engineers. Fast delivery across Dhaka, Chittagong, Sylhet.";
   const defaultImage = `${baseURL}/zantech-logo.webp`;
@@ -43,7 +43,7 @@ const Seo = ({
       description: seoDescription,
       brand: {
         "@type": "Brand",
-        name: product.brand || "Zantech Store",
+        name: product.brand || "ZAN Tech Store",
       },
       offers: {
         "@type": "Offer",
@@ -55,7 +55,7 @@ const Seo = ({
         }`,
         seller: {
           "@type": "Organization",
-          name: "Zantech Store",
+          name: "ZAN Tech Store",
         },
       },
     });
@@ -67,7 +67,7 @@ const Seo = ({
       <meta name="title" content={seoTitle} />
       <meta name="description" content={seoDescription} />
       <meta name="keywords" content={seoKeywords} />
-      <meta name="author" content="Zantech BD" />
+      <meta name="author" content="ZAN Tech" />
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />

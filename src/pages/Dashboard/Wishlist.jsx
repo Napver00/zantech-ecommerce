@@ -90,7 +90,7 @@ const Wishlist = () => {
   if (isLoading && wishlistItems.length === 0) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-zan-cyan" />
       </div>
     );
   }
@@ -98,12 +98,12 @@ const Wishlist = () => {
   return (
     <div>
       {/* Header */}
-      <div className="mb-6 pb-4 border-b border-gray-200">
-        <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-          <Heart className="h-6 w-6 text-red-600" />
+      <div className="mb-6 pb-4 border-b border-white/10">
+        <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+          <Heart className="h-6 w-6 text-red-400" />
           My Wishlist
         </h2>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="text-sm text-gray-300 mt-1">
           {pagination.total_rows} {pagination.total_rows === 1 ? 'item' : 'items'} in your wishlist
         </p>
       </div>
@@ -117,12 +117,12 @@ const Wishlist = () => {
 
       {/* Wishlist Items */}
       {wishlistItems.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="text-center py-12 bg-background rounded-lg border border-white/10">
           <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Your wishlist is empty</h3>
-          <p className="text-gray-600 mb-6">Save your favorite items for later</p>
+          <h3 className="text-lg font-medium text-white mb-2">Your wishlist is empty</h3>
+          <p className="text-gray-300 mb-6">Save your favorite items for later</p>
           <Link to="/shop">
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-zan-cyan hover:bg-cyan-300">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Browse Products
             </Button>
@@ -134,10 +134,10 @@ const Wishlist = () => {
             {wishlistItems.map((item) => (
               <div 
                 key={item.id} 
-                className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-blue-300 transition-colors group"
+                className="bg-card border border-white/10 rounded-lg overflow-hidden hover:border-zan-cyan/40 transition-colors group"
               >
                 <Link to={`/product/${item.product_slug}`} className="block">
-                  <div className="aspect-square relative overflow-hidden bg-gray-100">
+                  <div className="aspect-square relative overflow-hidden bg-white/5">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -155,17 +155,17 @@ const Wishlist = () => {
 
                 <div className="p-4">
                   <Link to={`/product/${item.product_slug}`}>
-                    <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
+                    <h3 className="font-medium text-white mb-2 line-clamp-2 hover:text-zan-cyan transition-colors">
                       {item.name}
                     </h3>
                   </Link>
                   
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-lg font-bold text-blue-600">
+                    <span className="text-lg font-bold text-zan-cyan">
                       ৳{(item.price - item.discount).toLocaleString()}
                     </span>
                     {item.discount > 0 && (
-                      <span className="text-sm text-gray-500 line-through">
+                      <span className="text-sm text-gray-400 line-through">
                         ৳{item.price.toLocaleString()}
                       </span>
                     )}
@@ -173,7 +173,7 @@ const Wishlist = () => {
 
                   <div className="flex gap-2">
                     <Link to={`/product/${item.product_slug}`} className="flex-1">
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700" size="sm">
+                      <Button className="w-full bg-zan-cyan hover:bg-cyan-300" size="sm">
                         View Product
                       </Button>
                     </Link>
@@ -182,7 +182,7 @@ const Wishlist = () => {
                       size="sm"
                       onClick={() => handleRemove(item.wishlistId)}
                       disabled={isRemoving === item.wishlistId}
-                      className="hover:bg-red-50 hover:text-red-600"
+                      className="hover:bg-red-500/10 hover:text-red-400"
                     >
                       {isRemoving === item.wishlistId? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -204,7 +204,7 @@ const Wishlist = () => {
                 size="sm"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="hover:bg-gray-100"
+                className="hover:bg-white/5"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -223,13 +223,13 @@ const Wishlist = () => {
                         variant={page === currentPage ? "default" : "outline"}
                         size="sm"
                         onClick={() => handlePageChange(page)}
-                        className={page === currentPage ? "bg-blue-600 hover:bg-blue-700" : "hover:bg-gray-100"}
+                        className={page === currentPage ? "bg-zan-cyan hover:bg-cyan-300" : "hover:bg-white/5"}
                       >
                         {page}
                       </Button>
                     );
                   } else if (page === currentPage - 2 || page === currentPage + 2) {
-                    return <span key={page} className="px-2 text-gray-500">...</span>;
+                    return <span key={page} className="px-2 text-gray-400">...</span>;
                   }
                   return null;
                 })}
@@ -240,7 +240,7 @@ const Wishlist = () => {
                 size="sm"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={!pagination.has_more_pages}
-                className="hover:bg-gray-100"
+                className="hover:bg-white/5"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -248,7 +248,7 @@ const Wishlist = () => {
           )}
 
           {/* Page Info */}
-          <div className="mt-4 text-center text-sm text-gray-600">
+          <div className="mt-4 text-center text-sm text-gray-300">
             Showing {wishlistItems.length} of {pagination.total_rows} items
           </div>
         </>

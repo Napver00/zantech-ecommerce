@@ -49,23 +49,23 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
   const renderSkeletons = () => (
     <div className="space-y-6">
       <div className="space-y-3">
-        <Skeleton className="h-7 w-3/4 bg-gray-100" />
-        <Skeleton className="h-4 w-full bg-gray-100" />
-        <Skeleton className="h-4 w-5/6 bg-gray-100" />
+        <Skeleton className="h-7 w-3/4 bg-white/5" />
+        <Skeleton className="h-4 w-full bg-white/5" />
+        <Skeleton className="h-4 w-5/6 bg-white/5" />
       </div>
       {[1, 2, 3].map((i) => (
         <div key={i} className="space-y-3 pt-2">
-          <Skeleton className="h-5 w-1/3 bg-gray-100" />
-          <Skeleton className="h-4 w-full bg-gray-100" />
-          <Skeleton className="h-4 w-full bg-gray-100" />
-          <Skeleton className="h-4 w-4/5 bg-gray-100" />
+          <Skeleton className="h-5 w-1/3 bg-white/5" />
+          <Skeleton className="h-4 w-full bg-white/5" />
+          <Skeleton className="h-4 w-full bg-white/5" />
+          <Skeleton className="h-4 w-4/5 bg-white/5" />
         </div>
       ))}
     </div>
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Seo {...seo} type="article" />
       <Header />
 
@@ -73,22 +73,22 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
         <div className="container mx-auto px-4 py-8 md:py-10">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1 text-xs text-gray-400 mb-6 max-w-4xl mx-auto">
-            <Link to="/" className="hover:text-gray-700 transition-colors flex items-center gap-1">
+            <Link to="/" className="hover:text-gray-200 transition-colors flex items-center gap-1">
               <Home className="w-3.5 h-3.5" /> Home
             </Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-gray-600 font-medium">{title}</span>
+            <span className="text-gray-300 font-medium">{title}</span>
           </nav>
 
           {/* Title */}
           <div className="max-w-4xl mx-auto mb-8">
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-5 h-5 text-gray-600" />
+              <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0">
+                <Icon className="w-5 h-5 text-gray-300" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">{title}</h1>
-                <p className="text-gray-500 text-sm mt-0.5">{subtitle}</p>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">{title}</h1>
+                <p className="text-gray-400 text-sm mt-0.5">{subtitle}</p>
               </div>
             </div>
           </div>
@@ -97,13 +97,13 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
           {highlights && highlights.length > 0 && (
             <div className="grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-8">
               {highlights.map((item) => (
-                <div key={item.title} className="bg-white p-4 rounded-xl border border-gray-100 flex items-start gap-3">
-                  <div className="p-2 bg-gray-50 rounded-lg text-gray-500 flex-shrink-0">
+                <div key={item.title} className="bg-card p-4 rounded-xl border border-white/10 flex items-start gap-3">
+                  <div className="p-2 bg-background rounded-lg text-gray-400 flex-shrink-0">
                     <item.icon size={18} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
+                    <h3 className="font-semibold text-white text-sm">{item.title}</h3>
+                    <p className="text-xs text-gray-400 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -111,35 +111,35 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
           )}
 
           {/* Content */}
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-gray-100 p-6 sm:p-10">
+          <div className="max-w-4xl mx-auto bg-card rounded-2xl border border-white/10 p-6 sm:p-10">
             {loading ? (
               renderSkeletons()
             ) : error ? (
               <div className="text-center py-12">
-                <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <AlertCircle className="w-7 h-7 text-red-500" />
                 </div>
-                <p className="text-gray-600 mb-4">{error}</p>
+                <p className="text-gray-300 mb-4">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+                  className="px-5 py-2.5 bg-surface-2 text-white rounded-xl text-sm font-semibold hover:bg-surface-3 transition-colors"
                 >
                   Retry
                 </button>
               </div>
             ) : content ? (
               <div
-                className="prose prose-sm md:prose-base max-w-none
-                  prose-headings:font-bold prose-headings:text-gray-900
-                  prose-p:text-gray-600 prose-p:leading-relaxed
-                  prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-gray-900
-                  prose-li:text-gray-600
+                className="rich-html prose prose-invert prose-sm md:prose-base max-w-none
+                  prose-headings:font-bold prose-headings:text-white
+                  prose-p:text-gray-300 prose-p:leading-relaxed
+                  prose-a:text-zan-cyan prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-white
+                  prose-li:text-gray-300
                   prose-ul:list-disc prose-ul:pl-4"
                 dangerouslySetInnerHTML={{ __html: content }}
               />
             ) : (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-gray-400">
                 <p>No content available at the moment.</p>
               </div>
             )}
@@ -159,7 +159,7 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
               )}
               <span>
                 Questions?{" "}
-                <Link to="/contact" className="text-blue-600 hover:underline font-medium">
+                <Link to="/contact" className="text-zan-cyan hover:underline font-medium">
                   Contact our support team
                 </Link>
               </span>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Mail,
   MapPin,
@@ -8,12 +9,16 @@ import {
   Instagram,
   Linkedin,
   ArrowUp,
+  ArrowUpRight,
   Twitter,
   Youtube,
   Send,
+  Banknote,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useCompany } from "@/context/CompanyContext";
+import { useCategories } from "@/context/CategoriesContext";
+import BrandLogo from "@/components/BrandLogo";
 
 const iconForPlatform = (platform) => {
   const p = platform?.toLowerCase?.();
@@ -26,13 +31,25 @@ const iconForPlatform = (platform) => {
   return LinkIcon;
 };
 
+const FooterHeading = ({ children }) => (
+  <h3 className="mb-5 font-mono text-[11px] uppercase tracking-[0.2em] text-zan-cyan">{children}</h3>
+);
+
+const FooterLink = ({ to, href, children }) => {
+  const cls = "text-sm text-gray-400 transition-colors hover:text-white";
+  return href ? (
+    <a href={href} target="_blank" rel="noreferrer" className={`${cls} inline-flex items-center gap-1`}>
+      {children} <ArrowUpRight className="h-3 w-3" />
+    </a>
+  ) : (
+    <Link to={to} className={cls}>{children}</Link>
+  );
+};
+
 const Footer = () => {
   const company = useCompany();
+  const { categories } = useCategories();
   const [newsletterEmail, setNewsletterEmail] = useState("");
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -43,173 +60,137 @@ const Footer = () => {
     setNewsletterEmail("");
   };
 
-  const socialLinks = company?.social_links || [];
+  const socialLinks = (company?.social_links || []).filter((l) => !l.platform?.toLowerCase?.().includes("tiktok"));
   const location = company?.location || "Barishal, Barisal Division Bangladesh";
   const email = company?.email || "zantechbd@gmail.com";
-  const phone = company?.phone || "+880 1712-345678"; // Fallback phone
+  const phone = company?.phone;
 
   return (
-    <footer className="bg-slate-900 text-slate-200 border-t border-slate-800">
-      <div className="container mx-auto px-6 pt-14 pb-10">
+    <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-[#080b13] text-gray-300">
+      <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-40" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[700px] -translate-x-1/2 rounded-full bg-zan-cyan/5 blur-[120px]" />
+
+      <div className="container relative mx-auto px-4">
         {/* Newsletter */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-14 mb-14 border-b border-slate-800">
+        <div className="flex flex-col gap-6 border-b border-white/10 py-10 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h3 className="text-xl md:text-2xl font-extrabold text-white leading-tight">
-              Stay in the loop
-            </h3>
-            <p className="text-slate-400 text-sm mt-1.5 max-w-md">
-              New kits, restocks, and free STEM workshops — straight to your inbox.
-            </p>
+            <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.2em] text-zan-cyan">&lt;Stay updated /&gt;</p>
+            <h3 className="text-xl font-bold text-white md:text-2xl">New kits, restocks &amp; free workshops</h3>
+            <p className="mt-1 text-sm text-gray-400">Be the first to know — straight to your inbox.</p>
           </div>
-          <form onSubmit={handleSubscribe} className="flex w-full lg:w-auto gap-2.5 flex-shrink-0">
+          <form onSubmit={handleSubscribe} className="flex w-full flex-shrink-0 gap-2 lg:w-auto">
             <input
               type="email"
               required
               value={newsletterEmail}
               onChange={(e) => setNewsletterEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-1 lg:w-72 bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm rounded-xl px-4 py-3 focus:outline-none focus:bg-white/10 focus:border-blue-500/50 transition-all"
+              className="h-12 flex-1 rounded-lg border border-white/10 bg-white/5 px-4 text-sm text-white placeholder-gray-500 outline-none transition-all focus:border-zan-cyan/60 lg:w-80"
             />
-            <button
-              type="submit"
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl transition-colors flex-shrink-0 text-sm"
-            >
-              <Send className="w-4 h-4" />
+            <button type="submit"
+              className="flex h-12 flex-shrink-0 items-center gap-2 rounded-lg bg-zan-cyan px-6 text-sm font-bold text-zan-dark transition-colors hover:bg-white">
+              <Send className="h-4 w-4" />
               <span className="hidden sm:inline">Subscribe</span>
             </button>
           </form>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand & Social */}
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-               <img
-                  src="/zantech-logo.webp"
-                  alt="ZAN Tech"
-                  className="h-12 brightness-0 invert"
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                    e.target.nextSibling.style.display = "block";
-                  }}
-                />
-              <span className="text-2xl font-bold text-white tracking-tight hidden">ZAN Tech</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed max-w-xs">
-              Engineering makers and engineers with technology solutions and education kits.
+        {/* Columns */}
+        <div className="grid grid-cols-2 gap-10 py-14 md:grid-cols-4 lg:grid-cols-12">
+          <div className="col-span-2 space-y-5 md:col-span-4 lg:col-span-4">
+            <BrandLogo />
+            <p className="max-w-sm text-sm leading-relaxed text-gray-400">
+              Robotics parts, IoT modules and DIY kits for students, makers and engineers across Bangladesh — from the team behind ZAN Tech's courses and bootcamps.
             </p>
-            <div className="flex gap-3">
-              {socialLinks.length > 0 ? (
-                socialLinks.map((link) => {
-                   const p = link.platform?.toLowerCase?.() || "";
-                   if (p.includes("tiktok")) return null;
-                   const Icon = iconForPlatform(link.platform);
-                   return (
-                    <a
-                      key={link.id}
-                      href={link.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white transition-all duration-300 transform hover:-translate-y-1"
-                      aria-label={link.platform}
-                    >
+            {socialLinks.length > 0 && (
+              <div className="flex gap-2.5">
+                {socialLinks.map((link) => {
+                  const Icon = iconForPlatform(link.platform);
+                  return (
+                    <a key={link.id} href={link.url} target="_blank" rel="noreferrer" aria-label={link.platform}
+                      className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition-all hover:-translate-y-0.5 hover:border-zan-cyan/50 hover:text-zan-cyan">
                       <Icon size={18} />
                     </a>
-                   );
-                })
-              ) : (
-                <>
-                  <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white transition-all duration-300 transform hover:-translate-y-1">
-                    <Facebook size={18} />
-                  </a>
-                  <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white transition-all duration-300 transform hover:-translate-y-1">
-                    <Instagram size={18} />
-                  </a>
-                  <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white transition-all duration-300 transform hover:-translate-y-1">
-                    <Linkedin size={18} />
-                  </a>
-                </>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="lg:col-span-2">
+            <FooterHeading>Shop</FooterHeading>
+            <ul className="space-y-3">
+              <li><FooterLink to="/shop">All products</FooterLink></li>
+              <li><FooterLink to="/zantech-kits">ZAN Tech Kits</FooterLink></li>
+              {categories.slice(0, 4).map((c) => (
+                <li key={c.id}><FooterLink to={`/shop?category_slug=${c.slug}`}>{c.name}</FooterLink></li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:col-span-2">
+            <FooterHeading>Help</FooterHeading>
+            <ul className="space-y-3">
+              <li><FooterLink to="/faq">FAQ</FooterLink></li>
+              <li><FooterLink to="/return-policy">Return Policy</FooterLink></li>
+              <li><FooterLink to="/terms">Terms &amp; Conditions</FooterLink></li>
+              <li><FooterLink to="/privacy-policy">Privacy Policy</FooterLink></li>
+              <li><FooterLink to="/dashboard/orders">Track your order</FooterLink></li>
+            </ul>
+          </div>
+
+          <div className="lg:col-span-2">
+            <FooterHeading>Company</FooterHeading>
+            <ul className="space-y-3">
+              <li><FooterLink to="/about">About us</FooterLink></li>
+              <li><FooterLink to="/contact">Contact</FooterLink></li>
+              <li><FooterLink to="/blog">Blog</FooterLink></li>
+              <li><FooterLink to="/tutorials">Tutorials</FooterLink></li>
+              <li><FooterLink href="https://zantechbd.com">Courses &amp; Bootcamps</FooterLink></li>
+            </ul>
+          </div>
+
+          <div className="col-span-2 md:col-span-4 lg:col-span-2">
+            <FooterHeading>Get in touch</FooterHeading>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-zan-cyan" />
+                <span className="text-gray-400">{location}</span>
+              </li>
+              {phone && (
+                <li className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 flex-shrink-0 text-zan-cyan" />
+                  <a href={`tel:${phone}`} className="text-gray-400 transition-colors hover:text-white">{phone}</a>
+                </li>
               )}
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-6">Company</h3>
-            <ul className="space-y-3">
-              {['About', 'Project', 'Shop', 'Contact'].map((item) => (
-                <li key={item}>
-                  <a 
-                    href={`/${item.toLowerCase()}`} 
-                    className="text-slate-400 hover:text-blue-400 transition-colors duration-200 flex items-center group"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-6">Legal</h3>
-            <ul className="space-y-3">
-              {[
-                { name: 'Terms & Conditions', href: '/terms' },
-                { name: 'Privacy Policy', href: '/privacy-policy' },
-                { name: 'Return Policy', href: '/return-policy' },
-                { name: 'FAQ', href: '/faq' },
-              ].map((item) => (
-                <li key={item.name}>
-                  <a 
-                    href={item.href} 
-                    className="text-slate-400 hover:text-blue-400 transition-colors duration-200 flex items-center group"
-                  >
-                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-6">Get in Touch</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <MapPin className="w-5 h-5 text-blue-500 mt-1 mr-3 shrink-0" />
-                <span className="text-slate-400">{location}</span>
-              </li>
-              <li className="flex items-center">
-                <Phone className="w-5 h-5 text-blue-500 mr-3 shrink-0" />
-                <a href={`tel:${phone}`} className="text-slate-400 hover:text-white transition-colors">
-                  {phone}
-                </a>
-              </li>
-              <li className="flex items-center">
-                <Mail className="w-5 h-5 text-blue-500 mr-3 shrink-0" />
-                <a href={`mailto:${email}`} className="text-slate-400 hover:text-white transition-colors">
-                  {email}
-                </a>
+              <li className="flex items-center gap-3">
+                <Mail className="h-4 w-4 flex-shrink-0 text-zan-cyan" />
+                <a href={`mailto:${email}`} className="break-all text-gray-400 transition-colors hover:text-white">{email}</a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">
-            &copy; {new Date().getFullYear()} ZAN Tech. All rights reserved.
-          </p>
-          
+        {/* Bottom bar */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 py-6 md:flex-row">
+          <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} ZAN Tech. All rights reserved.</p>
+
+          <div className="flex items-center gap-3 text-xs text-gray-500">
+            <span className="font-mono uppercase tracking-widest">We accept</span>
+            <span className="flex h-8 items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 text-gray-300">
+              <Banknote className="h-4 w-4 text-zan-neon" /> Cash on Delivery
+            </span>
+            <span className="flex h-8 items-center rounded-md bg-white px-2.5">
+              <img src="/bkashLogo.png" alt="bKash" className="h-5 w-auto" />
+            </span>
+          </div>
+
           <button
-            onClick={scrollToTop}
-            className="group flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="group flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-white"
           >
-            Back to Top
-            <span className="p-2 rounded-full bg-slate-800 group-hover:bg-blue-600 transition-colors">
+            Back to top
+            <span className="rounded-lg border border-white/10 p-2 transition-colors group-hover:border-zan-cyan/50 group-hover:text-zan-cyan">
               <ArrowUp size={16} />
             </span>
           </button>

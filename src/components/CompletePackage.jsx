@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Wrench, ShieldCheck, BookOpen } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import ProductCard from "./ProductCard";
-import { config } from '@/config';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Sparkles, PackageSearch, AlertTriangle, ArrowRight, Wrench, ShieldCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { fetchProducts } from "@/lib/products";
 
+const POINTS = [
+  { icon: Wrench, text: "Engineered in-house" },
+  { icon: ShieldCheck, text: "Every kit quality checked" },
+  { icon: BookOpen, text: "Guides & tutorials included" },
+];
+
+// ZAN Tech Kits showcase: brand panel on the left, kits on the right.
 const CompletePackage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,111 +19,59 @@ const CompletePackage = () => {
 
   useEffect(() => {
     let mounted = true;
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${config.baseURL}/products/category/starter-kit`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data)) {
-          if (mounted) setProducts(json.data);
-        } else {
-          throw new Error('Unexpected API response');
-        }
-      } catch (err) {
-        if (mounted) setError(err.message || 'Failed to load products');
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-    fetchProducts();
+    fetchProducts("/products/category/starter-kit")
+      .then((data) => mounted && setProducts(data))
+      .catch((e) => mounted && setError(e.message || "Failed to load products"))
+      .finally(() => mounted && setLoading(false));
     return () => { mounted = false; };
   }, []);
 
+  // Nothing to showcase — keep the home page clean instead of showing an empty box.
+  if (!loading && (error || products.length === 0)) return null;
+
   return (
-    <section className="mt-14">
-      <div className="relative overflow-hidden rounded-3xl bg-gray-900 shadow-sm">
-        {/* Ambient brand glow, matching the dedicated ZAN Tech Kits page */}
-        <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_15%_20%,#3b82f6,transparent_45%),radial-gradient(circle_at_85%_75%,#8b5cf6,transparent_45%)]" />
-
-        {/* Header */}
-        <div className="relative z-10 px-5 md:px-10 pt-8 md:pt-10 pb-7">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-            <div className="min-w-0">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-blue-300 bg-white/10 border border-white/15 px-3 py-1.5 rounded-full mb-3.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                Designed by ZAN Tech
-              </span>
-              <h2 className="text-2xl md:text-[32px] font-black text-white tracking-tight leading-tight">
-                ZAN Tech Kits
-              </h2>
-              <p className="text-sm md:text-[15px] text-gray-400 mt-2 max-w-md leading-relaxed">
-                Engineered and packaged in-house by our own team — complete kits to kickstart your next build.
-              </p>
-              <div className="flex items-center gap-4 mt-4">
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-300">
-                  <Wrench className="w-3.5 h-3.5 text-blue-400" />
-                  In-house engineered
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-300">
-                  <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-                  Quality checked
-                </span>
-              </div>
-            </div>
-            <Link
-              to="/zantech-kits"
-              className="hidden sm:inline-flex items-center gap-1.5 bg-white text-gray-900 hover:bg-gray-100 px-5 py-2.5 rounded-xl font-bold text-sm transition-colors flex-shrink-0 group"
-            >
-              View all kits
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
+    <section className="mt-16 grid gap-4 lg:grid-cols-4">
+      <div className="relative flex flex-col justify-between overflow-hidden rounded-xl border border-zan-cyan/20 bg-surface-dark p-6 md:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-60" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-zan-cyan/15 blur-[80px]" />
+        <div className="relative">
+          <span className="mb-4 inline-block rounded bg-zan-red px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-white">
+            Made by ZAN Tech
+          </span>
+          <h2 className="text-2xl font-bold leading-tight text-white md:text-3xl">
+            ZAN<span className="text-zan-red">TECH</span> Kits
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-gray-400">
+            Complete robotics kits designed and packaged by our own engineers — everything you need to build, in one box.
+          </p>
+          <ul className="mt-6 space-y-3">
+            {POINTS.map(({ icon: Icon, text }) => (
+              <li key={text} className="flex items-center gap-2.5 text-sm text-gray-200">
+                <Icon className="h-4 w-4 flex-shrink-0 text-zan-cyan" /> {text}
+              </li>
+            ))}
+          </ul>
         </div>
+        <Link
+          to="/zantech-kits"
+          className="group relative mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-zan-cyan px-5 py-3 text-sm font-bold text-zan-dark transition-colors hover:bg-white"
+        >
+          View all kits <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </Link>
+      </div>
 
-        {/* Product showcase panel */}
-        <div className="relative z-10 bg-gray-50 rounded-t-[28px] px-4 md:px-8 py-7 md:py-8">
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                  <Skeleton className="aspect-[5/4] bg-gray-100" />
-                  <div className="p-4 space-y-2.5">
-                    <Skeleton className="h-4 w-4/5 bg-gray-100" />
-                    <Skeleton className="h-4 w-3/5 bg-gray-100" />
-                    <Skeleton className="h-10 w-full rounded-xl bg-gray-100" />
-                  </div>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:col-span-3">
+        {loading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-xl border border-white/10 bg-surface-dark">
+                <Skeleton className="aspect-square w-full rounded-none bg-white/5" />
+                <div className="space-y-2 p-4">
+                  <Skeleton className="h-4 w-full bg-white/5" />
+                  <Skeleton className="h-9 w-full bg-white/5" />
                 </div>
-              ))}
-            </div>
-          ) : error ? (
-            <div className="bg-red-50 border border-red-100 rounded-2xl p-10 text-center">
-              <AlertTriangle className="h-10 w-10 text-red-400 mx-auto mb-3" />
-              <p className="text-red-800 font-semibold">Unable to load ZAN Tech kits</p>
-              <p className="text-red-500 text-sm mt-1">{error}</p>
-            </div>
-          ) : products.length === 0 ? (
-            <div className="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-12 text-center">
-              <PackageSearch className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-700 font-semibold">Our next kit is in the workshop</p>
-              <p className="text-gray-400 text-sm mt-1">We're designing new kits — check back soon!</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-
-          {!loading && !error && products.length > 0 && (
-            <div className="mt-6 text-center sm:hidden">
-              <Link to="/zantech-kits" className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold text-sm">
-                View All ZAN Tech Kits <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          )}
-        </div>
+              </div>
+            ))
+          : products.slice(0, 3).map((product) => <ProductCard key={product.id} product={product} />)}
       </div>
     </section>
   );

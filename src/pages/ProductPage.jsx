@@ -35,12 +35,12 @@ const Gallery = ({ images = [], alt = "" }) => {
 
   if (!imgs.length)
     return (
-      <div className="w-full aspect-square flex items-center justify-center bg-gray-50 rounded-2xl border border-gray-100">
+      <div className="w-full aspect-square flex items-center justify-center bg-background rounded-2xl border border-white/10">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-3 bg-gray-200 rounded-full flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-3 bg-white/10 rounded-full flex items-center justify-center">
             <ShoppingCart className="w-8 h-8 text-gray-400" />
           </div>
-          <p className="text-gray-500 font-medium text-sm">No Image Available</p>
+          <p className="text-gray-400 font-medium text-sm">No Image Available</p>
         </div>
       </div>
     );
@@ -53,8 +53,8 @@ const Gallery = ({ images = [], alt = "" }) => {
           onClick={() => setIndex(idx)}
           className={`flex-shrink-0 w-14 h-14 p-1.5 rounded-xl overflow-hidden border transition-all ${
             idx === index
-              ? "border-gray-900 bg-white"
-              : "border-gray-100 bg-white hover:border-gray-300"
+              ? "border-zan-cyan bg-white ring-2 ring-zan-cyan/30"
+              : "border-white/10 bg-white/90 opacity-70 hover:opacity-100"
           }`}
         >
           <img src={src} alt={`${alt}-${idx}`} loading="lazy" decoding="async" className="w-full h-full object-contain" />
@@ -73,7 +73,7 @@ const Gallery = ({ images = [], alt = "" }) => {
 
       <div className="flex-1 min-w-0 space-y-3">
         {/* Main image */}
-        <div className="relative bg-gray-50 rounded-2xl overflow-hidden group aspect-square flex items-center justify-center p-8">
+        <div className="product-tile relative rounded-2xl border border-white/10 overflow-hidden group aspect-square flex items-center justify-center p-8">
           <img
             src={imgs[index]}
             alt={alt}
@@ -84,7 +84,7 @@ const Gallery = ({ images = [], alt = "" }) => {
 
           <button
             onClick={() => setLightboxOpen(true)}
-            className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:scale-110 transition-all text-gray-600"
+            className="absolute top-3 right-3 bg-card p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:scale-110 transition-all text-gray-300"
             aria-label="Zoom image"
           >
             <Maximize2 className="h-4 w-4" />
@@ -95,14 +95,14 @@ const Gallery = ({ images = [], alt = "" }) => {
               <button
                 onClick={() => setIndex(i => (i > 0 ? i - 1 : i))}
                 disabled={index === 0}
-                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:scale-110 transition-all disabled:hidden text-gray-600"
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-card p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:scale-110 transition-all disabled:hidden text-gray-300"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setIndex(i => (i < imgs.length - 1 ? i + 1 : i))}
                 disabled={index === imgs.length - 1}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:scale-110 transition-all disabled:hidden text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-card p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:scale-110 transition-all disabled:hidden text-gray-300"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -153,26 +153,26 @@ const StarRating = ({ rating, totalReviews = 0 }) => (
         <Star key={i} className={`w-4 h-4 ${i < Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
       ))}
     </div>
-    <span className="text-sm font-bold text-gray-900">{rating.toFixed(1)}</span>
+    <span className="text-sm font-bold text-white">{rating.toFixed(1)}</span>
     <span className="text-sm text-gray-400">({totalReviews})</span>
   </div>
 );
 
 // ─── Quantity Selector ───────────────────────────────────────
 const QuantitySelector = ({ max = 1, value = 1, onChange }) => (
-  <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white">
+  <div className="flex items-center border border-white/10 rounded-xl overflow-hidden bg-card">
     <button
       onClick={() => onChange?.(Math.max(1, value - 1))}
       disabled={value <= 1}
-      className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-600"
+      className="w-10 h-10 flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-300"
     >
       <Minus className="w-3.5 h-3.5" />
     </button>
-    <span className="w-10 text-center font-bold text-gray-900 text-sm">{value}</span>
+    <span className="w-10 text-center font-bold text-white text-sm">{value}</span>
     <button
       onClick={() => onChange?.(Math.min(value + 1, max))}
       disabled={value >= max}
-      className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-600"
+      className="w-10 h-10 flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-300"
     >
       <Plus className="w-3.5 h-3.5" />
     </button>
@@ -278,15 +278,15 @@ const ProductPage = () => {
   // ── Loading skeleton ──
   if (loading)
     return (
-      <div className="flex flex-col min-h-screen bg-white">
+      <div className="flex flex-col min-h-screen bg-card">
         {SeoComponent}
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Skeleton className="aspect-square rounded-2xl bg-gray-100" />
+            <Skeleton className="aspect-square rounded-2xl bg-white/5" />
             <div className="space-y-4">
               {[3, 2, 4, 2, 12].map((w, i) => (
-                <Skeleton key={i} className={`h-${w === 12 ? 32 : w === 4 ? 10 : w === 3 ? 6 : 5} w-${w === 12 ? 'full' : w === 4 ? 'full' : w === 3 ? '3/4' : '1/2'} bg-gray-100 rounded-xl`} />
+                <Skeleton key={i} className={`h-${w === 12 ? 32 : w === 4 ? 10 : w === 3 ? 6 : 5} w-${w === 12 ? 'full' : w === 4 ? 'full' : w === 3 ? '3/4' : '1/2'} bg-white/5 rounded-xl`} />
               ))}
             </div>
           </div>
@@ -298,17 +298,17 @@ const ProductPage = () => {
   // ── Error state ──
   if (error || !product)
     return (
-      <div className="flex flex-col min-h-screen bg-white">
+      <div className="flex flex-col min-h-screen bg-card">
         {SeoComponent}
         <Header />
         <main className="flex-grow flex items-center justify-center p-4">
           <div className="text-center max-w-sm">
-            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
+            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-5">
               <AlertCircle className="w-10 h-10 text-red-500" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-            <p className="text-gray-500 mb-7 text-sm">{error || "The product you're looking for doesn't exist."}</p>
-            <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 transition-colors">
+            <h2 className="text-2xl font-bold text-white mb-2">Product Not Found</h2>
+            <p className="text-gray-400 mb-7 text-sm">{error || "The product you're looking for doesn't exist."}</p>
+            <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-surface-2 text-white font-semibold rounded-xl hover:bg-surface-3 transition-colors">
               <ShoppingCart className="w-4 h-4" /> Back to Shop
             </Link>
           </div>
@@ -338,7 +338,7 @@ const ProductPage = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-white font-sans">
+    <div className="flex flex-col min-h-screen bg-card font-sans">
       {SeoComponent}
       <Header />
 
@@ -347,21 +347,21 @@ const ProductPage = () => {
 
           {/* ── Breadcrumb ── */}
           <nav className="flex items-center gap-1 text-xs text-gray-400 mb-6 overflow-x-auto whitespace-nowrap">
-            <Link to="/" className="hover:text-gray-700 transition-colors flex items-center gap-1">
+            <Link to="/" className="hover:text-gray-200 transition-colors flex items-center gap-1">
               <Home className="w-3.5 h-3.5" /> Home
             </Link>
             <Breadcrumb className="w-3 h-3 flex-shrink-0" />
-            <Link to="/shop" className="hover:text-gray-700 transition-colors">Shop</Link>
+            <Link to="/shop" className="hover:text-gray-200 transition-colors">Shop</Link>
             {product.categories?.[0] && (
               <>
                 <Breadcrumb className="w-3 h-3 flex-shrink-0" />
-                <Link to={`/shop?category_slug=${product.categories[0].slug}`} className="hover:text-gray-700 transition-colors">
+                <Link to={`/shop?category_slug=${product.categories[0].slug}`} className="hover:text-gray-200 transition-colors">
                   {product.categories[0].name}
                 </Link>
               </>
             )}
             <Breadcrumb className="w-3 h-3 flex-shrink-0" />
-            <span className="text-gray-600 font-medium truncate max-w-[160px] md:max-w-xs">{product.name}</span>
+            <span className="text-gray-300 font-medium truncate max-w-[160px] md:max-w-xs">{product.name}</span>
           </nav>
 
           {/* ── Top Section: Gallery + Info ── */}
@@ -376,7 +376,7 @@ const ProductPage = () => {
               {product.brand && (
                 <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-400">
                   <Cpu className="w-3.5 h-3.5" />
-                  Brand <span className="font-semibold text-gray-600">{product.brand}</span>
+                  Brand <span className="font-semibold text-gray-300">{product.brand}</span>
                 </div>
               )}
             </div>
@@ -387,13 +387,13 @@ const ProductPage = () => {
               {product.categories?.[0] && (
                 <Link
                   to={`/shop?category_slug=${product.categories[0].slug}`}
-                  className="text-[11px] font-bold uppercase tracking-[0.15em] text-blue-600 hover:text-blue-700"
+                  className="text-[11px] font-bold uppercase tracking-[0.15em] text-zan-cyan hover:text-zan-cyan"
                 >
                   {product.categories[0].name}
                 </Link>
               )}
 
-              <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-snug mt-2">
+              <h1 className="text-2xl md:text-3xl font-black text-white leading-snug mt-2">
                 {product.name}
               </h1>
 
@@ -402,7 +402,7 @@ const ProductPage = () => {
                   <StarRating rating={product.average_rating} totalReviews={product.ratings?.length} />
                 )}
                 {product.quantity > 0 ? (
-                  <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                  <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     In stock — {product.quantity} available
                   </span>
@@ -417,7 +417,7 @@ const ProductPage = () => {
               {/* Price — plain, no card */}
               <div className="mt-5">
                 <div className="flex items-end gap-3 flex-wrap">
-                  <span className="text-4xl font-black text-gray-900">
+                  <span className="text-4xl font-black text-white">
                     ৳{product.discountedPrice?.toLocaleString()}
                   </span>
                   {hasDiscount && (
@@ -432,7 +432,7 @@ const ProductPage = () => {
                   )}
                 </div>
                 {hasDiscount && savings > 0 && (
-                  <p className="text-sm text-emerald-600 font-semibold flex items-center gap-1.5 mt-1.5">
+                  <p className="text-sm text-emerald-400 font-semibold flex items-center gap-1.5 mt-1.5">
                     <Tag className="w-3.5 h-3.5" />
                     You save ৳{savings.toLocaleString()}
                   </p>
@@ -440,16 +440,16 @@ const ProductPage = () => {
               </div>
 
               {product.short_description && (
-                <p className="text-gray-500 text-sm leading-relaxed mt-4">
+                <p className="text-gray-400 text-sm leading-relaxed mt-4">
                   {product.short_description}
                 </p>
               )}
 
               {/* Bundle value callout — driven by real bundle_items pricing */}
               {isBundleProduct && bundleSavings > 0 && (
-                <div className="mt-4 flex items-start gap-2.5 bg-emerald-50 rounded-xl px-3.5 py-3">
-                  <Sparkles className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-emerald-800 leading-snug">
+                <div className="mt-4 flex items-start gap-2.5 bg-emerald-500/10 rounded-xl px-3.5 py-3">
+                  <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-emerald-400 leading-snug">
                     <span className="font-bold">Save ৳{bundleSavings.toLocaleString()} ({bundleSavingsPercent}%)</span> buying
                     these {product.bundle_items.length} parts as a kit — ৳{bundleIndividualTotal.toLocaleString()} bought separately
                   </p>
@@ -457,16 +457,16 @@ const ProductPage = () => {
               )}
 
               {/* Buy panel — the one grouped, boxed element on the page */}
-              <div className="mt-5 bg-gray-50 rounded-2xl p-4">
+              <div className="mt-5 bg-background rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-sm font-semibold text-gray-700">Quantity</span>
+                  <span className="text-sm font-semibold text-gray-200">Quantity</span>
                   <QuantitySelector max={product.quantity} value={quantity} onChange={setQuantity} />
                 </div>
                 <div className="flex gap-2.5">
                   <button
                     onClick={handleAddToCart}
                     disabled={product.quantity === 0}
-                    className="flex-1 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-200 disabled:cursor-not-allowed text-white font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
+                    className="flex-1 bg-surface-2 hover:bg-surface-3 disabled:bg-white/10 disabled:cursor-not-allowed text-white font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     {product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
@@ -474,7 +474,7 @@ const ProductPage = () => {
                   <button
                     onClick={handleBuyNow}
                     disabled={product.quantity === 0}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed text-white font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
+                    className="flex-1 bg-zan-cyan hover:bg-cyan-300 disabled:bg-white/10 disabled:cursor-not-allowed text-zan-dark font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
                   >
                     <Zap className="w-4 h-4 fill-current" />
                     Buy Now
@@ -484,13 +484,13 @@ const ProductPage = () => {
                 <div className="flex items-center gap-4 mt-3.5">
                   <button
                     onClick={handleWishlistToggle}
-                    className={`flex items-center gap-1.5 text-xs font-semibold transition-colors ${isWishlisted ? "text-red-600" : "text-gray-500 hover:text-red-600"}`}
+                    className={`flex items-center gap-1.5 text-xs font-semibold transition-colors ${isWishlisted ? "text-red-400" : "text-gray-400 hover:text-red-400"}`}
                   >
                     <Heart className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`} />
                     {isWishlisted ? "In Wishlist" : "Wishlist"}
                   </button>
-                  <span className="w-px h-3.5 bg-gray-300" />
-                  <button onClick={handleShare} className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-blue-600 transition-colors">
+                  <span className="w-px h-3.5 bg-white/15" />
+                  <button onClick={handleShare} className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-zan-cyan transition-colors">
                     <Share2 className="w-4 h-4" /> Share
                   </button>
                 </div>
@@ -499,7 +499,7 @@ const ProductPage = () => {
               {/* Trust strip — inline, no boxes */}
               <div className="flex flex-wrap gap-x-5 gap-y-2 mt-4">
                 {trustItems.map((t) => (
-                  <div key={t.label} className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <div key={t.label} className="flex items-center gap-1.5 text-xs text-gray-400">
                     <span className="text-gray-400">{t.icon}</span>
                     {t.label}
                   </div>
@@ -513,7 +513,7 @@ const ProductPage = () => {
             <div className="mb-14">
               <div className="flex items-center gap-2.5 mb-5">
                 <Package className="w-5 h-5 text-gray-400" />
-                <h2 className="text-lg font-black text-gray-900">What's in the Box</h2>
+                <h2 className="text-lg font-black text-white">What's in the Box</h2>
                 <span className="text-sm text-gray-400">
                   {product.bundle_items.length} item{product.bundle_items.length !== 1 ? "s" : ""}
                 </span>
@@ -523,18 +523,18 @@ const ProductPage = () => {
                   <Link
                     key={item.item_id}
                     to={`/product/${item.slug}`}
-                    className="group bg-gray-50 hover:bg-gray-100 rounded-2xl p-3 md:p-4 transition-colors"
+                    className="group bg-background hover:bg-white/5 rounded-2xl p-3 md:p-4 transition-colors"
                   >
-                    <div className="relative aspect-square bg-white rounded-xl mb-3 overflow-hidden p-2 md:p-3 border border-gray-100">
+                    <div className="product-tile relative aspect-square rounded-xl mb-3 overflow-hidden p-2 md:p-3 border border-white/10">
                       <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300" />
-                      <div className="absolute top-1 right-1 bg-gray-900 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
+                      <div className="absolute top-1 right-1 bg-surface-2 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
                         ×{item.bundle_quantity}
                       </div>
                     </div>
-                    <h3 className="font-semibold text-gray-800 text-xs leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors mb-1.5">
+                    <h3 className="font-semibold text-white text-xs leading-snug line-clamp-2 group-hover:text-zan-cyan transition-colors mb-1.5">
                       {item.name}
                     </h3>
-                    <div className="flex items-center gap-1 text-gray-400 text-[10px] group-hover:text-blue-600 transition-colors">
+                    <div className="flex items-center gap-1 text-gray-400 text-[10px] group-hover:text-zan-cyan transition-colors">
                       <ExternalLink className="w-3 h-3" />
                       <span>View details</span>
                     </div>
@@ -546,70 +546,70 @@ const ProductPage = () => {
 
           {/* ── Tabs: Description & Reviews — minimal underline style ── */}
           <div className="mb-14">
-            <div className="flex items-center gap-8 border-b border-gray-200 mb-6">
+            <div className="flex items-center gap-8 border-b border-white/10 mb-6">
               <button
                 onClick={() => setActiveTab("description")}
                 className={`flex items-center gap-2 pb-3.5 text-sm font-bold transition-colors relative ${
-                  activeTab === "description" ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                  activeTab === "description" ? "text-white" : "text-gray-400 hover:text-gray-300"
                 }`}
               >
                 <BookOpen className="w-4 h-4" />
                 Description
-                {activeTab === "description" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900" />}
+                {activeTab === "description" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-surface-2" />}
               </button>
               {isBundleProduct && (
                 <button
                   onClick={() => setActiveTab("kit")}
                   className={`flex items-center gap-2 pb-3.5 text-sm font-bold transition-colors relative ${
-                    activeTab === "kit" ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                    activeTab === "kit" ? "text-white" : "text-gray-400 hover:text-gray-300"
                   }`}
                 >
                   <Package className="w-4 h-4" />
                   Kit Includes
-                  <span className="text-[10px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black bg-white/5 text-gray-300 px-1.5 py-0.5 rounded-full">
                     {product.bundle_items.length}
                   </span>
-                  {activeTab === "kit" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900" />}
+                  {activeTab === "kit" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-surface-2" />}
                 </button>
               )}
               <button
                 onClick={() => setActiveTab("reviews")}
                 className={`flex items-center gap-2 pb-3.5 text-sm font-bold transition-colors relative ${
-                  activeTab === "reviews" ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                  activeTab === "reviews" ? "text-white" : "text-gray-400 hover:text-gray-300"
                 }`}
               >
                 <MessageSquare className="w-4 h-4" />
                 Reviews
                 {product.ratings?.length > 0 && (
-                  <span className="text-[10px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black bg-white/5 text-gray-300 px-1.5 py-0.5 rounded-full">
                     {product.ratings.length}
                   </span>
                 )}
-                {activeTab === "reviews" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900" />}
+                {activeTab === "reviews" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-surface-2" />}
               </button>
             </div>
 
             {activeTab === "description" && (
               <div
                 className={[
-                  "prose prose-sm md:prose-base max-w-none",
-                  "prose-headings:font-black prose-headings:text-gray-900 prose-headings:tracking-tight",
+                  "rich-html prose prose-invert prose-sm md:prose-base max-w-none",
+                  "prose-headings:font-black prose-headings:text-white prose-headings:tracking-tight",
                   "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg",
-                  "prose-p:text-gray-600 prose-p:leading-relaxed prose-p:text-[15px]",
-                  "prose-a:text-blue-600 prose-a:no-underline prose-a:font-semibold hover:prose-a:underline",
-                  "prose-li:text-gray-600 prose-li:text-[15px]",
+                  "prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-[15px]",
+                  "prose-a:text-zan-cyan prose-a:no-underline prose-a:font-semibold hover:prose-a:underline",
+                  "prose-li:text-gray-300 prose-li:text-[15px]",
                   "prose-ul:space-y-1 prose-ol:space-y-1",
                   "prose-ul:my-3 prose-ol:my-3",
-                  "prose-img:rounded-2xl prose-img:shadow-md prose-img:border prose-img:border-gray-100",
-                  "prose-table:border prose-table:border-gray-200 prose-table:rounded-xl prose-table:overflow-hidden",
-                  "prose-th:bg-gray-50 prose-th:text-gray-800 prose-th:font-bold prose-th:px-4 prose-th:py-2.5",
-                  "prose-td:px-4 prose-td:py-2.5 prose-td:border-b prose-td:border-gray-100 prose-td:text-gray-600",
-                  "prose-code:bg-gray-100 prose-code:text-blue-700 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm",
-                  "prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-pre:shadow-lg",
-                  "prose-blockquote:border-l-4 prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50 prose-blockquote:rounded-r-xl prose-blockquote:py-1",
-                  "prose-blockquote:text-gray-700 prose-blockquote:not-italic",
-                  "prose-strong:text-gray-900 prose-strong:font-bold",
-                  "prose-hr:border-gray-200",
+                  "prose-img:rounded-2xl prose-img:shadow-md prose-img:border prose-img:border-white/10",
+                  "prose-table:border prose-table:border-white/10 prose-table:rounded-xl prose-table:overflow-hidden",
+                  "prose-th:bg-background prose-th:text-white prose-th:font-bold prose-th:px-4 prose-th:py-2.5",
+                  "prose-td:px-4 prose-td:py-2.5 prose-td:border-b prose-td:border-white/10 prose-td:text-gray-300",
+                  "prose-code:bg-white/5 prose-code:text-zan-cyan prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm",
+                  "prose-pre:bg-surface-2 prose-pre:rounded-2xl prose-pre:shadow-lg",
+                  "prose-blockquote:border-l-4 prose-blockquote:border-zan-cyan/40 prose-blockquote:bg-zan-cyan/10 prose-blockquote:rounded-r-xl prose-blockquote:py-1",
+                  "prose-blockquote:text-gray-200 prose-blockquote:not-italic",
+                  "prose-strong:text-white prose-strong:font-bold",
+                  "prose-hr:border-white/10",
                 ].join(" ")}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description || "") }}
               />
@@ -618,9 +618,9 @@ const ProductPage = () => {
             {activeTab === "kit" && isBundleProduct && (
               <div>
                 {bundleSavings > 0 && (
-                  <div className="flex items-start gap-2.5 bg-emerald-50 rounded-xl px-3.5 py-3 mb-5">
-                    <Sparkles className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-emerald-800 leading-snug">
+                  <div className="flex items-start gap-2.5 bg-emerald-500/10 rounded-xl px-3.5 py-3 mb-5">
+                    <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-emerald-400 leading-snug">
                       <span className="font-bold">Save ৳{bundleSavings.toLocaleString()} ({bundleSavingsPercent}%)</span> buying
                       these {product.bundle_items.length} parts as a kit — ৳{bundleIndividualTotal.toLocaleString()} bought separately
                     </p>
@@ -628,8 +628,8 @@ const ProductPage = () => {
                 )}
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
                   {product.bundle_items.map((item) => (
-                    <li key={item.item_id} className="flex items-center gap-2.5 text-sm text-gray-600">
-                      <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" strokeWidth={2.5} />
+                    <li key={item.item_id} className="flex items-center gap-2.5 text-sm text-gray-300">
+                      <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" strokeWidth={2.5} />
                       <span className="flex-1 leading-snug">
                         {item.name}
                         {item.bundle_quantity > 1 && (
@@ -646,9 +646,9 @@ const ProductPage = () => {
               <div>
                 {product.ratings?.length > 0 ? (
                   <>
-                    <div className="flex items-center gap-5 mb-6 p-4 bg-gray-50 rounded-2xl">
+                    <div className="flex items-center gap-5 mb-6 p-4 bg-background rounded-2xl">
                       <div className="text-center flex-shrink-0">
-                        <div className="text-5xl font-black text-gray-900 leading-none">{product.average_rating?.toFixed(1)}</div>
+                        <div className="text-5xl font-black text-white leading-none">{product.average_rating?.toFixed(1)}</div>
                         <div className="flex justify-center gap-0.5 my-1.5">
                           {[...Array(5)].map((_, i) => (
                             <Star key={i} className={`w-4 h-4 ${i < Math.round(product.average_rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
@@ -662,9 +662,9 @@ const ProductPage = () => {
                           const pct = Math.round((count / product.ratings.length) * 100);
                           return (
                             <div key={star} className="flex items-center gap-2">
-                              <span className="text-xs text-gray-500 w-4 text-right">{star}</span>
+                              <span className="text-xs text-gray-400 w-4 text-right">{star}</span>
                               <Star className="w-3 h-3 fill-amber-400 text-amber-400 flex-shrink-0" />
-                              <div className="flex-1 bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                              <div className="flex-1 bg-white/10 rounded-full h-1.5 overflow-hidden">
                                 <div className="bg-amber-400 h-full rounded-full transition-all" style={{ width: `${pct}%` }} />
                               </div>
                               <span className="text-xs text-gray-400 w-7">{pct}%</span>
@@ -676,13 +676,13 @@ const ProductPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {product.ratings.map((review) => (
-                        <div key={review.id} className="bg-gray-50 p-4 rounded-2xl">
+                        <div key={review.id} className="bg-background p-4 rounded-2xl">
                           <div className="flex items-center gap-3 mb-3">
-                            <div className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                            <div className="w-10 h-10 bg-surface-2 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                               {review.user.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <p className="font-bold text-gray-900 text-sm">{review.user}</p>
+                              <p className="font-bold text-white text-sm">{review.user}</p>
                               <div className="flex gap-0.5 mt-0.5">
                                 {[...Array(5)].map((_, i) => (
                                   <Star key={i} className={`w-3 h-3 ${i < parseInt(review.star) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
@@ -690,17 +690,17 @@ const ProductPage = () => {
                               </div>
                             </div>
                           </div>
-                          <p className="text-gray-600 text-sm leading-relaxed">"{review.rating}"</p>
+                          <p className="text-gray-300 text-sm leading-relaxed">"{review.rating}"</p>
                         </div>
                       ))}
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-10">
-                    <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Star className="w-7 h-7 text-gray-300" />
                     </div>
-                    <h3 className="text-base font-bold text-gray-900 mb-1">No Reviews Yet</h3>
+                    <h3 className="text-base font-bold text-white mb-1">No Reviews Yet</h3>
                     <p className="text-gray-400 text-sm">Be the first to review this product!</p>
                   </div>
                 )}
@@ -709,8 +709,8 @@ const ProductPage = () => {
           </div>
 
           {/* ── Related Products ── */}
-          <div className="border-t border-gray-100 pt-10">
-            <h2 className="text-xl font-black text-gray-900 mb-6">You Might Also Like</h2>
+          <div className="border-t border-white/10 pt-10">
+            <h2 className="text-xl font-black text-white mb-6">You Might Also Like</h2>
             <RelatedProducts categorySlug={product.categories?.[0]?.slug} currentProductId={product.id} />
           </div>
         </div>

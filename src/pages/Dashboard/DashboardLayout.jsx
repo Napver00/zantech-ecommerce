@@ -39,13 +39,13 @@ const DashboardLayout = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8 sm:py-12">
-        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-card rounded-[2rem] shadow-sm border border-white/10 overflow-hidden">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar */}
-            <aside className="w-full md:w-64 lg:w-72 flex-shrink-0 border-r border-gray-100 bg-gray-50/50">
+            <aside className="w-full md:w-64 lg:w-72 flex-shrink-0 border-r border-white/10 bg-white/[0.02]">
               <div className="p-6">
                 <div className="mb-8">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-4">
@@ -62,8 +62,8 @@ const DashboardLayout = () => {
                         cn(
                           "flex items-center gap-3 px-4 py-3.5 text-sm font-bold rounded-2xl transition-all duration-300",
                           isActive
-                            ? "bg-white text-blue-600 shadow-sm border border-gray-100 transform scale-[1.02]"
-                            : "text-gray-500 hover:text-gray-900 hover:bg-white/50",
+                            ? "bg-card text-zan-cyan shadow-sm border border-white/10 transform scale-[1.02]"
+                            : "text-gray-400 hover:text-white hover:bg-white/50",
                         )
                       }
                     >
@@ -73,7 +73,7 @@ const DashboardLayout = () => {
                   ))}
                   <button
                     onClick={logout}
-                    className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-bold rounded-2xl transition-all duration-300 text-gray-400 hover:text-red-500 hover:bg-red-50 mt-4"
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-bold rounded-2xl transition-all duration-300 text-gray-400 hover:text-red-500 hover:bg-red-500/10 mt-4"
                   >
                     <LogOut className="h-5 w-5" />
                     <span>Logout</span>
@@ -83,7 +83,7 @@ const DashboardLayout = () => {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 min-w-0 bg-white">
+            <div className="flex-1 min-w-0 bg-card">
               <div className="p-6 sm:p-10 lg:p-12">
                 <Outlet />
               </div>

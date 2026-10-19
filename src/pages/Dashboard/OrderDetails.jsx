@@ -103,20 +103,20 @@ const OrderDetails = () => {
 
   const getOrderStatusInfo = (status) => {
     switch (String(status)) {
-        case '0': return { text: 'Processing', className: 'bg-blue-100 text-blue-800 border-blue-200' };
-        case '1': return { text: 'Completed', className: 'bg-green-100 text-green-800 border-green-200' };
-        case '2': return { text: 'On Hold', className: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
-        case '3': return { text: 'Cancelled', className: 'bg-red-100 text-red-800 border-red-200' };
-        case '4': return { text: 'Refunded', className: 'bg-gray-100 text-gray-800 border-gray-200' };
-        default: return { text: 'Unknown', className: 'bg-gray-100 text-gray-800 border-gray-200' };
+        case '0': return { text: 'Processing', className: 'bg-zan-cyan/15 text-zan-cyan border-zan-cyan/20' };
+        case '1': return { text: 'Completed', className: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' };
+        case '2': return { text: 'On Hold', className: 'bg-amber-500/15 text-amber-300 border-amber-500/25' };
+        case '3': return { text: 'Cancelled', className: 'bg-red-500/15 text-red-300 border-red-500/25' };
+        case '4': return { text: 'Refunded', className: 'bg-white/5 text-white border-white/10' };
+        default: return { text: 'Unknown', className: 'bg-white/5 text-white border-white/10' };
     }
   };
 
   const getPaymentStatusInfo = (status) => {
     switch (String(status)) {
-        case '0': return { text: 'Unpaid', className: 'bg-red-100 text-red-800 border-red-200' };
-        case '1': return { text: 'Paid', className: 'bg-green-100 text-green-800 border-green-200' };
-        default: return { text: 'Unknown', className: 'bg-gray-100 text-gray-800 border-gray-200' };
+        case '0': return { text: 'Unpaid', className: 'bg-red-500/15 text-red-300 border-red-500/25' };
+        case '1': return { text: 'Paid', className: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' };
+        default: return { text: 'Unknown', className: 'bg-white/5 text-white border-white/10' };
     }
   };
 
@@ -138,7 +138,7 @@ const OrderDetails = () => {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-6 text-center">
+      <div className="bg-red-500/10 border border-red-500/25 text-red-300 rounded-lg p-6 text-center">
         <AlertTriangle className="h-10 w-10 mx-auto mb-3 text-red-500" />
         <p className="font-semibold">Could not load order details.</p>
         <p className="text-sm">{error}</p>
@@ -159,14 +159,14 @@ const OrderDetails = () => {
 
   return (
     <div>
-        <Link to="/dashboard/orders" className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-6 group">
+        <Link to="/dashboard/orders" className="inline-flex items-center gap-2 text-sm text-gray-300 hover:text-zan-cyan mb-6 group">
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             Back to all orders
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-                <h2 className="text-2xl font-bold text-gray-800">Order #{order.invoice_code}</h2>
-                <p className="text-sm text-gray-500">Placed on {formatDate(order.created_at)}</p>
+                <h2 className="text-2xl font-bold text-white">Order #{order.invoice_code}</h2>
+                <p className="text-sm text-gray-400">Placed on {formatDate(order.created_at)}</p>
             </div>
             <div className="flex items-center gap-3">
                 <span className={`px-3 py-1.5 text-sm font-semibold rounded-full border ${orderStatus.className}`}>{orderStatus.text}</span>
@@ -174,8 +174,8 @@ const OrderDetails = () => {
             </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><Package className="h-5 w-5 text-blue-600"/>Order Items</h3>
+        <div className="bg-card border border-white/10 rounded-xl p-6 mb-6">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Package className="h-5 w-5 text-zan-cyan"/>Order Items</h3>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -191,8 +191,8 @@ const OrderDetails = () => {
                         <TableRow key={item.product_id}>
                             <TableCell>
                                 <div className="flex items-center gap-3">
-                                    <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="w-12 h-12 object-contain rounded-md bg-gray-50" />
-                                    <Link to={`/product/${item.slug}`} className="font-medium text-gray-800 hover:text-blue-600 transition-colors">{item.name}</Link>
+                                    <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="w-12 h-12 object-contain rounded-md bg-background" />
+                                    <Link to={`/product/${item.slug}`} className="font-medium text-white hover:text-zan-cyan transition-colors">{item.name}</Link>
                                 </div>
                             </TableCell>
                             <TableCell>x {item.quantity}</TableCell>
@@ -245,34 +245,34 @@ const OrderDetails = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><MapPin className="h-5 w-5 text-blue-600"/>Shipping Address</h3>
-                <address className="text-gray-600 not-italic space-y-1">
-                    <p className="font-medium text-gray-800">{order.shipping_address.f_name} {order.shipping_address.l_name}</p>
+            <div className="bg-card border border-white/10 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><MapPin className="h-5 w-5 text-zan-cyan"/>Shipping Address</h3>
+                <address className="text-gray-300 not-italic space-y-1">
+                    <p className="font-medium text-white">{order.shipping_address.f_name} {order.shipping_address.l_name}</p>
                     <p>{order.shipping_address.address}</p>
                     <p>{order.shipping_address.city}, {order.shipping_address.zip}</p>
                     <p>{order.shipping_address.phone}</p>
                 </address>
             </div>
-             <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><Receipt className="h-5 w-5 text-blue-600"/>Order Summary</h3>
+             <div className="bg-card border border-white/10 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><Receipt className="h-5 w-5 text-zan-cyan"/>Order Summary</h3>
                 <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                        <span className="text-gray-600">Subtotal:</span>
-                        <span className="font-medium text-gray-800">৳{Number(order.item_subtotal).toLocaleString()}</span>
+                        <span className="text-gray-300">Subtotal:</span>
+                        <span className="font-medium text-white">৳{Number(order.item_subtotal).toLocaleString()}</span>
                     </div>
                      <div className="flex justify-between">
-                        <span className="text-gray-600">Shipping:</span>
-                        <span className="font-medium text-gray-800">৳{Number(order.shipping_charge).toLocaleString()}</span>
+                        <span className="text-gray-300">Shipping:</span>
+                        <span className="font-medium text-white">৳{Number(order.shipping_charge).toLocaleString()}</span>
                     </div>
                      <div className="flex justify-between">
-                        <span className="text-gray-600">Discount:</span>
-                        <span className="font-medium text-red-600">- ৳{Number(order.discount).toLocaleString()}</span>
+                        <span className="text-gray-300">Discount:</span>
+                        <span className="font-medium text-red-400">- ৳{Number(order.discount).toLocaleString()}</span>
                     </div>
-                     <div className="border-t border-gray-200 my-2"></div>
+                     <div className="border-t border-white/10 my-2"></div>
                      <div className="flex justify-between text-base font-bold">
-                        <span className="text-gray-900">Total:</span>
-                        <span className="text-blue-600">৳{Number(order.total_amount).toLocaleString()}</span>
+                        <span className="text-white">Total:</span>
+                        <span className="text-zan-cyan">৳{Number(order.total_amount).toLocaleString()}</span>
                     </div>
                 </div>
             </div>

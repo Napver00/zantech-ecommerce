@@ -104,40 +104,40 @@ const QuickSupport = () => {
     <div className="fixed right-4 bottom-4 sm:right-6 sm:bottom-6 z-[9999] flex flex-col items-end gap-3 font-sans">
       {/* Chat Window - Minimalist */}
       <div
-        className={`bg-white rounded-3xl shadow-2xl w-[320px] sm:w-[380px] h-[480px] flex flex-col overflow-hidden border border-gray-100 mb-2 transition-all duration-500 origin-bottom-right ${
+        className={`bg-card rounded-3xl shadow-2xl w-[320px] sm:w-[380px] h-[480px] flex flex-col overflow-hidden border border-white/10 mb-2 transition-all duration-500 origin-bottom-right ${
           isChatOpen
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-10 pointer-events-none absolute bottom-16 right-0"
         }`}
       >
         {/* Header - Glassmorphism */}
-        <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 p-4 flex justify-between items-center text-gray-900">
+        <div className="bg-white/80 backdrop-blur-md border-b border-white/10 p-4 flex justify-between items-center text-white">
           <div className="flex items-center gap-3">
             <div className="relative">
               <img
                 src="/zanu-ai-icon.png"
                 alt="Zanu AI"
-                className="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm"
+                className="w-10 h-10 rounded-full object-cover border border-white/10 shadow-sm"
               />
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
             </div>
             <div>
               <h3 className="font-bold text-sm tracking-tight">Zanu AI</h3>
-              <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
                 Support Agent
               </p>
             </div>
           </div>
           <button
             onClick={() => setIsChatOpen(false)}
-            className="hover:bg-gray-100 p-2 rounded-xl transition-colors text-gray-400 hover:text-gray-900"
+            className="hover:bg-white/5 p-2 rounded-xl transition-colors text-gray-400 hover:text-white"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Messages - Clean */}
-        <div className="flex-1 p-5 overflow-y-auto bg-white space-y-4">
+        <div className="flex-1 p-5 overflow-y-auto bg-card space-y-4">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -146,8 +146,8 @@ const QuickSupport = () => {
               <div
                 className={`max-w-[85%] p-4 text-sm leading-relaxed ${
                   msg.sender === "user"
-                    ? "bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-md shadow-blue-200"
-                    : "bg-gray-50 text-gray-800 border border-gray-100 rounded-2xl rounded-tl-sm"
+                    ? "bg-zan-cyan text-zan-dark rounded-2xl rounded-tr-sm shadow-md shadow-blue-200"
+                    : "bg-background text-zan-dark border border-white/10 rounded-2xl rounded-tl-sm"
                 }`}
               >
                 {msg.text}
@@ -156,10 +156,10 @@ const QuickSupport = () => {
           ))}
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-gray-50 p-4 rounded-2xl rounded-tl-sm border border-gray-100 flex gap-1.5 items-center">
-                <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce"></span>
-                <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce delay-150"></span>
-                <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce delay-300"></span>
+              <div className="bg-background p-4 rounded-2xl rounded-tl-sm border border-white/10 flex gap-1.5 items-center">
+                <span className="w-1.5 h-1.5 bg-white/15 rounded-full animate-bounce"></span>
+                <span className="w-1.5 h-1.5 bg-white/15 rounded-full animate-bounce delay-150"></span>
+                <span className="w-1.5 h-1.5 bg-white/15 rounded-full animate-bounce delay-300"></span>
               </div>
             </div>
           )}
@@ -169,18 +169,18 @@ const QuickSupport = () => {
         {/* Input - Minimal */}
         <form
           onSubmit={handleSendMessage}
-          className="p-4 bg-white border-t border-gray-50 flex gap-3"
+          className="p-4 bg-card border-t border-white/10 flex gap-3"
         >
           <input
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="How can we help?"
-            className="flex-1 bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-blue-100/50 rounded-2xl px-4 py-3 text-sm transition-all outline-none border border-gray-100"
+            className="flex-1 bg-background border-transparent focus:bg-card focus:ring-4 focus:ring-zan-cyan/40 rounded-2xl px-4 py-3 text-sm transition-all outline-none border border-white/10"
           />
           <button
             type="submit"
-            className="p-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
+            className="p-3 bg-zan-cyan text-zan-dark rounded-2xl hover:bg-cyan-300 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
             disabled={!inputText.trim()}
           >
             <Send className="w-5 h-5" />
@@ -226,7 +226,7 @@ const QuickSupport = () => {
       {/* Main Toggle Button - Refined */}
       <button
         onClick={toggleWidget}
-        className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl shadow-2xl flex items-center justify-center text-white transition-all duration-500 hover:scale-105 active:scale-95 z-50 ${isOpen ? "bg-gray-900 rotate-90" : "bg-blue-600 hover:bg-blue-700 shadow-blue-600/30"}`}
+        className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl shadow-2xl flex items-center justify-center text-zan-dark transition-all duration-500 hover:scale-105 active:scale-95 z-50 ${isOpen ? "bg-surface-2 rotate-90" : "bg-zan-cyan hover:bg-cyan-300 shadow-blue-600/30"}`}
       >
         {isOpen ? (
           <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -236,7 +236,7 @@ const QuickSupport = () => {
 
         {/* Subtle Pulse */}
         {!isOpen && !isChatOpen && (
-          <span className="absolute -inset-1 rounded-2xl bg-blue-400 opacity-20 animate-pulse pointer-events-none"></span>
+          <span className="absolute -inset-1 rounded-2xl bg-zan-cyan opacity-20 animate-pulse pointer-events-none"></span>
         )}
       </button>
     </div>

@@ -78,12 +78,12 @@ const PostListLayout = ({
   const renderSkeletons = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <Skeleton className="h-48 w-full bg-gray-100" />
+        <div key={i} className="bg-card rounded-2xl border border-white/10 overflow-hidden">
+          <Skeleton className="h-48 w-full bg-white/5" />
           <div className="p-5 space-y-3">
-            <Skeleton className="h-5 w-3/4 bg-gray-100" />
-            <Skeleton className="h-4 w-full bg-gray-100" />
-            <Skeleton className="h-4 w-5/6 bg-gray-100" />
+            <Skeleton className="h-5 w-3/4 bg-white/5" />
+            <Skeleton className="h-4 w-full bg-white/5" />
+            <Skeleton className="h-4 w-5/6 bg-white/5" />
           </div>
         </div>
       ))}
@@ -91,7 +91,7 @@ const PostListLayout = ({
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Seo {...seo} type="article" />
       <Header />
 
@@ -99,18 +99,18 @@ const PostListLayout = ({
         {/* Header */}
         <div className="text-center mb-10">
           {Icon && (
-            <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-gray-100 mb-4">
-              <Icon className="w-5 h-5 text-gray-600" />
+            <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 mb-4">
+              <Icon className="w-5 h-5 text-gray-300" />
             </div>
           )}
-          <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-3">
-            {title} <span className="text-blue-600">{highlight}</span>
+          <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
+            {title} <span className="text-zan-cyan">{highlight}</span>
           </h1>
-          <p className="text-gray-500 max-w-xl mx-auto">{subtitle}</p>
+          <p className="text-gray-400 max-w-xl mx-auto">{subtitle}</p>
 
           {!loading && !error && totalCount > 0 && (
             <p className="text-sm text-gray-400 mt-5">
-              <span className="font-bold text-gray-700">{totalCount}</span> {statLabel}
+              <span className="font-bold text-gray-200">{totalCount}</span> {statLabel}
             </p>
           )}
         </div>
@@ -120,15 +120,15 @@ const PostListLayout = ({
 
         {/* Error */}
         {!loading && error && (
-          <div className="max-w-lg mx-auto bg-white border border-gray-100 rounded-2xl p-10 text-center">
-            <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="max-w-lg mx-auto bg-card border border-white/10 rounded-2xl p-10 text-center">
+            <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="h-7 w-7 text-red-500" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Unable to Load Content</h3>
-            <p className="text-gray-500 text-sm mb-5">{error}</p>
+            <h3 className="text-lg font-bold text-white mb-2">Unable to Load Content</h3>
+            <p className="text-gray-400 text-sm mb-5">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+              className="bg-surface-2 hover:bg-surface-3 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors"
             >
               Try Again
             </button>
@@ -153,17 +153,17 @@ const PostListLayout = ({
 
         {/* Empty */}
         {!loading && !error && posts.length === 0 && (
-          <div className="max-w-lg mx-auto bg-white border border-dashed border-gray-200 rounded-2xl p-12 text-center">
+          <div className="max-w-lg mx-auto bg-card border border-dashed border-white/10 rounded-2xl p-12 text-center">
             {Icon && (
-              <div className="inline-flex p-4 bg-gray-50 rounded-full mb-5">
+              <div className="inline-flex p-4 bg-background rounded-full mb-5">
                 <Icon className="h-8 w-8 text-gray-300" />
               </div>
             )}
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{emptyTitle}</h3>
-            <p className="text-gray-500 mb-6">{emptyDescription}</p>
+            <h3 className="text-xl font-bold text-white mb-2">{emptyTitle}</h3>
+            <p className="text-gray-400 mb-6">{emptyDescription}</p>
             <Link
               to={emptyCtaHref}
-              className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 bg-surface-2 hover:bg-surface-3 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
             >
               {emptyCtaLabel}
             </Link>

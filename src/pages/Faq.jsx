@@ -47,7 +47,7 @@ const Faq = () => {
   const renderSkeletons = () => (
     <div className="space-y-4">
       {Array.from({ length: 5 }).map((_, index) => (
-        <div key={index} className="border border-slate-200 rounded-xl p-6 bg-white">
+        <div key={index} className="border border-white/10 rounded-xl p-6 bg-card">
           <Skeleton className="h-6 w-3/4 mb-4" />
           <Skeleton className="h-4 w-full" />
         </div>
@@ -56,10 +56,10 @@ const Faq = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Seo
-        title="FAQ - Zantech Store | Frequently Asked Questions"
-        description="Find answers to common questions about orders, shipping, payment, returns, and robotics & IoT products at Zantech Store."
+        title="FAQ - ZAN Tech Store | Frequently Asked Questions"
+        description="Find answers to common questions about orders, shipping, payment, returns, and robotics & IoT products at ZAN Tech Store."
         url="https://store.zantechbd.com/faq"
         type="website"
       />
@@ -68,15 +68,15 @@ const Faq = () => {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-slate-900 text-white py-20 relative overflow-hidden">
+        <section className="bg-surface-2 text-white py-20 relative overflow-hidden">
            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-[50%] -left-[20%] w-[80%] h-[80%] bg-blue-600/10 rounded-full blur-[100px]"></div>
-            <div className="absolute -bottom-[50%] -right-[20%] w-[80%] h-[80%] bg-purple-600/10 rounded-full blur-[100px]"></div>
+            <div className="absolute -top-[50%] -left-[20%] w-[80%] h-[80%] bg-zan-cyan/10 rounded-full blur-[100px]"></div>
+            <div className="absolute -bottom-[50%] -right-[20%] w-[80%] h-[80%] bg-zan-red/10 rounded-full blur-[100px]"></div>
           </div>
           
           <div className="container mx-auto px-4 relative z-10 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-6">
-              <HelpCircle className="w-8 h-8 text-blue-400" />
+              <HelpCircle className="w-8 h-8 text-zan-cyan" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
               Frequently Asked Questions
@@ -92,7 +92,7 @@ const Faq = () => {
               </div>
               <input
                 type="text"
-                className="block w-full pl-11 pr-4 py-4 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/20 transition-all backdrop-blur-sm"
+                className="block w-full pl-11 pr-4 py-4 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-zan-cyan/40 focus:bg-white/20 transition-all backdrop-blur-sm"
                 placeholder="Search for answers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -104,19 +104,19 @@ const Faq = () => {
         {/* FAQ Content */}
         <div className="container mx-auto px-4 py-16 -mt-10 relative z-20">
           <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-8 md:p-10 border border-slate-100">
+            <div className="bg-card rounded-2xl shadow-xl shadow-slate-200/50 p-8 md:p-10 border border-white/10">
               {loading && renderSkeletons()}
 
               {!loading && error && (
                 <div className="text-center py-12">
-                  <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <AlertTriangle className="h-8 w-8 text-red-600" />
+                  <div className="bg-red-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <AlertTriangle className="h-8 w-8 text-red-400" />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">Error loading FAQs</h3>
-                  <p className="text-slate-600 mb-6">{error}</p>
+                  <h3 className="text-lg font-semibold text-white mb-2">Error loading FAQs</h3>
+                  <p className="text-gray-300 mb-6">{error}</p>
                   <button 
                     onClick={() => window.location.reload()}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-6 py-2 bg-zan-cyan text-zan-dark rounded-lg hover:bg-cyan-300 transition-colors"
                   >
                     Try Again
                   </button>
@@ -129,12 +129,12 @@ const Faq = () => {
                     <AccordionItem 
                       key={faq.id} 
                       value={`item-${faq.id}`}
-                      className="border border-slate-200 rounded-xl px-6 data-[state=open]:bg-slate-50 data-[state=open]:border-blue-200 transition-all duration-200"
+                      className="border border-white/10 rounded-xl px-6 data-[state=open]:bg-background data-[state=open]:border-zan-cyan/20 transition-all duration-200"
                     >
-                      <AccordionTrigger className="text-lg font-medium text-slate-900 hover:text-blue-600 hover:no-underline py-6">
+                      <AccordionTrigger className="text-lg font-medium text-white hover:text-zan-cyan hover:no-underline py-6">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-base text-slate-600 leading-relaxed pb-6">
+                      <AccordionContent className="text-base text-gray-300 leading-relaxed pb-6">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>
@@ -144,11 +144,11 @@ const Faq = () => {
 
               {!loading && !error && filteredFaqs.length === 0 && (
                 <div className="text-center py-16">
-                  <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-background w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Search className="h-8 w-8 text-slate-400" />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">No Results Found</h3>
-                  <p className="text-slate-600">
+                  <h3 className="text-lg font-semibold text-white mb-2">No Results Found</h3>
+                  <p className="text-gray-300">
                     We couldn't find any FAQs matching "{searchQuery}". Try a different search term.
                   </p>
                 </div>
@@ -158,21 +158,21 @@ const Faq = () => {
 
           {/* Still Have Questions? */}
           <div className="max-w-3xl mx-auto mt-16 text-center">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Still have questions?</h2>
-            <p className="text-slate-600 mb-8">
+            <h2 className="text-2xl font-bold text-white mb-4">Still have questions?</h2>
+            <p className="text-gray-300 mb-8">
               Can't find the answer you're looking for? Please chat to our friendly team.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/contact" 
-                className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-zan-cyan hover:bg-cyan-300 text-zan-dark font-medium transition-colors"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 Contact Support
               </a>
               <a 
                 href="mailto:support@zantechbd.com" 
-                className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-card border border-white/10 hover:bg-background text-gray-200 font-medium transition-colors"
               >
                 <Mail className="w-5 h-5 mr-2" />
                 Email Us

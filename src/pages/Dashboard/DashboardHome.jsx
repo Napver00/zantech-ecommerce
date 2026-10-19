@@ -93,22 +93,22 @@ const DashboardHome = () => {
       <div className="mb-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
+            <h2 className="text-3xl font-bold text-white tracking-tight">
               Dashboard
             </h2>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-400 mt-1">
               Manage your account and track your robotics orders.
             </p>
           </div>
-          <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100">
-            <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+          <div className="flex items-center gap-3 bg-background px-4 py-2 rounded-2xl border border-white/10">
+            <div className="w-10 h-10 rounded-full bg-zan-cyan text-zan-dark flex items-center justify-center font-bold">
               {user.name?.charAt(0)}
             </div>
             <div className="text-sm">
-              <p className="font-bold text-gray-900">{user.name}</p>
+              <p className="font-bold text-white">{user.name}</p>
               <button
                 onClick={logout}
-                className="text-blue-600 hover:text-blue-700 font-medium text-xs"
+                className="text-zan-cyan hover:text-zan-cyan font-medium text-xs"
               >
                 Sign out
               </button>
@@ -116,26 +116,26 @@ const DashboardHome = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50/30 p-6 rounded-3xl border border-blue-100/50">
-          <p className="text-slate-700 leading-relaxed text-lg">
+        <div className="bg-zan-cyan/5 p-6 rounded-3xl border border-zan-cyan/20">
+          <p className="text-gray-200 leading-relaxed text-lg">
             Welcome back! From here you can easily oversee your{" "}
             <Link
               to="orders"
-              className="text-blue-600 hover:underline font-semibold tracking-tight"
+              className="text-zan-cyan hover:underline font-semibold tracking-tight"
             >
               recent orders
             </Link>
             , update your{" "}
             <Link
               to="addresses"
-              className="text-blue-600 hover:underline font-semibold tracking-tight"
+              className="text-zan-cyan hover:underline font-semibold tracking-tight"
             >
               shipping info
             </Link>
             , and{" "}
             <Link
               to="account-details"
-              className="text-blue-600 hover:underline font-semibold tracking-tight"
+              className="text-zan-cyan hover:underline font-semibold tracking-tight"
             >
               security settings
             </Link>
@@ -146,7 +146,7 @@ const DashboardHome = () => {
 
       {/* Quick Actions Grid */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <h3 className="text-lg font-semibold text-white mb-4">
           Quick Actions
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -154,20 +154,20 @@ const DashboardHome = () => {
             <Link
               key={item.to}
               to={item.to}
-              className="group bg-white border border-gray-100 rounded-3xl p-5 sm:p-6 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 active:scale-[0.98]"
+              className="group bg-card border border-white/10 rounded-3xl p-5 sm:p-6 hover:border-zan-cyan/20 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 active:scale-[0.98]"
             >
               <div className="flex items-center gap-5">
-                <div className="bg-gray-50 w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 transition-all duration-300">
+                <div className="bg-background w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-zan-cyan transition-all duration-300">
                   <item.icon className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <h4 className="font-bold text-lg text-white group-hover:text-zan-cyan transition-colors">
                       {item.label}
                     </h4>
-                    <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-blue-600 transform group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-zan-cyan transform group-hover:translate-x-1 transition-all" />
                   </div>
-                  <p className="text-sm text-gray-500 hidden sm:block mt-1">
+                  <p className="text-sm text-gray-400 hidden sm:block mt-1">
                     {item.description}
                   </p>
                 </div>
@@ -178,8 +178,8 @@ const DashboardHome = () => {
       </div>
 
       {/* Account Summary Section */}
-      <div className="mt-8 pt-6 border-t border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
+      <div className="mt-8 pt-6 border-t border-white/10">
+        <h3 className="text-lg font-semibold text-white mb-3">
           Account Summary
         </h3>
         {loading ? (
@@ -187,7 +187,7 @@ const DashboardHome = () => {
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="bg-gray-50 rounded-lg p-4 border border-gray-200"
+                className="bg-background rounded-lg p-4 border border-white/10"
               >
                 <Skeleton className="h-4 w-2/3 mb-2" />
                 <Skeleton className="h-8 w-1/3" />
@@ -195,7 +195,7 @@ const DashboardHome = () => {
             ))}
           </div>
         ) : error ? (
-          <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200 flex items-center gap-3">
+          <div className="bg-red-500/10 text-red-300 p-4 rounded-lg border border-red-500/25 flex items-center gap-3">
             <AlertTriangle className="h-5 w-5" />
             <span>{error}</span>
           </div>
@@ -204,12 +204,12 @@ const DashboardHome = () => {
             {summaryItems.map((item) => (
               <div
                 key={item.label}
-                className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                className="bg-card rounded-3xl p-5 sm:p-6 border border-white/10 shadow-sm hover:shadow-md transition-shadow"
               >
-                <p className="text-xs sm:text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">
+                <p className="text-xs sm:text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">
                   {item.label}
                 </p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-white">
                   {item.value ?? 0}
                 </p>
               </div>

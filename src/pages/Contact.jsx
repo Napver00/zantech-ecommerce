@@ -68,7 +68,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Seo
         title="Contact ZAN Tech Store - Robotics & IoT Support in Bangladesh"
         description="Get in touch with ZAN Tech Store for product queries, orders, technical support, or project consultation."
@@ -80,10 +80,10 @@ const Contact = () => {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-gray-900 text-white py-16">
+        <section className="bg-surface-2 text-white py-16">
           <div className="container mx-auto px-4 text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 mb-5">
-              <MessageSquare className="w-5 h-5 text-blue-300" />
+              <MessageSquare className="w-5 h-5 text-zan-cyan" />
             </div>
             <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tight">
               Let's Start a Conversation
@@ -100,33 +100,33 @@ const Contact = () => {
             {/* Contact Info Cards */}
             <div className="lg:col-span-1 space-y-4">
               {/* Location Card */}
-              <div className="bg-white p-6 rounded-2xl border border-gray-100">
-                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4 text-gray-600">
+              <div className="bg-card p-6 rounded-2xl border border-white/10">
+                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 text-gray-300">
                   <MapPin size={20} />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
+                <h3 className="text-base font-semibold text-white mb-1.5">
                   Visit Us
                 </h3>
                 {company?.location ? (
-                  <p className="text-gray-600 text-sm leading-relaxed">{company.location}</p>
+                  <p className="text-gray-300 text-sm leading-relaxed">{company.location}</p>
                 ) : (
-                  <div className="h-4 w-3/4 bg-gray-100 rounded animate-pulse" />
+                  <div className="h-4 w-3/4 bg-white/5 rounded animate-pulse" />
                 )}
               </div>
 
               {/* Contact Card */}
-              <div className="bg-white p-6 rounded-2xl border border-gray-100">
-                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4 text-gray-600">
+              <div className="bg-card p-6 rounded-2xl border border-white/10">
+                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 text-gray-300">
                   <Phone size={20} />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
+                <h3 className="text-base font-semibold text-white mb-1.5">
                   Call Us
                 </h3>
-                <p className="text-gray-500 text-sm mb-2">We're happy to help by phone</p>
+                <p className="text-gray-400 text-sm mb-2">We're happy to help by phone</p>
                 {company?.phone && (
                   <a
                     href={`tel:${company.phone}`}
-                    className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                    className="text-base font-medium text-white hover:text-zan-cyan transition-colors"
                   >
                     {company.phone}
                   </a>
@@ -134,20 +134,20 @@ const Contact = () => {
               </div>
 
               {/* Email Card */}
-              <div className="bg-white p-6 rounded-2xl border border-gray-100">
-                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mb-4 text-gray-600">
+              <div className="bg-card p-6 rounded-2xl border border-white/10">
+                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 text-gray-300">
                   <Mail size={20} />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-1.5">
+                <h3 className="text-base font-semibold text-white mb-1.5">
                   Email Us
                 </h3>
-                <p className="text-gray-500 text-sm mb-2">
+                <p className="text-gray-400 text-sm mb-2">
                   We'll respond within 24 hours
                 </p>
                 {company?.email && (
                   <a
                     href={`mailto:${company.email}`}
-                    className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                    className="text-base font-medium text-white hover:text-zan-cyan transition-colors"
                   >
                     {company.email}
                   </a>
@@ -157,29 +157,29 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 md:p-10">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
+              <div className="bg-card rounded-2xl border border-white/10 p-6 md:p-10">
+                <h2 className="text-xl font-bold text-white mb-6">
                   Send us a Message
                 </h2>
 
                 {success && (
-                  <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3 animate-fade-in">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <div className="mb-8 p-4 bg-emerald-500/10 border border-emerald-500/25 rounded-xl flex items-start gap-3 animate-fade-in">
+                    <CheckCircle className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-green-800 font-medium">
+                      <p className="text-emerald-400 font-medium">
                         Message Sent!
                       </p>
-                      <p className="text-green-700 text-sm mt-1">{success}</p>
+                      <p className="text-emerald-400 text-sm mt-1">{success}</p>
                     </div>
                   </div>
                 )}
 
                 {error && (
-                  <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-fade-in">
-                    <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                  <div className="mb-8 p-4 bg-red-500/10 border border-red-500/25 rounded-xl flex items-start gap-3 animate-fade-in">
+                    <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-red-800 font-medium">Failed to Send</p>
-                      <p className="text-red-700 text-sm mt-1">{error}</p>
+                      <p className="text-red-300 font-medium">Failed to Send</p>
+                      <p className="text-red-300 text-sm mt-1">{error}</p>
                     </div>
                   </div>
                 )}
@@ -189,7 +189,7 @@ const Contact = () => {
                     <div className="space-y-2">
                       <label
                         htmlFor="f_name"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-sm font-medium text-gray-200"
                       >
                         First Name
                       </label>
@@ -198,7 +198,7 @@ const Contact = () => {
                         name="f_name"
                         value={form.f_name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
+                        className="w-full px-4 py-3 rounded-xl border border-white/10 focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 outline-none transition-all bg-background focus:bg-card"
                         placeholder="John"
                         required
                       />
@@ -206,7 +206,7 @@ const Contact = () => {
                     <div className="space-y-2">
                       <label
                         htmlFor="l_name"
-                        className="text-sm font-medium text-gray-700"
+                        className="text-sm font-medium text-gray-200"
                       >
                         Last Name
                       </label>
@@ -215,7 +215,7 @@ const Contact = () => {
                         name="l_name"
                         value={form.l_name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
+                        className="w-full px-4 py-3 rounded-xl border border-white/10 focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 outline-none transition-all bg-background focus:bg-card"
                         placeholder="Doe"
                         required
                       />
@@ -225,7 +225,7 @@ const Contact = () => {
                   <div className="space-y-2">
                     <label
                       htmlFor="email"
-                      className="text-sm font-medium text-gray-700"
+                      className="text-sm font-medium text-gray-200"
                     >
                       Email Address
                     </label>
@@ -235,7 +235,7 @@ const Contact = () => {
                       type="email"
                       value={form.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-white/10 focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 outline-none transition-all bg-background focus:bg-card"
                       placeholder="john@example.com"
                       required
                     />
@@ -244,7 +244,7 @@ const Contact = () => {
                   <div className="space-y-2">
                     <label
                       htmlFor="project_type"
-                      className="text-sm font-medium text-gray-700"
+                      className="text-sm font-medium text-gray-200"
                     >
                       Subject
                     </label>
@@ -253,7 +253,7 @@ const Contact = () => {
                       name="project_type"
                       value={form.project_type}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-white/10 focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 outline-none transition-all bg-background focus:bg-card"
                       placeholder="Product Inquiry, Support, etc."
                     />
                   </div>
@@ -261,7 +261,7 @@ const Contact = () => {
                   <div className="space-y-2">
                     <label
                       htmlFor="message"
-                      className="text-sm font-medium text-gray-700"
+                      className="text-sm font-medium text-gray-200"
                     >
                       Message
                     </label>
@@ -271,7 +271,7 @@ const Contact = () => {
                       rows={5}
                       value={form.message}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50 focus:bg-white resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-white/10 focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 outline-none transition-all bg-background focus:bg-card resize-none"
                       placeholder="How can we help you?"
                       required
                     />
@@ -280,7 +280,7 @@ const Contact = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full bg-surface-2 hover:bg-surface-3 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <>
@@ -300,8 +300,8 @@ const Contact = () => {
           </div>
 
           {/* Map */}
-          <div className="mt-8 bg-white p-2 rounded-2xl border border-gray-100">
-            <div className="aspect-video w-full bg-gray-100 rounded-xl overflow-hidden">
+          <div className="mt-8 bg-card p-2 rounded-2xl border border-white/10">
+            <div className="aspect-video w-full bg-white/5 rounded-xl overflow-hidden">
               <iframe
                 src="https://maps.google.com/maps?q=23.863472,90.387222&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"

@@ -1,80 +1,68 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useCategories } from "@/context/CategoriesContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import SectionHeader from "./SectionHeader";
-import {
-  LayoutGrid, Cpu, Zap, Package, Trophy, Layers, Circle, Tag,
-  Radio, Settings, Microchip, Wrench, Bot, CircuitBoard, Battery, Gauge,
-  Wifi, Camera,
-} from "lucide-react";
+import { LayoutGrid, ChevronDown } from "lucide-react";
+import { getCategoryIcon } from "@/lib/categoryIcons";
 
-const getCategoryIcon = (name = "") => {
-  const n = name.toLowerCase();
-  if (n.includes("robot") || n.includes("arm") || n.includes("chassis")) return Bot;
-  if (n.includes("competition")) return Trophy;
-  if (n.includes("kit") || n.includes("starter") || n.includes("package")) return Package;
-  if (n.includes("sensor")) return Gauge;
-  if (n.includes("motor") || n.includes("servo")) return Settings;
-  if (n.includes("wheel")) return Circle;
-  if (n.includes("power") || n.includes("battery")) return Battery;
-  if (n.includes("transistor") || n.includes("mosfet")) return Cpu;
-  if (n.includes("capacitor") || n.includes("resistor") || n.includes("diode")) return CircuitBoard;
-  if (n.includes("esp") || n.includes("wifi") || n.includes("bluetooth") || n.includes("wireless")) return Wifi;
-  if (n.includes("arduino") || n.includes("raspberry") || n.includes("micro")) return Microchip;
-  if (n.includes("camera") || n.includes("display") || n.includes("screen")) return Camera;
-  if (n.includes("module") || n.includes("board") || n.includes("ic")) return Radio;
-  if (n.includes("tool") || n.includes("wire") || n.includes("cable") || n.includes("accessor")) return Wrench;
-  if (n.includes("3d") || n.includes("print")) return Layers;
-  if (n.includes("iot") || n.includes("smart")) return Zap;
-  return Tag;
-};
+const INITIAL = 12;
 
+// Icon grid of every category, like DFRobot's platform row.
 const CategoryShowcase = () => {
   const { categories, isLoading: loading } = useCategories();
-  const navigate = useNavigate();
+  const [showAll, setShowAll] = useState(false);
 
   if (!loading && categories.length === 0) return null;
 
+  const visible = showAll ? categories : categories.slice(0, INITIAL);
+
   return (
-    <section className="mt-14">
+    <section className="mt-16">
       <SectionHeader
         icon={LayoutGrid}
         eyebrow="Browse"
         title="Shop by Category"
         subtitle="Find exactly what your project needs"
         viewAllHref="/shop"
-        viewAllLabel="All categories"
+        viewAllLabel="All products"
       />
 
-      <div className="scroll-strip flex gap-2 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
         {loading
-          ? Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="flex-shrink-0 w-20 flex flex-col items-center gap-2">
-                <Skeleton className="w-14 h-14 rounded-xl bg-gray-100" />
-                <Skeleton className="h-3 w-14 bg-gray-100" />
-              </div>
+          ? Array.from({ length: INITIAL }).map((_, i) => (
+              <Skeleton key={i} className="h-[112px] rounded-xl bg-white/5" />
             ))
-          : categories.map((category) => {
+          : visible.map((category) => {
               const Icon = getCategoryIcon(category.name);
               return (
-                <button
+                <Link
                   key={category.id}
-                  onClick={() =>
-                    navigate(`/shop?category_slug=${encodeURIComponent(category.slug)}`)
-                  }
-                  className="group flex-shrink-0 w-20 flex flex-col items-center gap-2"
+                  to={`/shop?category_slug=${encodeURIComponent(category.slug)}`}
+                  className="group flex flex-col items-center justify-center gap-3 rounded-xl border border-white/10 bg-surface-dark px-2 py-5 text-center transition-all hover:-translate-y-0.5 hover:border-zan-cyan/40 hover:bg-surface-2"
                 >
-                  <div className="w-14 h-14 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center transition-colors group-hover:bg-blue-50 group-hover:border-blue-100">
-                    <Icon className="w-5 h-5 text-gray-500 group-hover:text-blue-600 transition-colors" />
-                  </div>
-                  <span className="text-[11px] font-medium text-gray-600 text-center leading-tight line-clamp-2">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-300 transition-colors group-hover:border-zan-cyan/30 group-hover:bg-zan-cyan/10 group-hover:text-zan-cyan">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="line-clamp-2 text-xs font-semibold leading-tight text-gray-200 group-hover:text-white">
                     {category.name}
                   </span>
-                </button>
+                </Link>
               );
             })}
       </div>
+
+      {!loading && categories.length > INITIAL && (
+        <div className="mt-5 flex justify-center">
+          <button
+            onClick={() => setShowAll((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-5 py-2 text-sm font-semibold text-gray-300 transition-colors hover:border-zan-cyan/50 hover:text-zan-cyan"
+          >
+            {showAll ? "Show less" : `Show all ${categories.length} categories`}
+            <ChevronDown className={`h-4 w-4 transition-transform ${showAll ? "rotate-180" : ""}`} />
+          </button>
+        </div>
+      )}
     </section>
   );
 };

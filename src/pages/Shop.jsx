@@ -230,15 +230,15 @@ const Shop = () => {
     };
 
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mt-6">
+      <div className="bg-card rounded-2xl shadow-sm border border-white/10 p-4 sm:p-6 mt-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500 order-2 sm:order-1">
-            Page <span className="font-semibold text-gray-800">{current_page}</span> of <span className="font-semibold text-gray-800">{last_page}</span>
+          <p className="text-sm text-gray-400 order-2 sm:order-1">
+            Page <span className="font-semibold text-white">{current_page}</span> of <span className="font-semibold text-white">{last_page}</span>
             <span className="hidden sm:inline text-gray-400"> · {total.toLocaleString()} products</span>
           </p>
           <div className="flex items-center gap-1 order-1 sm:order-2">
             <button onClick={() => handlePageChange(current_page - 1)} disabled={current_page === 1}
-              className="h-9 px-3 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition-colors">
+              className="h-9 px-3 rounded-lg border border-white/10 text-sm font-medium text-gray-300 hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition-colors">
               <ChevronLeft className="h-4 w-4" />
               <span className="hidden sm:inline">Prev</span>
             </button>
@@ -252,8 +252,8 @@ const Shop = () => {
                   <button key={page} onClick={() => handlePageChange(page)}
                     className={`h-9 w-9 rounded-lg text-sm font-semibold transition-colors ${
                       current_page === page
-                        ? "bg-blue-600 text-white"
-                        : "border border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700"
+                        ? "bg-zan-cyan text-zan-dark"
+                        : "border border-white/10 text-gray-200 hover:bg-zan-cyan/10 hover:border-zan-cyan/20 hover:text-zan-cyan"
                     }`}>
                     {page}
                   </button>
@@ -261,15 +261,15 @@ const Shop = () => {
               )}
             </div>
             <button onClick={() => handlePageChange(current_page + 1)} disabled={current_page === last_page}
-              className="h-9 px-3 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition-colors">
+              className="h-9 px-3 rounded-lg border border-white/10 text-sm font-medium text-gray-300 hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition-colors">
               <span className="hidden sm:inline">Next</span>
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
           <div className="hidden md:flex items-center gap-2 order-3 text-sm">
-            <span className="text-gray-500">Go to:</span>
+            <span className="text-gray-400">Go to:</span>
             <select value={current_page} onChange={(e) => handlePageChange(parseInt(e.target.value))}
-              className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+              className="border border-white/10 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-zan-cyan/40 focus:border-zan-cyan bg-card">
               {Array.from({ length: last_page }, (_, i) => i + 1).map(p => (
                 <option key={p} value={p}>Page {p}</option>
               ))}
@@ -283,12 +283,12 @@ const Shop = () => {
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
-          <Skeleton className="aspect-[5/4] w-full bg-gray-100" />
+        <div key={i} className="bg-card border border-white/10 rounded-2xl overflow-hidden">
+          <Skeleton className="aspect-[5/4] w-full bg-white/5" />
           <div className="p-4 space-y-2.5">
-            <Skeleton className="h-4 w-3/4 bg-gray-100" />
-            <Skeleton className="h-4 w-1/2 bg-gray-100" />
-            <Skeleton className="h-9 w-full rounded-xl bg-gray-100" />
+            <Skeleton className="h-4 w-3/4 bg-white/5" />
+            <Skeleton className="h-4 w-1/2 bg-white/5" />
+            <Skeleton className="h-9 w-full rounded-xl bg-white/5" />
           </div>
         </div>
       ))}
@@ -296,10 +296,10 @@ const Shop = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-background">
       <Seo
-        title="Shop Robotics & IoT Components Online - Zantech Store"
-        description="Browse and buy robotics kits, Arduino, ESP32, sensors, modules, and IoT components from Zantech Store. Fast delivery across Bangladesh for students, makers, and engineers."
+        title="Shop Robotics & IoT Components Online - ZAN Tech Store"
+        description="Browse and buy robotics kits, Arduino, ESP32, sensors, modules, and IoT components from ZAN Tech Store. Fast delivery across Bangladesh for students, makers, and engineers."
         url="https://store.zantechbd.com/shop"
         type="website"
         keywords="Zantech shop, buy Arduino Bangladesh, robotics components BD, IoT sensors online, ESP32 modules, electronics shop Bangladesh, ZAN Tech store"
@@ -312,10 +312,10 @@ const Shop = () => {
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-1">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-1">
                 {activeCategory ? activeCategory.name : "All Products"}
               </h1>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-400 text-sm">
                 {isLoading
                   ? "Loading products..."
                   : `${pagination.total.toLocaleString()} products available`}
@@ -330,11 +330,11 @@ const Shop = () => {
                 value={liveSearch}
                 onChange={e => setLiveSearch(e.target.value)}
                 placeholder="Search products..."
-                className="w-full bg-white border border-gray-200 text-gray-900 placeholder-gray-400 pl-10 pr-9 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full bg-card border border-white/10 text-white placeholder-gray-500 pl-10 pr-9 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-zan-cyan/40 focus:border-zan-cyan transition-all"
               />
               {liveSearch && (
                 <button onClick={() => setLiveSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors">
                   <X className="h-4 w-4" />
                 </button>
               )}
@@ -344,47 +344,47 @@ const Shop = () => {
           {/* Active Filter Chips */}
           {activeFilterCount > 0 && (
             <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Filters:</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Filters:</span>
               {filters.search && (
-                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-zan-cyan/10 text-zan-cyan text-xs font-semibold px-3 py-1.5 rounded-full">
                   <Search className="w-3 h-3" />
                   "{filters.search}"
                   <button onClick={() => { setLiveSearch(""); handleFilterChange("search", ""); }}
-                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-zan-cyan/15 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               {filters.category_slug && activeCategory && (
-                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-zan-cyan/10 text-zan-cyan text-xs font-semibold px-3 py-1.5 rounded-full">
                   {React.createElement(getCategoryIcon(activeCategory.name), { className: "w-3 h-3" })}
                   {activeCategory.name}
                   <button onClick={() => handleFilterChange("category_slug", "")}
-                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-zan-cyan/15 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               {filters.min_price && (
-                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-zan-cyan/10 text-zan-cyan text-xs font-semibold px-3 py-1.5 rounded-full">
                   Min ৳{Number(filters.min_price).toLocaleString()}
                   <button onClick={() => handleFilterChange("min_price", "")}
-                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-zan-cyan/15 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               {filters.max_price && (
-                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-zan-cyan/10 text-zan-cyan text-xs font-semibold px-3 py-1.5 rounded-full">
                   Max ৳{Number(filters.max_price).toLocaleString()}
                   <button onClick={() => handleFilterChange("max_price", "")}
-                    className="hover:bg-blue-100 rounded-full p-0.5 -mr-0.5 transition-colors">
+                    className="hover:bg-zan-cyan/15 rounded-full p-0.5 -mr-0.5 transition-colors">
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
               )}
               <button onClick={clearFilters}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full transition-colors">
+                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded-full transition-colors">
                 <RefreshCw className="w-3 h-3" /> Clear All
               </button>
             </div>
@@ -396,11 +396,11 @@ const Shop = () => {
               {/* Mobile toggle */}
               <div className="lg:hidden mb-3">
                 <button onClick={() => setShowFilters(!showFilters)}
-                  className="w-full flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm">
+                  className="w-full flex items-center justify-between bg-card border border-white/10 rounded-xl px-4 py-3 text-sm font-semibold text-gray-200 shadow-sm">
                   <span className="flex items-center gap-2">
-                    <SlidersHorizontal className="h-4 w-4 text-blue-600" />
+                    <SlidersHorizontal className="h-4 w-4 text-zan-cyan" />
                     Filters {activeFilterCount > 0 && (
-                      <span className="bg-blue-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                      <span className="bg-zan-cyan text-zan-dark text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                         {activeFilterCount}
                       </span>
                     )}
@@ -409,31 +409,31 @@ const Shop = () => {
                 </button>
               </div>
 
-              <div className={`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden ${showFilters || "hidden lg:block"}`}>
+              <div className={`bg-card rounded-2xl shadow-sm border border-white/10 overflow-hidden ${showFilters || "hidden lg:block"}`}>
                 {/* Sidebar Header */}
-                <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+                <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
                   <div className="flex items-center gap-2">
                     <Filter className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm font-bold text-gray-800 uppercase tracking-wide">Filters</span>
+                    <span className="text-sm font-bold text-white uppercase tracking-wide">Filters</span>
                     {activeFilterCount > 0 && (
-                      <span className="bg-blue-600 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full leading-none flex items-center justify-center">
+                      <span className="bg-zan-cyan text-zan-dark text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full leading-none flex items-center justify-center">
                         {activeFilterCount}
                       </span>
                     )}
                   </div>
                   {activeFilterCount > 0 && (
-                    <button onClick={clearFilters} className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors">
+                    <button onClick={clearFilters} className="text-xs font-semibold text-zan-cyan hover:text-zan-cyan flex items-center gap-1 transition-colors">
                       <RefreshCw className="h-3 w-3" /> Reset
                     </button>
                   )}
                 </div>
 
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-white/5">
                   {/* Price Range */}
                   <div className="p-4">
                     <button onClick={() => toggleSection("price")}
                       className="flex items-center justify-between w-full text-left mb-1">
-                      <span className="text-sm font-bold text-gray-800">Price Range</span>
+                      <span className="text-sm font-bold text-white">Price Range</span>
                       {expandedSections.price
                         ? <ChevronUp className="h-4 w-4 text-gray-400" />
                         : <ChevronDown className="h-4 w-4 text-gray-400" />}
@@ -441,16 +441,16 @@ const Shop = () => {
                     {expandedSections.price && (
                       <div className="mt-3 grid grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1">Min ৳</label>
+                          <label className="block text-xs font-medium text-gray-400 mb-1">Min ৳</label>
                           <Input type="number" placeholder="0" value={filters.min_price}
                             onChange={(e) => handleFilterChange("min_price", e.target.value)}
-                            className="h-9 text-sm rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-500" />
+                            className="h-9 text-sm rounded-lg border-white/10 focus:ring-2 focus:ring-zan-cyan/40" />
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1">Max ৳</label>
+                          <label className="block text-xs font-medium text-gray-400 mb-1">Max ৳</label>
                           <Input type="number" placeholder="∞" value={filters.max_price}
                             onChange={(e) => handleFilterChange("max_price", e.target.value)}
-                            className="h-9 text-sm rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-500" />
+                            className="h-9 text-sm rounded-lg border-white/10 focus:ring-2 focus:ring-zan-cyan/40" />
                         </div>
                       </div>
                     )}
@@ -460,7 +460,7 @@ const Shop = () => {
                   <div className="p-4">
                     <button onClick={() => toggleSection("category")}
                       className="flex items-center justify-between w-full text-left mb-1">
-                      <span className="text-sm font-bold text-gray-800">Categories</span>
+                      <span className="text-sm font-bold text-white">Categories</span>
                       {expandedSections.category
                         ? <ChevronUp className="h-4 w-4 text-gray-400" />
                         : <ChevronDown className="h-4 w-4 text-gray-400" />}
@@ -470,8 +470,8 @@ const Shop = () => {
                         <button onClick={() => handleFilterChange("category_slug", "")}
                           className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm transition-colors text-left ${
                             filters.category_slug === ""
-                              ? "bg-blue-50 text-blue-700 font-semibold"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                              ? "bg-zan-cyan/10 text-zan-cyan font-semibold"
+                              : "text-gray-300 hover:bg-background hover:text-white"
                           }`}>
                           <Grid3X3 className="w-4 h-4 text-gray-400 flex-shrink-0" />
                           All Products
@@ -483,10 +483,10 @@ const Shop = () => {
                             <button key={cat.id} onClick={() => handleFilterChange("category_slug", cat.slug)}
                               className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-sm transition-colors text-left group ${
                                 isActive
-                                  ? "bg-blue-50 text-blue-700 font-semibold"
-                                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                  ? "bg-zan-cyan/10 text-zan-cyan font-semibold"
+                                  : "text-gray-300 hover:bg-background hover:text-white"
                               }`}>
-                              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-blue-600" : "text-gray-400"}`} />
+                              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-zan-cyan" : "text-gray-400"}`} />
                               <span className="line-clamp-1 flex-1">{cat.name}</span>
                             </button>
                           );
@@ -501,30 +501,30 @@ const Shop = () => {
             {/* Products Section */}
             <div className="flex-1 min-w-0">
               {/* Toolbar */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-3 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="bg-card rounded-2xl shadow-sm border border-white/10 px-4 py-3 mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
                   {/* View Mode */}
-                  <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
+                  <div className="flex items-center bg-white/5 rounded-lg p-0.5">
                     <button onClick={() => setViewMode("grid")}
-                      className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-white shadow-sm text-blue-600" : "text-gray-400 hover:text-gray-600"}`}>
+                      className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-card shadow-sm text-zan-cyan" : "text-gray-400 hover:text-gray-300"}`}>
                       <Grid3X3 className="h-3.5 w-3.5" />
                     </button>
                     <button onClick={() => setViewMode("list")}
-                      className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-white shadow-sm text-blue-600" : "text-gray-400 hover:text-gray-600"}`}>
+                      className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-card shadow-sm text-zan-cyan" : "text-gray-400 hover:text-gray-300"}`}>
                       <List className="h-3.5 w-3.5" />
                     </button>
                   </div>
 
                   {/* Results count */}
                   {!isLoading && pagination.total > 0 && (
-                    <span className="text-xs text-gray-500 font-medium">
+                    <span className="text-xs text-gray-400 font-medium">
                       {(pagination.current_page - 1) * pagination.per_page + 1}–{Math.min(pagination.current_page * pagination.per_page, pagination.total)}
-                      {" "}of <strong className="text-gray-800">{pagination.total.toLocaleString()}</strong> products
+                      {" "}of <strong className="text-white">{pagination.total.toLocaleString()}</strong> products
                     </span>
                   )}
                   {isLoading && (
                     <span className="text-xs text-gray-400 flex items-center gap-1.5">
-                      <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-3 h-3 border-2 border-zan-cyan border-t-transparent rounded-full animate-spin" />
                       Loading…
                     </span>
                   )}
@@ -534,7 +534,7 @@ const Shop = () => {
                 <div className="flex items-center gap-2">
                   <ArrowUpDown className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
                   <select
-                    className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700"
+                    className="border border-white/10 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-zan-cyan/40 focus:border-zan-cyan bg-card text-gray-200"
                     onChange={(e) => handleFilterChange("sort", e.target.value)}>
                     <option value="newest">Newest First</option>
                     <option value="price_low">Price: Low to High</option>
@@ -548,30 +548,30 @@ const Shop = () => {
               {isLoading ? (
                 <LoadingSkeleton />
               ) : error ? (
-                <div className="bg-white rounded-2xl shadow-sm border border-red-100 p-12 text-center">
-                  <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="bg-card rounded-2xl shadow-sm border border-red-500/25 p-12 text-center">
+                  <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <X className="h-8 w-8 text-red-400" />
                   </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-2">Failed to load products</h3>
-                  <p className="text-sm text-gray-500 mb-6">{error}</p>
+                  <h3 className="text-base font-bold text-white mb-2">Failed to load products</h3>
+                  <p className="text-sm text-gray-400 mb-6">{error}</p>
                   <button onClick={() => fetchProducts()}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                    className="bg-zan-cyan hover:bg-cyan-300 text-zan-dark px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
                     Try Again
                   </button>
                 </div>
               ) : products.length === 0 ? (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="bg-card rounded-2xl shadow-sm border border-white/10 p-12 text-center">
+                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Search className="h-8 w-8 text-gray-400" />
                   </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-2">No products found</h3>
-                  <p className="text-sm text-gray-500 mb-6">
+                  <h3 className="text-base font-bold text-white mb-2">No products found</h3>
+                  <p className="text-sm text-gray-400 mb-6">
                     {filters.search
                       ? `No results for "${filters.search}". Try a different keyword.`
                       : "Try adjusting your filters to find what you're looking for."}
                   </p>
                   <button onClick={clearFilters}
-                    className="border border-gray-200 hover:bg-gray-50 text-gray-700 px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                    className="border border-white/10 hover:bg-background text-gray-200 px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">
                     Clear Filters
                   </button>
                 </div>

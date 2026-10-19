@@ -14,7 +14,7 @@ const PostCard = ({ post, linkState }) => {
   const getCategoryStyle = (category) => {
     const lowerCategory = category?.toLowerCase() || "";
     if (lowerCategory.includes("tutorial")) return "bg-purple-600";
-    if (lowerCategory.includes("blog")) return "bg-blue-600";
+    if (lowerCategory.includes("blog")) return "bg-zan-cyan";
     return "bg-emerald-600";
   };
 
@@ -22,11 +22,11 @@ const PostCard = ({ post, linkState }) => {
     <Link
       to={`/postdetails/${post.slug}`}
       state={linkState}
-      className="group flex flex-col bg-white rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden h-full"
+      className="group flex flex-col bg-card rounded-2xl border border-white/10 hover:border-white/10 hover:shadow-md transition-all duration-200 overflow-hidden h-full"
     >
       {/* Image Section */}
       <div className="relative overflow-hidden shrink-0">
-        <div className="aspect-[16/10] overflow-hidden bg-gray-100">
+        <div className="aspect-[16/10] overflow-hidden bg-white/5">
           <img
             src={post.thumbnail || "/placeholder-post.jpg"}
             alt={post.title}
@@ -55,7 +55,7 @@ const PostCard = ({ post, linkState }) => {
           </div>
           {post.read_time && (
             <>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span className="w-1 h-1 rounded-full bg-white/15" />
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5" />
                 <span>{post.read_time} min read</span>
@@ -65,24 +65,24 @@ const PostCard = ({ post, linkState }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+        <h3 className="text-base font-bold text-white mb-2 line-clamp-2 leading-snug group-hover:text-zan-cyan transition-colors">
           {post.title}
         </h3>
 
         {/* Excerpt */}
         {post.excerpt && (
-          <p className="text-gray-500 text-sm mb-5 line-clamp-3 leading-relaxed flex-grow">
+          <p className="text-gray-400 text-sm mb-5 line-clamp-3 leading-relaxed flex-grow">
             {post.excerpt}
           </p>
         )}
 
         {/* Footer Meta */}
-        <div className="pt-3.5 mt-auto border-t border-gray-100 flex items-center justify-between">
+        <div className="pt-3.5 mt-auto border-t border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">
+            <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-gray-400 flex-shrink-0">
               <User className="h-3.5 w-3.5" />
             </div>
-            <span className="text-xs font-medium text-gray-600 truncate">
+            <span className="text-xs font-medium text-gray-300 truncate">
               {post.author_name || "ZAN Tech Team"}
             </span>
           </div>
@@ -90,10 +90,10 @@ const PostCard = ({ post, linkState }) => {
           {post.tags && post.tags.length > 0 ? (
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <Tag className="h-3.5 w-3.5 text-gray-400" />
-              <span className="text-xs font-medium text-gray-500">{post.tags[0]}</span>
+              <span className="text-xs font-medium text-gray-400">{post.tags[0]}</span>
             </div>
           ) : (
-            <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+            <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-zan-cyan group-hover:translate-x-0.5 transition-all flex-shrink-0" />
           )}
         </div>
       </div>

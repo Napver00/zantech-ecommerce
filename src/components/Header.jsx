@@ -11,28 +11,25 @@ import {
   Heart,
   LogOut,
   ChevronDown,
+  ChevronRight,
   ArrowRight,
+  ArrowUpRight,
   TrendingUp,
   X,
-  Cpu,
+  LayoutGrid,
+  LayoutDashboard,
   Package,
-  Zap,
+  Phone,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { config } from "@/config";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -42,20 +39,38 @@ import { useAuth } from "@/context/AuthContext";
 import { useCategories } from "@/context/CategoriesContext";
 import { useCompany } from "@/context/CompanyContext";
 import { AuthSheet } from "@/components/AuthSheet";
+import BrandLogo from "@/components/BrandLogo";
+import { getCategoryIcon } from "@/lib/categoryIcons";
 
 const YouTubeIcon = ({ size = 16 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden
-  >
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
     <rect x="2" y="5" width="20" height="14" rx="4" fill="currentColor" />
-    <path d="M10 9.5L15 12L10 14.5V9.5Z" fill="white" />
+    <path d="M10 9.5L15 12L10 14.5V9.5Z" fill="#0b0f19" />
   </svg>
 );
+
+const socialIcon = (platform = "") => {
+  const p = platform.toLowerCase();
+  if (p.includes("facebook")) return Facebook;
+  if (p.includes("instagram")) return Instagram;
+  if (p.includes("linkedin")) return Linkedin;
+  if (p.includes("youtube")) return YouTubeIcon;
+  return LinkIcon;
+};
+
+// Quick links in the category bar (DFRobot-style secondary navigation)
+const NAV_LINKS = [
+  { to: "/shop", label: "All Products" },
+  { to: "/zantech-kits", label: "ZAN Tech Kits", highlight: true },
+  { to: "/shop?category_slug=competition-robotics-kits", label: "Competition Kits" },
+  { to: "/shop?category_slug=starter-kit", label: "Starter Kits" },
+  { to: "/tutorials", label: "Tutorials" },
+  { to: "/blog", label: "Blog" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
+];
+
+const trendingSearches = ["Arduino", "ESP32", "Robot Kit", "Servo Motor", "Ultrasonic Sensor"];
 
 const Header = () => {
   const location = useLocation();
@@ -68,11 +83,13 @@ const Header = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [activeMobileTab, setActiveMobileTab] = useState("main");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
+  const megaTimer = useRef(null);
   const { cartCount } = useCart();
-  const { user, userInfo, logout, isAuthSheetOpen, setIsAuthSheetOpen } =
-    useAuth(); // Get userInfo from context
+  const { user, userInfo, logout, isAuthSheetOpen, setIsAuthSheetOpen } = useAuth();
 
   const wishlistCount = userInfo?.total_wishlist || 0;
+  const socialLinks = (company?.social_links || []).filter((l) => !l.platform?.toLowerCase?.().includes("tiktok"));
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -80,34 +97,28 @@ const Header = () => {
         performSearch(searchQuery, true);
       } else {
         setSearchResults([]);
-        setShowSearchResults(false);
       }
     }, 300);
-
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
+  // Close the mega menu / mobile menu whenever the page changes
+  useEffect(() => {
+    setMegaOpen(false);
+    setMobileMenuOpen(false);
+  }, [location.pathname, location.search]);
+
   const performSearch = async (query, isPreview = false) => {
     if (!query.trim()) return;
-
     setIsSearching(true);
     try {
       const limit = isPreview ? 5 : 20;
-      const response = await fetch(
-        `${config.baseURL}/products?search=${encodeURIComponent(query)}&limit=${limit}`,
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      const response = await fetch(`${config.baseURL}/products?search=${encodeURIComponent(query)}&limit=${limit}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const result = await response.json();
-
       if (result.success && Array.isArray(result.data)) {
         setSearchResults(result.data);
-        if (isPreview) {
-          setShowSearchResults(true);
-        }
+        if (isPreview) setShowSearchResults(true);
       } else {
         setSearchResults([]);
       }
@@ -124,13 +135,7 @@ const Header = () => {
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setShowSearchResults(false);
-    }
-  };
-
-  const handleSearchInputChange = (e) => {
-    setSearchQuery(e.target.value);
-    if (!e.target.value.trim()) {
-      setShowSearchResults(false);
+      setMobileMenuOpen(false);
     }
   };
 
@@ -147,239 +152,90 @@ const Header = () => {
     }
   };
 
-  const searchInputRef = useRef(null);
-  const isResourcesActive =
-    location.pathname === "/blog" || location.pathname === "/tutorials";
+  const openMega = () => { clearTimeout(megaTimer.current); setMegaOpen(true); };
+  const closeMega = () => { megaTimer.current = setTimeout(() => setMegaOpen(false), 150); };
 
-  const trendingSearches = ["Arduino", "ESP32", "Robot Kit", "Servo Motor", "Ultrasonic Sensor"];
+  const isActive = (to) => {
+    const [path, query] = to.split("?");
+    if (query) return location.pathname === path && location.search.includes(query);
+    return location.pathname === path && (path !== "/shop" || !location.search.includes("category_slug"));
+  };
+
+  const activeCategory = new URLSearchParams(location.search).get("category_slug") || "";
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-      {/* Top Bar */}
-      <div className="bg-gray-900 text-white text-xs py-3">
-        <div className="container mx-auto flex justify-between items-center px-4">
-          <div className="flex items-center space-x-6">
-            <span className="text-blue-100 font-medium">
-              Welcome to ZAN Tech
-            </span>
-            <div className="hidden md:flex items-center space-x-4">
-              <Link
-                to="/terms"
-                className="hover:text-blue-200 transition-colors duration-200 hover:underline"
-              >
-                Terms & Conditions
-              </Link>
-              <Link
-                to="/privacy-policy"
-                className="hover:text-blue-200 transition-colors duration-200 hover:underline"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                to="/return-policy"
-                className="hover:text-blue-200 transition-colors duration-200 hover:underline"
-              >
-                Return Policy
-              </Link>
-            </div>
+    <>
+      {/* ── Utility bar ── */}
+      <div className="hidden border-b border-white/5 bg-black/40 text-xs text-gray-400 md:block">
+        <div className="container mx-auto flex h-9 items-center justify-between px-4">
+          <div className="flex items-center gap-5">
+            <span className="font-mono uppercase tracking-widest text-zan-cyan/80">Robotics · IoT · Electronics</span>
+            <span className="h-3 w-px bg-white/10" />
+            <Link to="/terms" className="transition-colors hover:text-white">Terms</Link>
+            <Link to="/privacy-policy" className="transition-colors hover:text-white">Privacy</Link>
+            <Link to="/return-policy" className="transition-colors hover:text-white">Returns</Link>
+            <Link to="/faq" className="transition-colors hover:text-white">FAQ</Link>
           </div>
-
-          <div className="flex items-center space-x-3 hidden sm:flex">
-            <span className="text-blue-200 text-xs hidden sm:block">
-              Follow us:
-            </span>
-            {company?.social_links?.length > 0 ? (
-              company.social_links.map((link) => {
-                const platform = link.platform?.toLowerCase?.() || "";
-                let Icon = LinkIcon;
-                if (platform.includes("facebook")) Icon = Facebook;
-                if (platform.includes("instagram")) Icon = Instagram;
-                if (platform.includes("linkedin")) Icon = Linkedin;
-                if (platform.includes("youtube")) Icon = YouTubeIcon;
-                if (platform.includes("tiktok")) return null;
-                return (
-                  <a
-                    key={link.id}
-                    href={link.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-blue-200 hover:text-white transition-all duration-200 hover:scale-110"
-                  >
-                    <Icon size={16} />
-                  </a>
-                );
-              })
-            ) : (
-              <>
-                <a
-                  href="#"
-                  className="text-blue-200 hover:text-white transition-all duration-200 hover:scale-110"
-                >
-                  <Facebook size={16} />
+          <div className="flex items-center gap-4">
+            <a href="https://zantechbd.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 transition-colors hover:text-zan-cyan">
+              Courses &amp; Bootcamps <ArrowUpRight className="h-3 w-3" />
+            </a>
+            {socialLinks.length > 0 && <span className="h-3 w-px bg-white/10" />}
+            {socialLinks.map((link) => {
+              const Icon = socialIcon(link.platform);
+              return (
+                <a key={link.id} href={link.url} target="_blank" rel="noreferrer" aria-label={link.platform}
+                  className="transition-colors hover:text-zan-cyan">
+                  <Icon size={14} />
                 </a>
-                <a
-                  href="#"
-                  className="text-blue-200 hover:text-white transition-all duration-200 hover:scale-110"
-                >
-                  <Instagram size={16} />
-                </a>
-                <a
-                  href="#"
-                  className="text-blue-200 hover:text-white transition-all duration-200 hover:scale-110"
-                >
-                  <Linkedin size={16} />
-                </a>
-              </>
-            )}
+              );
+            })}
           </div>
         </div>
       </div>
 
-      {/* Main Header */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <img
-              src="/zantech-logo.webp"
-              alt="ZAN Tech Logo"
-              className="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-            />
-          </Link>
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-zan-dark/90 backdrop-blur-xl">
+        {/* ── Main bar ── */}
+        <div className="container mx-auto flex h-16 items-center gap-4 px-4 lg:h-[72px] lg:gap-8">
+          <BrandLogo />
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center">
-            <NavigationMenu>
-              <NavigationMenuList className="space-x-2">
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/shop"
-                      className={cn(
-                        "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative",
-                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
-                        location.pathname === "/shop"
-                          ? "text-blue-600 bg-blue-50 after:w-8"
-                          : "text-gray-700 after:w-0 hover:after:w-4",
-                      )}
-                    >
-                      SHOP
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+          {/* Search */}
+          <div className="relative hidden flex-1 md:block">
+            <form onSubmit={handleSearch} className="relative mx-auto max-w-2xl">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <input
+                type="search"
+                placeholder="Search Arduino, ESP32, sensors, robot kits…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowSearchResults(true)}
+                onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+                className="h-11 w-full rounded-lg border border-white/10 bg-white/[0.04] pl-11 pr-28 text-sm text-white placeholder-gray-500 outline-none transition-all focus:border-zan-cyan/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-zan-cyan/10"
+              />
+              {searchQuery && (
+                <button type="button" aria-label="Clear search"
+                  onClick={() => { setSearchQuery(""); setSearchResults([]); }}
+                  className="absolute right-[5.5rem] top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+              <button type="submit"
+                className="absolute right-1 top-1 bottom-1 inline-flex items-center gap-1.5 rounded-md bg-zan-cyan px-4 text-sm font-bold text-zan-dark transition-colors hover:bg-white">
+                {isSearching ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-zan-dark/30 border-t-zan-dark" /> : <Search className="h-4 w-4" />}
+                <span>Search</span>
+              </button>
 
-                {/* Resources Dropdown */}
-                <NavigationMenuItem>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        className={cn(
-                          "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative flex items-center gap-1",
-                          'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
-                          isResourcesActive
-                            ? "text-blue-600 bg-blue-50 after:w-8"
-                            : "text-gray-700 after:w-0 hover:after:w-4",
-                        )}
-                      >
-                        RESOURCES
-                        <ChevronDown className="h-4 w-4" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-48 mt-2">
-                      <DropdownMenuItem asChild>
-                        <Link to="/blog" className="cursor-pointer font-medium">
-                          Blog
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link
-                          to="/tutorials"
-                          className="cursor-pointer font-medium"
-                        >
-                          Tutorials
-                        </Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/about"
-                      className={cn(
-                        "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative",
-                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
-                        location.pathname === "/about"
-                          ? "text-blue-600 bg-blue-50 after:w-8"
-                          : "text-gray-700 after:w-0 hover:after:w-4",
-                      )}
-                    >
-                      ABOUT
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/contact"
-                      className={cn(
-                        "font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:bg-blue-50 relative",
-                        'after:content-[""] after:absolute after:left-1/2 after:bottom-0 after:h-0.5 after:bg-blue-600 after:transform after:-translate-x-1/2 after:transition-all after:duration-300',
-                        location.pathname === "/contact"
-                          ? "text-blue-600 bg-blue-50 after:w-8"
-                          : "text-gray-700 after:w-0 hover:after:w-4",
-                      )}
-                    >
-                      CONTACT
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-          </nav>
-
-          {/* Search & Actions */}
-          <div className="flex items-center gap-4">
-            {/* Search Bar with Dropdown */}
-            <div className="relative w-72 sm:w-96 hidden md:block">
-              <form onSubmit={handleSearch} className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                <Input
-                  ref={searchInputRef}
-                  type="search"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
-                  onFocus={() => setShowSearchResults(true)}
-                  onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
-                  className="pl-10 pr-10 py-2.5 text-sm rounded-xl bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm h-10"
-                />
-                {searchQuery ? (
-                  <button type="button" onClick={() => { setSearchQuery(''); setSearchResults([]); setShowSearchResults(false); }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                    <X className="h-4 w-4" />
-                  </button>
-                ) : isSearching ? (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                ) : null}
-              </form>
-
-              {/* Search Results Dropdown */}
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-lg z-50 overflow-hidden">
-                  {/* Trending (no query) */}
+                <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-white/10 bg-surface-dark shadow-2xl shadow-black/50">
                   {!searchQuery && (
-                    <div className="p-3">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-2 mb-2 flex items-center gap-1.5">
-                        <TrendingUp className="w-3 h-3" /> Trending searches
+                    <div className="p-4">
+                      <p className="mb-2.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-gray-500">
+                        <TrendingUp className="h-3 w-3" /> Trending searches
                       </p>
-                      <div className="flex flex-wrap gap-1.5 px-1">
-                        {trendingSearches.map(term => (
-                          <button key={term} type="button"
-                            onMouseDown={() => { setSearchQuery(term); }}
-                            className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-1.5 rounded-full font-medium transition-colors">
+                      <div className="flex flex-wrap gap-1.5">
+                        {trendingSearches.map((term) => (
+                          <button key={term} type="button" onMouseDown={() => setSearchQuery(term)}
+                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-gray-300 transition-colors hover:border-zan-cyan/40 hover:text-zan-cyan">
                             {term}
                           </button>
                         ))}
@@ -387,431 +243,330 @@ const Header = () => {
                     </div>
                   )}
 
-                  {/* Searching spinner */}
-                  {searchQuery && isSearching && (
-                    <div className="flex items-center gap-3 px-4 py-4">
-                      <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                      <span className="text-sm text-gray-500">Searching for <strong className="text-gray-800">"{searchQuery}"</strong>…</span>
+                  {searchQuery && searchQuery.length <= 2 && (
+                    <p className="px-4 py-4 text-sm text-gray-500">Keep typing to search…</p>
+                  )}
+
+                  {searchQuery.length > 2 && isSearching && searchResults.length === 0 && (
+                    <div className="flex items-center gap-3 px-4 py-4 text-sm text-gray-400">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-zan-cyan/30 border-t-zan-cyan" />
+                      Searching for <strong className="text-white">"{searchQuery}"</strong>…
                     </div>
                   )}
 
-                  {/* No results */}
-                  {searchQuery && !isSearching && searchResults.length === 0 && (
+                  {searchQuery.length > 2 && !isSearching && searchResults.length === 0 && (
                     <div className="px-4 py-6 text-center">
-                      <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Search className="w-5 h-5 text-gray-400" />
-                      </div>
-                      <p className="text-sm font-semibold text-gray-700 mb-0.5">No results for "{searchQuery}"</p>
-                      <p className="text-xs text-gray-400 mb-3">Try a different keyword</p>
-                      <button onMouseDown={handleViewAllResults}
-                        className="text-xs text-blue-600 hover:underline font-medium">
+                      <p className="mb-1 text-sm font-semibold text-gray-200">No results for "{searchQuery}"</p>
+                      <p className="mb-3 text-xs text-gray-500">Try a different keyword</p>
+                      <button onMouseDown={() => navigate("/shop")} className="text-xs font-medium text-zan-cyan hover:underline">
                         Browse all products →
                       </button>
                     </div>
                   )}
 
-                  {/* Results list */}
-                  {searchQuery && !isSearching && searchResults.length > 0 && (
+                  {searchQuery.length > 2 && searchResults.length > 0 && (
                     <>
-                      <div className="px-3 pt-3 pb-1 flex items-center justify-between">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                          Products
-                        </p>
-                        <span className="text-[10px] text-gray-400">{searchResults.length} found</span>
+                      <div className="flex items-center justify-between px-4 pb-1 pt-3">
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-gray-500">Products</p>
+                        <span className="text-[10px] text-gray-500">{searchResults.length} found</span>
                       </div>
-                      <div className="px-2 pb-2 max-h-72 overflow-y-auto">
+                      <div className="max-h-80 overflow-y-auto px-2 pb-2">
                         {searchResults.map((product) => (
                           <div key={product.id} onMouseDown={() => handleSearchResultClick(product.slug)}
-                            className="flex items-center gap-3 p-2 hover:bg-blue-50 cursor-pointer rounded-xl transition-colors group">
-                            <div className="relative flex-shrink-0">
-                              <img src={product.image || "/placeholder-product.jpg"} alt={product.name}
-                                loading="lazy" decoding="async"
-                                className="w-12 h-12 object-cover rounded-lg bg-gray-100" />
-                              {product.discountPercentage && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full leading-none">
-                                  -{product.discountPercentage}%
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-semibold text-gray-800 group-hover:text-blue-700 line-clamp-1 transition-colors leading-snug">
-                                {product.name}
-                              </p>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-sm font-bold text-blue-600">
-                                  ৳{(product.discountedPrice || product.price || 0).toLocaleString()}
-                                </span>
+                            className="group flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-white/5">
+                            <img src={product.image || "/placeholder-product.jpg"} alt={product.name} loading="lazy" decoding="async"
+                              className="product-tile h-12 w-12 flex-shrink-0 rounded-md object-contain p-1" />
+                            <div className="min-w-0 flex-1">
+                              <p className="line-clamp-1 text-sm font-semibold text-gray-100 transition-colors group-hover:text-zan-cyan">{product.name}</p>
+                              <div className="mt-0.5 flex items-center gap-2">
+                                <span className="text-sm font-bold text-zan-cyan">৳{(product.discountedPrice || product.price || 0).toLocaleString()}</span>
                                 {product.discountedPrice && product.discountedPrice < product.price && (
-                                  <span className="text-xs text-gray-400 line-through">৳{(product.price).toLocaleString()}</span>
+                                  <span className="text-xs text-gray-500 line-through">৳{product.price.toLocaleString()}</span>
                                 )}
                                 {product.categories?.[0] && (
-                                  <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full ml-auto">
-                                    {product.categories[0].name}
-                                  </span>
+                                  <span className="ml-auto rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-gray-400">{product.categories[0].name}</span>
                                 )}
                               </div>
                             </div>
-                            <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-blue-500 flex-shrink-0 transition-colors" />
                           </div>
                         ))}
                       </div>
-                      <div className="border-t border-gray-100">
-                        <button onMouseDown={handleViewAllResults}
-                          className="w-full py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 rounded-b-2xl">
-                          View all results for "{searchQuery}"
-                          <ArrowRight className="w-4 h-4" />
-                        </button>
-                      </div>
+                      <button onMouseDown={handleViewAllResults}
+                        className="flex w-full items-center justify-center gap-2 border-t border-white/10 py-3 text-sm font-semibold text-zan-cyan transition-colors hover:bg-white/5">
+                        View all results for "{searchQuery}" <ArrowRight className="h-4 w-4" />
+                      </button>
                     </>
                   )}
                 </div>
               )}
-            </div>
+            </form>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-2">
-              {/* Wishlist */}
-              <Link to="/dashboard/wishlist">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative hover:bg-blue-50 transition-colors duration-200 group"
-                >
-                  <Heart className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200" />
-                  {user && wishlistCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium shadow-sm">
-                      {wishlistCount}
+          {/* Actions */}
+          <div className="ml-auto flex items-center gap-1 md:ml-0 md:gap-2">
+            {/* Account */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="hidden items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 sm:flex">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-zan-cyan/40 bg-zan-cyan/10 text-sm font-bold text-zan-cyan">
+                      {(user.name || user.email || "U").charAt(0).toUpperCase()}
                     </span>
-                  )}
-                </Button>
-              </Link>
-
-              {/* Cart */}
-              <Sheet>
+                    <span className="hidden leading-tight xl:block">
+                      <span className="block text-[11px] text-gray-500">Hello,</span>
+                      <span className="block max-w-[110px] truncate text-sm font-semibold text-white">{user.name?.split(" ")[0] || "Account"}</span>
+                    </span>
+                    <ChevronDown className="hidden h-3.5 w-3.5 text-gray-500 xl:block" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="truncate text-xs font-normal text-gray-400">{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link to="/dashboard" className="cursor-pointer"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/dashboard/orders" className="cursor-pointer"><Package className="h-4 w-4" /> My orders</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/dashboard/wishlist" className="cursor-pointer"><Heart className="h-4 w-4" /> Wishlist</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-400 focus:text-red-300"><LogOut className="h-4 w-4" /> Log out</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Sheet open={isAuthSheetOpen} onOpenChange={setIsAuthSheetOpen}>
                 <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative hover:bg-blue-50 transition-colors duration-200 group"
-                  >
-                    <ShoppingCart className="text-gray-600 group-hover:text-blue-600 transition-colors duration-200" />
+                  <button className="hidden items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 sm:flex">
+                    <User className="h-6 w-6 text-gray-300" />
+                    <span className="hidden leading-tight xl:block">
+                      <span className="block text-[11px] text-gray-500">Sign in</span>
+                      <span className="block text-sm font-semibold text-white">Account</span>
+                    </span>
+                  </button>
+                </SheetTrigger>
+                <AuthSheet />
+              </Sheet>
+            )}
+
+            {/* Wishlist */}
+            <Link to="/dashboard/wishlist" aria-label="Wishlist"
+              className="relative hidden rounded-lg p-2.5 text-gray-300 transition-colors hover:bg-white/5 hover:text-zan-cyan sm:block">
+              <Heart className="h-6 w-6" />
+              {user && wishlistCount > 0 && (
+                <span className="absolute right-0.5 top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-zan-red px-1 text-[11px] font-bold text-white">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Cart */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <button aria-label="Cart" className="relative flex items-center gap-2.5 rounded-lg p-2.5 text-gray-300 transition-colors hover:bg-white/5 hover:text-zan-cyan">
+                  <span className="relative">
+                    <ShoppingCart className="h-6 w-6" />
                     {cartCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium shadow-sm">
+                      <span className="absolute -right-2.5 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-zan-cyan px-1 text-[11px] font-bold text-zan-dark">
                         {cartCount}
                       </span>
                     )}
-                  </Button>
-                </SheetTrigger>
-                <Cart />
-              </Sheet>
+                  </span>
+                  <span className="hidden text-left leading-tight xl:block">
+                    <span className="block text-[11px] text-gray-500">Your</span>
+                    <span className="block text-sm font-semibold text-white">Cart</span>
+                  </span>
+                </button>
+              </SheetTrigger>
+              <Cart />
+            </Sheet>
 
-              {/* Login/User Section - Desktop */}
-              {user ? (
-                <div className="hidden sm:flex items-center gap-2">
-                  <Link to="/dashboard">
-                    <Button
-                      variant="outline"
-                      className="hover:bg-blue-50 transition-colors duration-200"
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    onClick={logout}
-                    variant="ghost"
-                    size="icon"
-                    className="hover:bg-red-50 transition-colors duration-200 group"
-                    title="Logout"
-                  >
-                    <LogOut className="h-4 w-4 text-gray-600 group-hover:text-red-600" />
-                  </Button>
+            {/* Mobile menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <button aria-label="Open menu" className="rounded-lg p-2.5 text-gray-300 transition-colors hover:bg-white/5 lg:hidden">
+                  <Menu className="h-6 w-6" />
+                </button>
+              </SheetTrigger>
+              <SheetContent className="w-[320px] overflow-y-auto border-l border-white/10 bg-zan-dark p-0 sm:w-[380px]">
+                <div className="sticky top-0 z-10 border-b border-white/10 bg-zan-dark">
+                  <div className="p-4 pr-12">
+                    <BrandLogo compact onClick={() => setMobileMenuOpen(false)} />
+                  </div>
+                  <div className="flex">
+                    {[["main", "Menu"], ["category", "Categories"]].map(([key, label]) => (
+                      <button key={key} onClick={() => setActiveMobileTab(key)}
+                        className={cn("flex-1 border-b-2 px-4 py-3 text-sm font-semibold transition-colors",
+                          activeMobileTab === key ? "border-zan-cyan text-zan-cyan" : "border-transparent text-gray-400 hover:text-white")}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <Sheet open={isAuthSheetOpen} onOpenChange={setIsAuthSheetOpen}>
-                  <SheetTrigger asChild>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors hidden sm:flex">
-                      <User className="mr-2 h-4 w-4" />
-                      Login
-                    </Button>
-                  </SheetTrigger>
-                  <AuthSheet />
-                </Sheet>
+
+                <nav className="flex flex-col p-4">
+                  {activeMobileTab === "main" ? (
+                    <>
+                      {user ? (
+                        <div className="mb-5 rounded-xl border border-white/10 bg-surface-dark p-4">
+                          <div className="mb-3 flex items-center gap-3">
+                            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-zan-cyan/40 bg-zan-cyan/10 text-lg font-bold text-zan-cyan">
+                              {(user.name || user.email || "U").charAt(0).toUpperCase()}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-bold text-white">{user.name || "User"}</p>
+                              <p className="truncate text-xs text-gray-400">{user.email}</p>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <Link to="/dashboard" className="flex items-center justify-center gap-1.5 rounded-lg bg-zan-cyan py-2 text-sm font-bold text-zan-dark">
+                              <LayoutDashboard className="h-4 w-4" /> Dashboard
+                            </Link>
+                            <button onClick={logout} className="flex items-center justify-center gap-1.5 rounded-lg border border-white/10 py-2 text-sm font-semibold text-gray-300 hover:border-red-500/40 hover:text-red-400">
+                              <LogOut className="h-4 w-4" /> Log out
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button onClick={() => { setMobileMenuOpen(false); setIsAuthSheetOpen(true); }}
+                          className="mb-5 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zan-cyan font-bold text-zan-dark">
+                          <User className="h-4 w-4" /> Login / Sign up
+                        </button>
+                      )}
+
+                      <form onSubmit={handleSearch} className="relative mb-5">
+                        <input type="search" placeholder="Search products…" value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="h-11 w-full rounded-lg border border-white/10 bg-white/5 pl-4 pr-11 text-base text-white placeholder-gray-500 outline-none focus:border-zan-cyan/60" />
+                        <button type="submit" aria-label="Search" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <Search className="h-5 w-5" />
+                        </button>
+                      </form>
+
+                      {NAV_LINKS.map((l) => (
+                        <Link key={l.to} to={l.to}
+                          className={cn("flex items-center justify-between rounded-lg px-3 py-3 font-medium transition-colors",
+                            isActive(l.to) ? "bg-zan-cyan/10 text-zan-cyan" : "text-gray-200 hover:bg-white/5")}>
+                          {l.label}
+                          <ChevronRight className="h-4 w-4 text-gray-600" />
+                        </Link>
+                      ))}
+
+                      <div className="my-4 border-t border-white/10" />
+                      <Link to="/dashboard/wishlist" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-white/5">
+                        <Heart className="h-4 w-4" /> Wishlist {user && wishlistCount > 0 && <span className="ml-auto text-xs text-zan-red">{wishlistCount}</span>}
+                      </Link>
+                      {[["/terms", "Terms & Conditions"], ["/privacy-policy", "Privacy Policy"], ["/return-policy", "Return Policy"], ["/faq", "FAQ"]].map(([to, label]) => (
+                        <Link key={to} to={to} className="rounded-lg px-3 py-2 text-sm text-gray-400 hover:text-white">{label}</Link>
+                      ))}
+                    </>
+                  ) : isLoading ? (
+                    <div className="py-10 text-center text-sm text-gray-500">
+                      <span className="mx-auto mb-3 block h-8 w-8 animate-spin rounded-full border-2 border-zan-cyan/30 border-t-zan-cyan" />
+                      Loading categories…
+                    </div>
+                  ) : (
+                    <>
+                      <Link to="/shop" className="mb-1 flex items-center gap-3 rounded-lg px-3 py-3 font-semibold text-white hover:bg-white/5">
+                        <LayoutGrid className="h-4 w-4 text-zan-cyan" /> All products
+                      </Link>
+                      {categories.map((category) => {
+                        const Icon = getCategoryIcon(category.name);
+                        const active = activeCategory === category.slug;
+                        return (
+                          <Link key={category.id} to={`/shop?category_slug=${category.slug}`}
+                            className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                              active ? "bg-zan-cyan/10 font-semibold text-zan-cyan" : "text-gray-300 hover:bg-white/5 hover:text-white")}>
+                            <Icon className={cn("h-4 w-4", active ? "text-zan-cyan" : "text-gray-500")} />
+                            {category.name}
+                          </Link>
+                        );
+                      })}
+                    </>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        {/* ── Mobile search ── */}
+        <div className="container mx-auto px-4 pb-3 md:hidden">
+          <form onSubmit={handleSearch} className="relative">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+            <input
+              type="search"
+              placeholder="Search products…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-10 w-full rounded-lg border border-white/10 bg-white/[0.04] pl-10 pr-20 text-sm text-white placeholder-gray-500 outline-none focus:border-zan-cyan/60"
+            />
+            <button type="submit" className="absolute bottom-1 right-1 top-1 rounded-md bg-zan-cyan px-3 text-xs font-bold text-zan-dark">
+              Search
+            </button>
+          </form>
+        </div>
+
+        {/* ── Category bar (desktop) ── */}
+        <div className="hidden border-t border-white/5 lg:block">
+          <div className="container mx-auto flex h-12 items-center gap-6 px-4">
+            {/* Mega menu */}
+            <div className="relative h-full" onMouseEnter={openMega} onMouseLeave={closeMega}>
+              <button onClick={() => setMegaOpen((v) => !v)} aria-expanded={megaOpen}
+                className={cn("flex h-full items-center gap-2.5 px-4 text-sm font-bold uppercase tracking-wide transition-colors",
+                  megaOpen ? "bg-zan-cyan text-zan-dark" : "bg-zan-cyan/10 text-zan-cyan hover:bg-zan-cyan/20")}>
+                <LayoutGrid className="h-4 w-4" />
+                All Categories
+                <ChevronDown className={cn("h-4 w-4 transition-transform", megaOpen && "rotate-180")} />
+              </button>
+
+              {megaOpen && (
+                <div className="absolute left-0 top-full z-50 w-[min(960px,calc(100vw-2rem))] rounded-b-xl rounded-tr-xl border border-white/10 bg-surface-dark p-6 shadow-2xl shadow-black/60">
+                  <div className="mb-4 flex items-center justify-between">
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-gray-500">Shop by category</p>
+                    <Link to="/shop" className="inline-flex items-center gap-1 text-sm font-semibold text-zan-cyan hover:underline">
+                      Browse all products <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                  {isLoading ? (
+                    <p className="py-6 text-center text-sm text-gray-500">Loading categories…</p>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-1 xl:grid-cols-4">
+                      {categories.map((category) => {
+                        const Icon = getCategoryIcon(category.name);
+                        return (
+                          <Link key={category.id} to={`/shop?category_slug=${category.slug}`}
+                            className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-white/5">
+                            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-colors group-hover:border-zan-cyan/40 group-hover:bg-zan-cyan/10">
+                              <Icon className="h-4 w-4 text-gray-400 transition-colors group-hover:text-zan-cyan" />
+                            </span>
+                            <span className="line-clamp-1 text-sm text-gray-300 transition-colors group-hover:text-white">{category.name}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
 
-            {/* Mobile Menu */}
-            <div className="lg:hidden">
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="hover:bg-blue-50 transition-colors duration-200"
-                  >
-                    <Menu className="text-gray-600" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="w-[320px] sm:w-[400px] overflow-y-auto p-0 border-l border-gray-100 shadow-lg">
-                  {/* Tabs Header */}
-                  <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
-                    <div className="p-4">
-                      <img
-                        src="/zantech-logo.webp"
-                        alt="ZAN Tech"
-                        className="h-10 mb-4"
-                      />
-                    </div>
+            <nav className="flex h-full min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none]">
+              {NAV_LINKS.map((l) => (
+                <Link key={l.to} to={l.to}
+                  className={cn("relative flex h-full items-center whitespace-nowrap px-3 text-sm font-medium transition-colors",
+                    "after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-zan-cyan after:transition-transform after:duration-300",
+                    isActive(l.to) ? "text-white after:scale-x-100" : "text-gray-400 after:scale-x-0 hover:text-white hover:after:scale-x-100",
+                    l.highlight && "text-zan-cyan")}>
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
 
-                    {/* Tab Buttons */}
-                    <div className="flex border-b border-gray-200">
-                      <button
-                        onClick={() => setActiveMobileTab("main")}
-                        className={cn(
-                          "flex-1 py-3 px-4 text-sm font-semibold transition-colors",
-                          activeMobileTab === "main"
-                            ? "text-blue-600 border-b-2 border-blue-600"
-                            : "text-gray-600 hover:text-gray-900",
-                        )}
-                      >
-                        Main tab
-                      </button>
-                      <button
-                        onClick={() => setActiveMobileTab("category")}
-                        className={cn(
-                          "flex-1 py-3 px-4 text-sm font-semibold transition-colors",
-                          activeMobileTab === "category"
-                            ? "text-blue-600 border-b-2 border-blue-600"
-                            : "text-gray-600 hover:text-gray-900",
-                        )}
-                      >
-                        Category tab
-                      </button>
-                    </div>
-                  </div>
-
-                  <nav className="flex flex-col space-y-1 p-4">
-                    {activeMobileTab === "main" ? (
-                      <>
-                        {/* User Info & Dashboard Link - Mobile */}
-                        {user ? (
-                          <div className="mb-6 p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                            <div className="flex items-center gap-3 mb-4">
-                              <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
-                                {user.name?.charAt(0) || user.email?.charAt(0)}
-                              </div>
-                              <div className="min-w-0">
-                                <p className="text-sm font-bold text-gray-900 truncate">
-                                  {user.name || "User"}
-                                </p>
-                                <p className="text-xs text-gray-500 truncate">
-                                  {user.email}
-                                </p>
-                              </div>
-                            </div>
-                            <Link
-                              to="/dashboard"
-                              className="w-full flex items-center justify-center gap-2 bg-white text-blue-600 font-bold py-2.5 rounded-xl border border-blue-100 shadow-sm active:scale-[0.98] transition-all"
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              <User className="h-4 w-4" />
-                              Go to Dashboard
-                            </Link>
-                          </div>
-                        ) : (
-                          <div className="mb-6">
-                            <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 font-bold">
-                                Login / Sign Up
-                              </Button>
-                            </Link>
-                          </div>
-                        )}
-
-                        {/* Mobile Search - Minimal */}
-                        <form onSubmit={handleSearch} className="relative mb-6">
-                          <Input
-                            type="search"
-                            placeholder="Search high-tech robotics..."
-                            value={searchQuery}
-                            onChange={handleSearchInputChange}
-                            className="pr-10 rounded-2xl border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100/50 transition-all h-12 text-base"
-                          />
-                          <button
-                            type="submit"
-                            className="absolute right-4 top-1/2 -translate-y-1/2"
-                          >
-                            {isSearching ? (
-                              <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                            ) : (
-                              <Search className="h-5 w-5 text-gray-400" />
-                            )}
-                          </button>
-                        </form>
-
-                        {/* SHOP */}
-                        <Link
-                          to="/shop"
-                          className={cn(
-                            "font-semibold py-3 px-4 rounded-lg transition-colors duration-200",
-                            location.pathname === "/shop"
-                              ? "text-blue-600 bg-blue-50"
-                              : "text-gray-700 hover:bg-gray-50",
-                          )}
-                        >
-                          SHOP
-                        </Link>
-
-                        {/* Resources Section */}
-                        <div className="space-y-1 mt-4">
-                          <div className="font-semibold py-3 px-4 text-gray-900">
-                            RESOURCES
-                          </div>
-                          <Link
-                            to="/blog"
-                            className="py-2 px-8 rounded-lg transition-colors duration-200 block text-gray-600 hover:bg-gray-50"
-                          >
-                            Blog
-                          </Link>
-                          <Link
-                            to="/tutorials"
-                            className="py-2 px-8 rounded-lg transition-colors duration-200 block text-gray-600 hover:bg-gray-50"
-                          >
-                            Tutorials
-                          </Link>
-                        </div>
-
-                        {/* ABOUT */}
-                        <Link
-                          to="/about"
-                          className={cn(
-                            "font-semibold py-3 px-4 rounded-lg transition-colors duration-200 mt-4",
-                            location.pathname === "/about"
-                              ? "text-blue-600 bg-blue-50"
-                              : "text-gray-700 hover:bg-gray-50",
-                          )}
-                        >
-                          ABOUT
-                        </Link>
-
-                        {/* CONTACT */}
-                        <Link
-                          to="/contact"
-                          className={cn(
-                            "font-semibold py-3 px-4 rounded-lg transition-colors duration-200",
-                            location.pathname === "/contact"
-                              ? "text-blue-600 bg-blue-50"
-                              : "text-gray-700 hover:bg-gray-50",
-                          )}
-                        >
-                          CONTACT
-                        </Link>
-
-                        <div className="border-t border-gray-200 my-4"></div>
-
-                        {/* Legal Links */}
-                        <div className="space-y-1">
-                          <Link
-                            to="/terms"
-                            className="block text-gray-600 hover:text-blue-600 py-2 px-4 text-sm transition-colors duration-200"
-                          >
-                            Terms & Conditions
-                          </Link>
-                          <Link
-                            to="/privacy-policy"
-                            className="block text-gray-600 hover:text-blue-600 py-2 px-4 text-sm transition-colors duration-200"
-                          >
-                            Privacy Policy
-                          </Link>
-                          <Link
-                            to="/return-policy"
-                            className="block text-gray-600 hover:text-blue-600 py-2 px-4 text-sm transition-colors duration-200"
-                          >
-                            Return Policy
-                          </Link>
-                        </div>
-
-                        {/* Mobile Login/Dashboard Button */}
-                        {user ? (
-                          <div className="space-y-2 mt-6">
-                            <Link to="/dashboard">
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                <User className="mr-2 h-4 w-4" /> Dashboard
-                              </Button>
-                            </Link>
-                            <Button
-                              onClick={logout}
-                              variant="outline"
-                              className="w-full hover:bg-red-50 hover:text-red-600 hover:border-red-300"
-                            >
-                              <LogOut className="mr-2 h-4 w-4" /> Logout
-                            </Button>
-                          </div>
-                        ) : (
-                          <Sheet
-                            open={isAuthSheetOpen}
-                            onOpenChange={setIsAuthSheetOpen}
-                          >
-                            <SheetTrigger asChild>
-                              <Button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                <User className="mr-2 h-4 w-4" /> Login
-                              </Button>
-                            </SheetTrigger>
-                            <AuthSheet />
-                          </Sheet>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {/* Category Tab - Only Categories */}
-                        <div className="space-y-1">
-                          {isLoading ? (
-                            <div className="py-8 text-center text-gray-500">
-                              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent mx-auto mb-2"></div>
-                              <p className="text-sm">Loading categories...</p>
-                            </div>
-                          ) : categories.length > 0 ? (
-                            <>
-                              <Link
-                                to="/shop"
-                                className="py-3 px-4 rounded-lg transition-colors duration-200 block font-semibold text-gray-700 hover:bg-gray-50 border-b border-gray-100 mb-2"
-                              >
-                                All Categories
-                              </Link>
-                              {categories.map((category) => (
-                                <Link
-                                  key={category.id}
-                                  to={`/shop?category_slug=${category.slug}`}
-                                  className={cn(
-                                    "py-3 px-4 rounded-lg transition-colors duration-200 block",
-                                    location.pathname === "/shop" &&
-                                      location.search.includes(
-                                        `category_slug=${category.slug}`,
-                                      )
-                                      ? "text-blue-600 bg-blue-50 font-semibold"
-                                      : "text-gray-700 hover:bg-gray-50",
-                                  )}
-                                >
-                                  {category.name}
-                                </Link>
-                              ))}
-                            </>
-                          ) : (
-                            <div className="py-8 text-center text-gray-500">
-                              <p className="text-sm">No categories available</p>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
+            {company?.phone && (
+              <a href={`tel:${company.phone}`} className="hidden items-center gap-2 text-sm text-gray-400 transition-colors hover:text-zan-cyan 2xl:flex">
+                <Phone className="h-4 w-4 text-zan-cyan" />
+                <span>Need help? <span className="font-semibold text-white">{company.phone}</span></span>
+              </a>
+            )}
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 };
 
