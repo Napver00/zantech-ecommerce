@@ -28,7 +28,7 @@ const CartItem = ({ item }) => {
     <div className="relative bg-card rounded-xl p-3 border border-white/10">
       {/* Discount Badge */}
       {hasDiscount && item.discountPercentage && (
-        <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md z-10">
+        <div className="absolute top-2 left-2 bg-red-500 text-[#fff] text-[10px] font-bold px-1.5 py-0.5 rounded-md z-10">
           -{Math.round(item.discountPercentage)}%
         </div>
       )}

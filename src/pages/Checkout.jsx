@@ -764,7 +764,7 @@ const Checkout = () => {
                             className="font-medium cursor-pointer text-white text-sm flex items-center gap-2"
                           >
                             Local Pickup
-                            <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-xs font-semibold rounded">
+                            <span className="px-1.5 py-0.5 bg-emerald-600 text-[#fff] text-xs font-semibold rounded">
                               FREE
                             </span>
                           </Label>

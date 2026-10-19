@@ -5,6 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/public/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0f19" />
+    <script>
+      // Apply the saved theme before first paint (dark is the default).
+      (function () {
+        var t = "dark";
+        try { if (localStorage.getItem("zt-theme") === "light") t = "light"; } catch (e) {}
+        var r = document.documentElement;
+        r.classList.add(t);
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", t === "light" ? "#ffffff" : "#0b0f19");
+      })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

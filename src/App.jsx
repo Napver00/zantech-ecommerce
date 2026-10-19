@@ -8,6 +8,7 @@ import { CompanyProvider } from "./context/CompanyContext";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedRoute";
 import QuickSupport from "./components/QuickSupport";
+import { useTheme } from "./lib/theme";
 
 // Lazy load pages
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -59,12 +60,13 @@ const SearchRedirect = () => {
 
 // Simple loading fallback
 const PageLoader = () => (
-  <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+  <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
     <div className="w-10 h-10 border-4 border-zan-cyan/20 border-t-zan-cyan rounded-full animate-spin" />
   </div>
 );
 
 function App() {
+  const { theme } = useTheme();
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -115,6 +117,7 @@ function App() {
             </Suspense>
           </BrowserRouter>
           <Toaster
+            theme={theme}
             position="top-right"
             expand={true}
             richColors

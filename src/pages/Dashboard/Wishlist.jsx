@@ -146,7 +146,7 @@ const Wishlist = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {item.discount > 0 && (
-                      <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                      <div className="absolute top-2 right-2 bg-red-600 text-[#fff] text-xs font-bold px-2 py-1 rounded">
                         -{Math.round((item.discount / item.price) * 100)}%
                       </div>
                     )}

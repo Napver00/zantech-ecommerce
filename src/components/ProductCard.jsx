@@ -75,7 +75,7 @@ const ProductCard = ({ product, isNew = false }) => {
       {/* Badges */}
       <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
         {hasDiscount && percent > 0 && (
-          <span className="rounded bg-zan-red px-2 py-1 text-[11px] font-bold leading-none text-white shadow-sm">
+          <span className="rounded bg-zan-red px-2 py-1 text-[11px] font-bold leading-none text-[#fff] shadow-sm">
             -{percent}%
           </span>
         )}
@@ -97,8 +97,8 @@ const ProductCard = ({ product, isNew = false }) => {
         className={cn(
           "absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition-all",
           isWishlisted
-            ? "border-zan-red/30 bg-zan-red text-white"
-            : "border-black/5 bg-white/90 text-gray-500 opacity-100 hover:text-zan-red sm:opacity-0 sm:group-hover:opacity-100",
+            ? "border-zan-red/30 bg-zan-red text-[#fff]"
+            : "border-black/5 bg-[#fff]/90 text-[#6b7280] opacity-100 hover:text-zan-red sm:opacity-0 sm:group-hover:opacity-100",
         )}
         aria-label={isWishlisted ? "In your wishlist" : "Add to wishlist"}
       >

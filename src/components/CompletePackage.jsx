@@ -35,7 +35,7 @@ const CompletePackage = () => {
         <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-60" />
         <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-zan-cyan/15 blur-[80px]" />
         <div className="relative">
-          <span className="mb-4 inline-block rounded bg-zan-red px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-white">
+          <span className="mb-4 inline-block rounded bg-zan-red px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-[#fff]">
             Made by ZAN Tech
           </span>
           <h2 className="text-2xl font-bold leading-tight text-white md:text-3xl">

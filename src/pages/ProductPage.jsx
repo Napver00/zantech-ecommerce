@@ -53,8 +53,8 @@ const Gallery = ({ images = [], alt = "" }) => {
           onClick={() => setIndex(idx)}
           className={`flex-shrink-0 w-14 h-14 p-1.5 rounded-xl overflow-hidden border transition-all ${
             idx === index
-              ? "border-zan-cyan bg-white ring-2 ring-zan-cyan/30"
-              : "border-white/10 bg-white/90 opacity-70 hover:opacity-100"
+              ? "border-zan-cyan bg-[#fff] ring-2 ring-zan-cyan/30"
+              : "border-white/10 bg-[#fff] opacity-70 hover:opacity-100"
           }`}
         >
           <img src={src} alt={`${alt}-${idx}`} loading="lazy" decoding="async" className="w-full h-full object-contain" />
@@ -106,7 +106,7 @@ const Gallery = ({ images = [], alt = "" }) => {
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/40 text-white text-[11px] font-semibold px-2 py-0.5 rounded-full">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/40 text-[#fff] text-[11px] font-semibold px-2 py-0.5 rounded-full">
                 {index + 1}/{imgs.length}
               </div>
             </>
@@ -128,7 +128,7 @@ const Gallery = ({ images = [], alt = "" }) => {
         >
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="absolute top-5 right-5 text-[#fff]/80 hover:text-[#fff] p-2 rounded-full hover:bg-[#fff]/10 transition-colors"
             aria-label="Close"
           >
             <X className="h-6 w-6" />
@@ -425,7 +425,7 @@ const ProductPage = () => {
                       <span className="text-base text-gray-400 line-through font-medium">
                         ৳{product.price?.toLocaleString()}
                       </span>
-                      <span className="text-xs font-black text-white bg-red-500 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-black text-[#fff] bg-red-500 px-2 py-0.5 rounded-full">
                         -{product.discountPercentage}%
                       </span>
                     </div>

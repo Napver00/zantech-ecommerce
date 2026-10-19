@@ -63,7 +63,7 @@ const DashboardLayout = () => {
                           "flex items-center gap-3 px-4 py-3.5 text-sm font-bold rounded-2xl transition-all duration-300",
                           isActive
                             ? "bg-card text-zan-cyan shadow-sm border border-white/10 transform scale-[1.02]"
-                            : "text-gray-400 hover:text-white hover:bg-white/50",
+                            : "text-gray-400 hover:text-white hover:bg-white/5",
                         )
                       }
                     >

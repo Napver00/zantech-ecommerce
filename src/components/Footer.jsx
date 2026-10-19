@@ -66,7 +66,7 @@ const Footer = () => {
   const phone = company?.phone;
 
   return (
-    <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-[#080b13] text-gray-300">
+    <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-surface-footer text-gray-300">
       <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-40" />
       <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[700px] -translate-x-1/2 rounded-full bg-zan-cyan/5 blur-[120px]" />
 
@@ -180,7 +180,7 @@ const Footer = () => {
             <span className="flex h-8 items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 text-gray-300">
               <Banknote className="h-4 w-4 text-zan-neon" /> Cash on Delivery
             </span>
-            <span className="flex h-8 items-center rounded-md bg-white px-2.5">
+            <span className="flex h-8 items-center rounded-md bg-[#fff] px-2.5">
               <img src="/bkashLogo.png" alt="bKash" className="h-5 w-auto" />
             </span>
           </div>

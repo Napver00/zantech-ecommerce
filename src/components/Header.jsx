@@ -41,11 +41,12 @@ import { useCompany } from "@/context/CompanyContext";
 import { AuthSheet } from "@/components/AuthSheet";
 import BrandLogo from "@/components/BrandLogo";
 import { getCategoryIcon } from "@/lib/categoryIcons";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const YouTubeIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
     <rect x="2" y="5" width="20" height="14" rx="4" fill="currentColor" />
-    <path d="M10 9.5L15 12L10 14.5V9.5Z" fill="#0b0f19" />
+    <path d="M10 9.5L15 12L10 14.5V9.5Z" fill="var(--zan-dark)" />
   </svg>
 );
 
@@ -166,7 +167,7 @@ const Header = () => {
   return (
     <>
       {/* ── Utility bar ── */}
-      <div className="hidden border-b border-white/5 bg-black/40 text-xs text-gray-400 md:block">
+      <div className="hidden border-b border-white/5 bg-surface-footer text-xs text-gray-400 md:block">
         <div className="container mx-auto flex h-9 items-center justify-between px-4">
           <div className="flex items-center gap-5">
             <span className="font-mono uppercase tracking-widest text-zan-cyan/80">Robotics · IoT · Electronics</span>
@@ -344,12 +345,14 @@ const Header = () => {
               </Sheet>
             )}
 
+            <ThemeToggle />
+
             {/* Wishlist */}
             <Link to="/dashboard/wishlist" aria-label="Wishlist"
               className="relative hidden rounded-lg p-2.5 text-gray-300 transition-colors hover:bg-white/5 hover:text-zan-cyan sm:block">
               <Heart className="h-6 w-6" />
               {user && wishlistCount > 0 && (
-                <span className="absolute right-0.5 top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-zan-red px-1 text-[11px] font-bold text-white">
+                <span className="absolute right-0.5 top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-zan-red px-1 text-[11px] font-bold text-[#fff]">
                   {wishlistCount}
                 </span>
               )}

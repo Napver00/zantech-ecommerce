@@ -52,7 +52,7 @@ const FallbackBanner = () => (
     <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-60" />
     <div className="pointer-events-none absolute -left-20 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-zan-cyan/10 blur-[100px]" />
     <div className="relative max-w-xl">
-      <span className="mb-4 inline-flex items-center gap-1.5 rounded bg-zan-red px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-widest text-white">
+      <span className="mb-4 inline-flex items-center gap-1.5 rounded bg-zan-red px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-widest text-[#fff]">
         <Wrench className="h-3 w-3" /> ZAN Tech Store
       </span>
       <h1 className="text-4xl font-bold leading-tight text-white md:text-5xl">
