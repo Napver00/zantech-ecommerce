@@ -122,7 +122,7 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
                 <p className="text-gray-300 mb-4">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="px-5 py-2.5 bg-surface-2 text-white rounded-xl text-sm font-semibold hover:bg-surface-3 transition-colors"
+                  className="px-5 py-2.5 bg-zan-cyan text-zan-dark rounded-xl text-sm font-bold hover:bg-white transition-colors"
                 >
                   Retry
                 </button>

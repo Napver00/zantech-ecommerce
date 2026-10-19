@@ -128,7 +128,7 @@ const PostListLayout = ({
             <p className="text-gray-400 text-sm mb-5">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="bg-surface-2 hover:bg-surface-3 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+              className="bg-zan-cyan hover:bg-white text-zan-dark px-6 py-2.5 rounded-xl text-sm font-bold transition-colors"
             >
               Try Again
             </button>
@@ -163,7 +163,7 @@ const PostListLayout = ({
             <p className="text-gray-400 mb-6">{emptyDescription}</p>
             <Link
               to={emptyCtaHref}
-              className="inline-flex items-center gap-2 bg-surface-2 hover:bg-surface-3 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 bg-zan-cyan hover:bg-white text-zan-dark font-bold px-6 py-2.5 rounded-xl transition-colors"
             >
               {emptyCtaLabel}
             </Link>

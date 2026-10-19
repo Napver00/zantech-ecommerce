@@ -173,7 +173,7 @@ export const Cart = () => {
                 <SheetClose asChild>
                   <Link to="/checkout" className="w-full block">
                     <Button
-                      className="w-full h-11 text-sm font-semibold bg-surface-2 hover:bg-surface-3"
+                      className="w-full h-11 text-sm font-bold bg-zan-cyan text-zan-dark hover:bg-white shadow-[0_0_20px_rgba(0,240,255,0.15)]"
                       size="lg"
                     >
                       Proceed to Checkout
@@ -212,7 +212,7 @@ export const Cart = () => {
           </p>
           <SheetClose asChild>
             <Link to="/shop">
-              <Button className="bg-surface-2 hover:bg-surface-3" size="lg">
+              <Button className="bg-zan-cyan text-zan-dark font-bold hover:bg-white" size="lg">
                 <ShoppingBag className="h-4 w-4 mr-2" />
                 Start Shopping
               </Button>

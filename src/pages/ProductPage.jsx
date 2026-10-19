@@ -308,7 +308,7 @@ const ProductPage = () => {
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Product Not Found</h2>
             <p className="text-gray-400 mb-7 text-sm">{error || "The product you're looking for doesn't exist."}</p>
-            <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-surface-2 text-white font-semibold rounded-xl hover:bg-surface-3 transition-colors">
+            <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-zan-cyan text-zan-dark font-bold rounded-xl hover:bg-white transition-colors">
               <ShoppingCart className="w-4 h-4" /> Back to Shop
             </Link>
           </div>
@@ -466,7 +466,7 @@ const ProductPage = () => {
                   <button
                     onClick={handleAddToCart}
                     disabled={product.quantity === 0}
-                    className="flex-1 bg-surface-2 hover:bg-surface-3 disabled:bg-white/10 disabled:cursor-not-allowed text-white font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
+                    className="flex-1 border border-white/15 bg-surface-2 hover:bg-surface-3 disabled:bg-white/10 disabled:cursor-not-allowed text-white font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     {product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
@@ -555,7 +555,7 @@ const ProductPage = () => {
               >
                 <BookOpen className="w-4 h-4" />
                 Description
-                {activeTab === "description" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-surface-2" />}
+                {activeTab === "description" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-zan-cyan" />}
               </button>
               {isBundleProduct && (
                 <button
@@ -569,7 +569,7 @@ const ProductPage = () => {
                   <span className="text-[10px] font-black bg-white/5 text-gray-300 px-1.5 py-0.5 rounded-full">
                     {product.bundle_items.length}
                   </span>
-                  {activeTab === "kit" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-surface-2" />}
+                  {activeTab === "kit" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-zan-cyan" />}
                 </button>
               )}
               <button
@@ -585,7 +585,7 @@ const ProductPage = () => {
                     {product.ratings.length}
                   </span>
                 )}
-                {activeTab === "reviews" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-surface-2" />}
+                {activeTab === "reviews" && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-zan-cyan" />}
               </button>
             </div>
 
