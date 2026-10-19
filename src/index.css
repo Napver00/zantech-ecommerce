@@ -412,3 +412,28 @@ html.theme-transition *::before,
 html.theme-transition *::after {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease !important;
 }
+
+/* ZAN Tech Kits slider: equal-height cards, dots under the row */
+.kits-swiper {
+  padding-bottom: 2rem !important;
+  --swiper-theme-color: var(--zan-cyan);
+  --swiper-pagination-color: var(--zan-cyan);
+  --swiper-pagination-bullet-inactive-color: var(--color-white);
+  --swiper-pagination-bullet-inactive-opacity: 0.3;
+}
+.kits-swiper .swiper-slide {
+  height: auto;
+}
+.kits-swiper .swiper-slide > * {
+  height: 100%;
+}
+.kits-swiper .swiper-pagination {
+  bottom: 0 !important;
+}
+.kits-swiper .swiper-pagination-bullet-active {
+  width: 20px;
+  border-radius: 9999px;
+}
+.kits-nav.swiper-button-lock {
+  display: none;
+}

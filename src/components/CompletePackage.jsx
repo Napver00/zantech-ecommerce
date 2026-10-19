@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Wrench, ShieldCheck, BookOpen } from "lucide-react";
+import { ArrowRight, Wrench, ShieldCheck, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProductCard from "./ProductCard";
 import { fetchProducts } from "@/lib/products";
@@ -11,7 +15,10 @@ const POINTS = [
   { icon: BookOpen, text: "Guides & tutorials included" },
 ];
 
-// ZAN Tech Kits showcase: brand panel on the left, kits on the right.
+const navBtn =
+  "kits-nav absolute top-[38%] z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-zan-dark/80 text-white shadow-lg backdrop-blur transition-colors hover:border-zan-cyan hover:text-zan-cyan disabled:pointer-events-none disabled:opacity-0 md:flex";
+
+// ZAN Tech Kits showcase: brand panel on the left, a slider of every kit on the right.
 const CompletePackage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +51,7 @@ const CompletePackage = () => {
           <p className="mt-3 text-sm leading-relaxed text-gray-400">
             Complete robotics kits designed and packaged by our own engineers — everything you need to build, in one box.
           </p>
-          <ul className="mt-6 space-y-3">
+          <ul className="mt-6 hidden space-y-3 2xl:block">
             {POINTS.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-2.5 text-sm text-gray-200">
                 <Icon className="h-4 w-4 flex-shrink-0 text-zan-cyan" /> {text}
@@ -54,24 +61,54 @@ const CompletePackage = () => {
         </div>
         <Link
           to="/zantech-kits"
-          className="group relative mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-zan-cyan px-5 py-3 text-sm font-bold text-zan-dark transition-colors hover:bg-white"
+          className="group relative mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-zan-cyan px-5 py-3 text-sm font-bold text-zan-dark transition-colors hover:bg-white lg:mt-8"
         >
-          View all kits <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          View all {products.length > 0 ? `${products.length} ` : ""}kits
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:col-span-3">
-        {loading
-          ? Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="overflow-hidden rounded-xl border border-white/10 bg-surface-dark">
+      <div className="relative min-w-0 lg:col-span-3">
+        {loading ? (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className={`overflow-hidden rounded-xl border border-white/10 bg-surface-dark ${i === 2 ? "hidden md:block" : ""}`}>
                 <Skeleton className="aspect-square w-full rounded-none bg-white/5" />
                 <div className="space-y-2 p-4">
                   <Skeleton className="h-4 w-full bg-white/5" />
                   <Skeleton className="h-9 w-full bg-white/5" />
                 </div>
               </div>
-            ))
-          : products.slice(0, 3).map((product) => <ProductCard key={product.id} product={product} />)}
+            ))}
+          </div>
+        ) : (
+          <>
+            <Swiper
+              className="kits-swiper"
+              modules={[Navigation, Autoplay, Pagination]}
+              spaceBetween={16}
+              slidesPerView={1.6}
+              breakpoints={{ 480: { slidesPerView: 2 }, 768: { slidesPerView: 3 } }}
+              navigation={{ prevEl: ".kits-prev", nextEl: ".kits-next" }}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              rewind
+              grabCursor
+            >
+              {products.map((product) => (
+                <SwiperSlide key={product.id}>
+                  <ProductCard product={product} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <button aria-label="Previous kits" className={`kits-prev ${navBtn} -left-4`}>
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button aria-label="Next kits" className={`kits-next ${navBtn} -right-4`}>
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </>
+        )}
       </div>
     </section>
   );

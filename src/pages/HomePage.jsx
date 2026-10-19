@@ -50,8 +50,8 @@ const HomePage = () => {
         <HeroSection />
         <TrustStrip />
         <CategoryShowcase />
-        <ProductTabs />
         <CompletePackage />
+        <ProductTabs />
         <LearnBanner />
       </main>
 
