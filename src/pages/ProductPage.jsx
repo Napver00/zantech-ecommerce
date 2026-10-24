@@ -590,27 +590,9 @@ const ProductPage = () => {
             </div>
 
             {activeTab === "description" && (
+              /* Same theme-aware reading styles as tutorials (see .article-body in index.css) */
               <div
-                className={[
-                  "rich-html prose dark:prose-invert prose-sm md:prose-base max-w-none",
-                  "prose-headings:font-black prose-headings:text-white prose-headings:tracking-tight",
-                  "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg",
-                  "prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-[15px]",
-                  "prose-a:text-zan-cyan prose-a:no-underline prose-a:font-semibold hover:prose-a:underline",
-                  "prose-li:text-gray-300 prose-li:text-[15px]",
-                  "prose-ul:space-y-1 prose-ol:space-y-1",
-                  "prose-ul:my-3 prose-ol:my-3",
-                  "prose-img:rounded-2xl prose-img:shadow-md prose-img:border prose-img:border-white/10",
-                  "prose-table:border prose-table:border-white/10 prose-table:rounded-xl prose-table:overflow-hidden",
-                  "prose-th:bg-background prose-th:text-white prose-th:font-bold prose-th:px-4 prose-th:py-2.5",
-                  "prose-td:px-4 prose-td:py-2.5 prose-td:border-b prose-td:border-white/10 prose-td:text-gray-300",
-                  "prose-code:bg-white/5 prose-code:text-zan-cyan prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm",
-                  "prose-pre:bg-surface-2 prose-pre:rounded-2xl prose-pre:shadow-lg",
-                  "prose-blockquote:border-l-4 prose-blockquote:border-zan-cyan/40 prose-blockquote:bg-zan-cyan/10 prose-blockquote:rounded-r-xl prose-blockquote:py-1",
-                  "prose-blockquote:text-gray-200 prose-blockquote:not-italic",
-                  "prose-strong:text-white prose-strong:font-bold",
-                  "prose-hr:border-white/10",
-                ].join(" ")}
+                className="article-body max-w-3xl text-[15px] md:text-base"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description || "") }}
               />
             )}

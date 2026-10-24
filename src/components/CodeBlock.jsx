@@ -46,17 +46,17 @@ const CodeBlock = ({ children, className = "" }) => {
 
   return (
     // "not-prose" prevents Tailwind Typography from affecting this block
-    <div className="not-prose relative my-8 rounded-xl overflow-hidden shadow-2xl border border-gray-700/50 bg-[#1e1e1e]">
+    <div className="not-prose relative my-8 rounded-xl overflow-hidden shadow-2xl border border-[#3a3a3a] bg-[#1e1e1e]">
       {/* Header Bar */}
-      <div className="flex justify-between items-center bg-[#252526] px-5 py-3 border-b border-gray-700/50">
+      <div className="flex justify-between items-center bg-[#252526] px-5 py-3 border-b border-[#3a3a3a]">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 transition-all cursor-pointer shadow-sm"></div>
             <div className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 transition-all cursor-pointer shadow-sm"></div>
             <div className="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 transition-all cursor-pointer shadow-sm"></div>
           </div>
-          <div className="h-4 w-px bg-gray-600/50"></div>
-          <span className="text-gray-400 text-xs font-mono font-medium tracking-wide uppercase">
+          <div className="h-4 w-px bg-[#4b5563]"></div>
+          <span className="text-[#9aa4b2] text-xs font-mono font-medium tracking-wide uppercase">
             Arduino Code
           </span>
         </div>
@@ -64,8 +64,8 @@ const CodeBlock = ({ children, className = "" }) => {
           onClick={handleCopy}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${
             copied
-              ? "bg-green-500/10 text-green-400 border-green-500/20"
-              : "bg-gray-700/30 text-gray-300 border-gray-600/30 hover:bg-gray-700/50 hover:text-white hover:border-gray-500/50"
+              ? "bg-[#22c55e1a] text-[#4ade80] border-[#22c55e33]"
+              : "bg-[#ffffff0d] text-[#d1d5db] border-[#ffffff1a] hover:bg-[#ffffff1a] hover:text-[#fff] hover:border-[#ffffff33]"
           }`}
         >
           {copied ? <Check size={14} /> : <Copy size={14} />}

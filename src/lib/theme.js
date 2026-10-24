@@ -4,7 +4,7 @@ const KEY = "zt-theme";
 const listeners = new Set();
 
 const read = () =>
-  typeof document !== "undefined" && document.documentElement.classList.contains("light") ? "light" : "dark";
+  typeof document !== "undefined" && document.documentElement.classList.contains("dark") ? "dark" : "light";
 
 export const setTheme = (theme) => {
   const root = document.documentElement;
@@ -29,6 +29,6 @@ const subscribe = (l) => {
 
 // Current theme ("dark" | "light") and a toggle, shared by every component.
 export const useTheme = () => {
-  const theme = useSyncExternalStore(subscribe, read, () => "dark");
+  const theme = useSyncExternalStore(subscribe, read, () => "light");
   return { theme, toggleTheme: () => setTheme(theme === "dark" ? "light" : "dark") };
 };
