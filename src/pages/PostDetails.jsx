@@ -220,7 +220,7 @@ const PostDetails = () => {
             {/* 4. THE CONTENT CONTAINER */}
             {/* The 'prose' class automates all the typography styling */}
             <article
-              className="prose prose-lg prose-invert md:prose-xl max-w-none 
+              className="prose prose-lg dark:prose-invert md:prose-xl max-w-none 
                 prose-headings:font-black prose-headings:text-white 
                 prose-p:text-gray-300 prose-li:text-gray-300
                 prose-img:rounded-xl"

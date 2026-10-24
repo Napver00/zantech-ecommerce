@@ -592,7 +592,7 @@ const ProductPage = () => {
             {activeTab === "description" && (
               <div
                 className={[
-                  "rich-html prose prose-invert prose-sm md:prose-base max-w-none",
+                  "rich-html prose dark:prose-invert prose-sm md:prose-base max-w-none",
                   "prose-headings:font-black prose-headings:text-white prose-headings:tracking-tight",
                   "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg",
                   "prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-[15px]",

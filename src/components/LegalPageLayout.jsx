@@ -129,7 +129,7 @@ const LegalPageLayout = ({ icon: Icon, title, subtitle, endpoint, seo, highlight
               </div>
             ) : content ? (
               <div
-                className="rich-html prose prose-invert prose-sm md:prose-base max-w-none
+                className="rich-html prose dark:prose-invert prose-sm md:prose-base max-w-none
                   prose-headings:font-bold prose-headings:text-white
                   prose-p:text-gray-300 prose-p:leading-relaxed
                   prose-a:text-zan-cyan prose-a:no-underline hover:prose-a:underline

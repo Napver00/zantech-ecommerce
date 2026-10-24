@@ -388,18 +388,25 @@ html {
 }
 
 /* HTML that comes from the admin editor often carries inline light-theme
-   styles (white backgrounds, black text, Times). Make it follow the theme. */
+   styles (white backgrounds, black text, Times). Make it follow the theme:
+   the box gets a theme-aware text colour (gray-300 flips to gray-700 in
+   light mode) and every child inherits it, whatever the editor saved. */
+.rich-html {
+  color: var(--color-gray-300) !important;
+}
 .rich-html *:not(img):not(pre):not(code) {
   background-color: transparent !important;
   color: inherit !important;
   font-family: inherit !important;
 }
-.rich-html a {
+/* Extra :not()s keep these stronger than the inherit rule above */
+.rich-html a:not(img):not(pre):not(code) {
   color: var(--color-zan-cyan) !important;
 }
-.rich-html :is(h1, h2, h3, h4, h5, h6, strong, b) {
+.rich-html :is(h1, h2, h3, h4, h5, h6, strong, b):not(img):not(pre):not(code) {
   color: var(--color-white) !important;
 }
+.rich-html :is(li)::marker { color: var(--color-zan-cyan); }
 .rich-html table td,
 .rich-html table th {
   border-color: var(--border) !important;

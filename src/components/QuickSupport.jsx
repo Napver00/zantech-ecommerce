@@ -146,8 +146,8 @@ const QuickSupport = () => {
               <div
                 className={`max-w-[85%] p-4 text-sm leading-relaxed ${
                   msg.sender === "user"
-                    ? "bg-zan-cyan text-zan-dark rounded-2xl rounded-tr-sm shadow-md shadow-blue-200"
-                    : "bg-background text-zan-dark border border-white/10 rounded-2xl rounded-tl-sm"
+                    ? "bg-zan-cyan text-zan-dark rounded-2xl rounded-tr-sm shadow-md"
+                    : "bg-background text-white border border-white/10 rounded-2xl rounded-tl-sm"
                 }`}
               >
                 {msg.text}
