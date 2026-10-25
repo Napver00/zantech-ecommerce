@@ -322,6 +322,11 @@ html.light {
   background-size: 40px 40px;
 }
 
+/* Pages with a sticky bottom action bar on phones (checkout) lift the chat button above it */
+@media (max-width: 1023px) {
+  body[data-bottom-bar] .quick-support { bottom: 92px; }
+}
+
 /* Horizontally scrolling chip rows on phones, without a visible bar */
 @utility no-scrollbar {
   scrollbar-width: none;

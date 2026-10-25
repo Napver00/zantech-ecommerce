@@ -1,222 +1,139 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, ChevronRight, Heart, MapPin, Package, ShoppingBag, Sparkles } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { config } from "../../config";
-import {
-  Package,
-  Download,
-  MapPin,
-  User,
-  Heart,
-  ArrowRight,
-  AlertTriangle,
-} from "lucide-react";
 import { Skeleton } from "../../components/ui/skeleton";
+import WhatsAppIcon from "../../components/WhatsAppIcon";
+import StatusPill from "../../components/StatusPill";
+import { formatDate, taka } from "../../lib/orders";
+
+const greeting = () => {
+  const h = new Date().getHours();
+  return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+};
 
 const DashboardHome = () => {
-  const { user, logout, token } = useAuth();
-  const [userInfo, setUserInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, token, userInfo } = useAuth();
+  const [orders, setOrders] = useState(null);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      if (!token) return;
-      try {
-        const response = await fetch(`${config.baseURL}/users/info`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Could not fetch user summary.");
-        }
-        const data = await response.json();
-        if (data.success) {
-          setUserInfo(data.data);
-        } else {
-          throw new Error(data.message || "Failed to get user info.");
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserInfo();
+    if (!token) return;
+    fetch(`${config.baseURL}/orders/users?limit=3&page=1`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((d) => setOrders(d.success && Array.isArray(d.data) ? d.data : []))
+      .catch(() => setOrders([]));
   }, [token]);
 
-  const dashboardItems = [
-    {
-      to: "orders",
-      icon: Package,
-      label: "Orders",
-      description: "View and track your orders",
-    },
-    {
-      to: "downloads",
-      icon: Download,
-      label: "Downloads",
-      description: "Access your downloads",
-    },
-    {
-      to: "addresses",
-      icon: MapPin,
-      label: "Addresses",
-      description: "Manage shipping addresses",
-    },
-    {
-      to: "account-details",
-      icon: User,
-      label: "Account Details",
-      description: "Update your information",
-    },
-    {
-      to: "wishlist",
-      icon: Heart,
-      label: "Wishlist",
-      description: "View saved items",
-    },
+  const firstName = user?.name?.split(" ")[0] || "there";
+  const stats = [
+    { to: "/dashboard/orders", icon: Package, label: "Orders", value: userInfo?.total_orders },
+    { to: "/dashboard/wishlist", icon: Heart, label: "Wishlist", value: userInfo?.total_wishlist },
+    { to: "/dashboard/addresses", icon: MapPin, label: "Addresses", value: userInfo?.total_shipping_addr },
   ];
-
-  const summaryItems = [
-    { label: "Total Orders", value: userInfo?.total_orders },
-    { label: "Wishlist Items", value: userInfo?.total_wishlist },
-    { label: "Addresses", value: userInfo?.total_shipping_addr },
-    { label: "Downloads", value: 0 }, // Assuming downloads are not in the API yet
-  ];
+  const noAddress = userInfo && Number(userInfo.total_shipping_addr) === 0;
 
   return (
-    <div>
-      {/* Welcome Message - Minimalist */}
-      <div className="mb-10">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <h2 className="text-3xl font-bold text-white tracking-tight">
-              Dashboard
-            </h2>
-            <p className="text-gray-400 mt-1">
-              Manage your account and track your robotics orders.
+    <div className="space-y-6">
+      {/* Greeting */}
+      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-surface-2 p-6 md:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-60" />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-zan-cyan/15 blur-3xl" />
+        <div className="relative">
+          <p className="text-sm font-medium text-gray-400">{greeting()},</p>
+          <h1 className="mt-1 text-3xl font-black tracking-tight text-white md:text-4xl">{firstName} 👋</h1>
+          <p className="mt-2 max-w-lg text-gray-400">Track your orders, manage delivery addresses and pick up where you left off.</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link to="/shop" className="inline-flex h-11 items-center gap-2 rounded-xl bg-zan-cyan px-5 text-sm font-bold text-zan-dark hover:opacity-90">
+              <ShoppingBag className="h-4 w-4" /> Shop now
+            </Link>
+            <Link to="/dashboard/orders" className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/15 bg-card px-5 text-sm font-semibold text-white hover:border-zan-cyan/40">
+              <Package className="h-4 w-4" /> My orders
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Counts */}
+      <section className="grid grid-cols-3 gap-3 md:gap-4">
+        {stats.map(({ to, icon: Icon, label, value }) => (
+          <Link key={label} to={to} className="group rounded-2xl border border-white/10 bg-card p-4 transition-colors hover:border-zan-cyan/40 md:p-5">
+            <Icon className="h-5 w-5 text-zan-cyan" />
+            {userInfo || orders !== null ? (
+              <p className="mt-3 text-2xl font-black text-white md:text-3xl">{userInfo ? value ?? 0 : "—"}</p>
+            ) : (
+              <Skeleton className="mt-3 h-8 w-10" />
+            )}
+            <p className="mt-0.5 flex items-center justify-between text-xs font-medium text-gray-400 md:text-sm">
+              {label} <ChevronRight className="hidden h-4 w-4 transition-transform group-hover:translate-x-0.5 sm:block" />
             </p>
-          </div>
-          <div className="flex items-center gap-3 bg-background px-4 py-2 rounded-2xl border border-white/10">
-            <div className="w-10 h-10 rounded-full bg-zan-cyan text-zan-dark flex items-center justify-center font-bold">
-              {user.name?.charAt(0)}
-            </div>
-            <div className="text-sm">
-              <p className="font-bold text-white">{user.name}</p>
-              <button
-                onClick={logout}
-                className="text-zan-cyan hover:text-zan-cyan font-medium text-xs"
-              >
-                Sign out
-              </button>
-            </div>
-          </div>
-        </div>
+          </Link>
+        ))}
+      </section>
 
-        <div className="bg-zan-cyan/5 p-6 rounded-3xl border border-zan-cyan/20">
-          <p className="text-gray-200 leading-relaxed text-lg">
-            Welcome back! From here you can easily oversee your{" "}
-            <Link
-              to="orders"
-              className="text-zan-cyan hover:underline font-semibold tracking-tight"
-            >
-              recent orders
-            </Link>
-            , update your{" "}
-            <Link
-              to="addresses"
-              className="text-zan-cyan hover:underline font-semibold tracking-tight"
-            >
-              shipping info
-            </Link>
-            , and{" "}
-            <Link
-              to="account-details"
-              className="text-zan-cyan hover:underline font-semibold tracking-tight"
-            >
-              security settings
-            </Link>
-            .
-          </p>
-        </div>
-      </div>
+      {noAddress && (
+        <Link to="/dashboard/addresses" className="flex items-center gap-4 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 hover:border-amber-500/50">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-500"><MapPin className="h-5 w-5" /></span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-bold text-white">Add a delivery address</span>
+            <span className="block text-sm text-gray-400">Save it once and checkout takes seconds.</span>
+          </span>
+          <ArrowRight className="h-5 w-5 flex-shrink-0 text-amber-500" />
+        </Link>
+      )}
 
-      {/* Quick Actions Grid */}
-      <div>
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Quick Actions
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {dashboardItems.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="group bg-card border border-white/10 rounded-3xl p-5 sm:p-6 hover:border-zan-cyan/20 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-5">
-                <div className="bg-background w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-zan-cyan transition-all duration-300">
-                  <item.icon className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <h4 className="font-bold text-lg text-white group-hover:text-zan-cyan transition-colors">
-                      {item.label}
-                    </h4>
-                    <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-zan-cyan transform group-hover:translate-x-1 transition-all" />
-                  </div>
-                  <p className="text-sm text-gray-400 hidden sm:block mt-1">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+      {/* Recent orders */}
+      <section className="rounded-2xl border border-white/10 bg-card">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <h2 className="text-lg font-bold text-white">Recent orders</h2>
+          <Link to="/dashboard/orders" className="text-sm font-semibold text-zan-cyan hover:underline">View all</Link>
         </div>
-      </div>
-
-      {/* Account Summary Section */}
-      <div className="mt-8 pt-6 border-t border-white/10">
-        <h3 className="text-lg font-semibold text-white mb-3">
-          Account Summary
-        </h3>
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-background rounded-lg p-4 border border-white/10"
-              >
-                <Skeleton className="h-4 w-2/3 mb-2" />
-                <Skeleton className="h-8 w-1/3" />
-              </div>
-            ))}
+        {orders === null ? (
+          <div className="space-y-3 p-5">
+            {[1, 2, 3].map((i) => <Skeleton key={i} className="h-14 w-full rounded-xl" />)}
           </div>
-        ) : error ? (
-          <div className="bg-red-500/10 text-red-300 p-4 rounded-lg border border-red-500/25 flex items-center gap-3">
-            <AlertTriangle className="h-5 w-5" />
-            <span>{error}</span>
+        ) : orders.length === 0 ? (
+          <div className="px-5 py-10 text-center">
+            <Sparkles className="mx-auto h-8 w-8 text-gray-500" />
+            <p className="mt-3 font-semibold text-white">No orders yet</p>
+            <p className="mt-1 text-sm text-gray-400">Your orders will show up here.</p>
+            <Link to="/shop" className="mt-4 inline-flex h-10 items-center rounded-xl bg-zan-cyan px-5 text-sm font-bold text-zan-dark hover:opacity-90">
+              Start shopping
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            {summaryItems.map((item) => (
-              <div
-                key={item.label}
-                className="bg-card rounded-3xl p-5 sm:p-6 border border-white/10 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <p className="text-xs sm:text-sm font-medium text-gray-400 mb-2 uppercase tracking-wider">
-                  {item.label}
-                </p>
-                <p className="text-3xl font-bold text-white">
-                  {item.value ?? 0}
-                </p>
-              </div>
+          <ul className="divide-y divide-white/10">
+            {orders.map((o) => (
+              <li key={o.order_id}>
+                <Link to={`/dashboard/orders/${o.invoice_code}`} className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white/[0.03]">
+                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 text-gray-400"><Package className="h-5 w-5" /></span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-mono font-bold text-white">{o.invoice_code}</span>
+                    <span className="block text-sm text-gray-400">{formatDate(o.order_placed_date)} · {o.totalProduct} {Number(o.totalProduct) === 1 ? "item" : "items"}</span>
+                  </span>
+                  <span className="hidden text-right sm:block">
+                    <span className="block font-bold text-white">{taka(o.total_amount)}</span>
+                  </span>
+                  <StatusPill status={o.status} />
+                  <ChevronRight className="h-4 w-4 flex-shrink-0 text-gray-500" />
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
-      </div>
+      </section>
+
+      {/* Help */}
+      <section className="flex flex-col items-start gap-4 rounded-2xl border border-white/10 bg-card p-5 sm:flex-row sm:items-center">
+        <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-[#25D366]/15 text-[#25D366]"><WhatsAppIcon className="h-5 w-5" /></span>
+        <span className="flex-1">
+          <span className="block font-bold text-white">Question about an order?</span>
+          <span className="block text-sm text-gray-400">Send us your order number on WhatsApp and we'll help right away.</span>
+        </span>
+        <a href="https://wa.me/8801894634149" target="_blank" rel="noreferrer" className="inline-flex h-10 items-center rounded-xl border border-white/15 px-4 text-sm font-semibold text-white hover:border-[#25D366]/50">
+          Chat with us
+        </a>
+      </section>
     </div>
   );
 };

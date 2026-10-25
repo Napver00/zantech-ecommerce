@@ -1,388 +1,307 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import {
+  AlertCircle, ArrowLeft, CheckCircle2, Eye, EyeOff, Heart, KeyRound, Lock, Mail, MapPin, Package, Phone, User, Zap,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, CheckCircle, Mail, Lock, User, Phone, Eye, EyeOff, ArrowLeft, Shield } from 'lucide-react';
+import { SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from '@/components/ui/sheet';
+import { isBdMobile, normalisePhone } from '@/lib/phone';
+
+const TITLES = {
+  login: ['Welcome back', 'Sign in to track orders and check out faster.'],
+  register: ['Create your account', 'It takes less than a minute.'],
+  forgot: ['Reset your password', "Enter your email and we'll send you a reset link."],
+  forgotSent: ['Check your email', 'Follow the link in the email to choose a new password.'],
+  registerSuccess: ['Account created', 'Verify your email, then sign in.'],
+};
+
+const PERKS = [
+  { icon: Package, text: 'Track every order' },
+  { icon: MapPin, text: 'Saved delivery addresses' },
+  { icon: Zap, text: 'One-tap checkout' },
+  { icon: Heart, text: 'Keep a wishlist' },
+];
+
+const strengthOf = (pw) => {
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  if (pw.length < 8) return { score: 1, label: 'Too short', color: 'bg-red-500' };
+  if (score <= 2) return { score: 2, label: 'Okay', color: 'bg-amber-500' };
+  if (score <= 3) return { score: 3, label: 'Good', color: 'bg-zan-cyan' };
+  return { score: 4, label: 'Strong', color: 'bg-emerald-500' };
+};
+
+const inputCls =
+  'h-12 w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 text-[15px] text-white outline-none transition-all placeholder:text-gray-500 focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/25';
+
+const Field = ({ id, label, icon: Icon, hint, aside, children }) => (
+  <div className="space-y-1.5">
+    <div className="flex items-center justify-between">
+      <label htmlFor={id} className="text-sm font-semibold text-gray-200">{label}</label>
+      {aside}
+    </div>
+    <div className="relative">
+      <Icon className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+      {children}
+    </div>
+    {hint && <p className="text-xs text-gray-500">{hint}</p>}
+  </div>
+);
+
+const PasswordInput = ({ id, name, value, onChange, autoComplete, placeholder, show, onToggle, minLength }) => (
+  <>
+    <input
+      id={id}
+      name={name}
+      type={show ? 'text' : 'password'}
+      value={value}
+      onChange={onChange}
+      autoComplete={autoComplete}
+      placeholder={placeholder}
+      minLength={minLength}
+      required
+      className={`${inputCls} pr-12`}
+    />
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={show ? 'Hide password' : 'Show password'}
+      className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-gray-500 hover:bg-white/5 hover:text-white"
+    >
+      {show ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+    </button>
+  </>
+);
+
+const Spinner = () => <span className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />;
 
 export const AuthSheet = () => {
-  const [view, setView] = useState('login');
-  const [registeredEmail, setRegisteredEmail] = useState('');
-  const [resendMessage, setResendMessage] = useState('');
+  const {
+    login, register, loading, error, setError, resendVerificationEmail, forgotPassword, authView, setAuthView,
+  } = useAuth();
+  const view = authView || 'login';
+  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
-  const { login, register, loading, error, resendVerificationEmail } = useAuth();
+  const [fieldError, setFieldError] = useState('');
+  const [registeredEmail, setRegisteredEmail] = useState('');
+
+  useEffect(() => {
+    setShowPassword(false);
+    setFieldError('');
+  }, [view]);
+
+  const go = (next) => {
+    setError(null);
+    setAuthView(next);
+  };
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setFieldError('');
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    await login(email, password);
+    await login(form.email.trim(), form.password);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const phone = e.target.phone.value;
-    const password = e.target.password.value;
-    const result = await register(name, email, phone, password);
-    if (result.success) {
+    const phone = normalisePhone(form.phone);
+    if (!isBdMobile(phone)) {
+      setFieldError('Enter an 11-digit Bangladeshi mobile number, e.g. 01712345678.');
+      return;
+    }
+    const email = form.email.trim();
+    const result = await register(form.name.trim(), email, phone, form.password);
+    if (!result.success) return;
+    // Sign-in doesn't wait for verification, so log the new customer straight in.
+    const signedIn = await login(email, form.password);
+    if (signedIn.success) {
+      toast.success('Account created', { description: `We've sent a verification link to ${email}.`, duration: 6000 });
+      setAuthView('login');
+      setForm({ name: '', email: '', phone: '', password: '' });
+    } else {
       setRegisteredEmail(email);
-      setView('registerSuccess');
-      setShowPassword(false);
+      setAuthView('registerSuccess');
     }
   };
-  
-  const handleResend = async () => {
-    const result = await resendVerificationEmail(registeredEmail);
+
+  const handleForgot = async (e) => {
+    e.preventDefault();
+    const result = await forgotPassword(form.email.trim());
     if (result.success) {
-      setResendMessage(result.message);
-      setTimeout(() => setResendMessage(''), 5000);
+      setRegisteredEmail(form.email.trim());
+      setAuthView('forgotSent');
     }
   };
 
-  const switchToRegister = () => {
-    setView('register');
-    setShowPassword(false);
-  };
-
-  const switchToLogin = () => {
-    setView('login');
-    setShowPassword(false);
-  };
-
-  const renderContent = () => {
-    switch (view) {
-      case 'login':
-        return (
-          <div className="space-y-6 px-1">
-            <div className="text-center space-y-3">
-              <div className="mx-auto w-16 h-16 bg-zan-cyan text-zan-dark rounded-2xl flex items-center justify-center shadow-lg">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">Welcome Back!</h2>
-                <p className="text-sm text-gray-300 mt-1">Sign in to access your account</p>
-              </div>
-            </div>
-
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="login-email" className="text-sm font-semibold text-gray-200">
-                  Email
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input 
-                    id="login-email" 
-                    name="email" 
-                    type="email" 
-                    placeholder="you@example.com" 
-                    required 
-                    className="pl-11 h-12 text-base border-white/10 rounded-lg focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="login-password" className="text-sm font-semibold text-gray-200">
-                  Password
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input 
-                    id="login-password" 
-                    name="password" 
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    required 
-                    className="pl-11 pr-11 h-12 text-base border-white/10 rounded-lg focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/40 transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors focus:outline-none"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button 
-                type="submit" 
-                disabled={loading} 
-                className="w-full h-12 bg-zan-cyan hover:bg-white text-zan-dark font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 rounded-lg"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Signing In...</span>
-                  </div>
-                ) : (
-                  'Sign In'
-                )}
-              </Button>
-
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/10"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-card text-gray-400 font-medium">New to ZAN Tech?</span>
-                </div>
-              </div>
-
-              <button 
-                type="button" 
-                onClick={switchToRegister} 
-                className="w-full h-12 border-2 border-white/10 rounded-lg font-semibold text-gray-200 text-base hover:bg-background hover:border-zan-cyan/40 hover:text-zan-cyan transition-all duration-200"
-              >
-                Create New Account
-              </button>
-            </form>
-          </div>
-        );
-
-      case 'register':
-        return (
-          <div className="space-y-6 px-1">
-            <button
-              type="button"
-              onClick={switchToLogin}
-              className="flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-zan-cyan transition-colors group"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Back to Login
-            </button>
-
-            <div className="text-center space-y-3">
-              <div className="mx-auto w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <User className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">Create an Account</h2>
-                <p className="text-sm text-gray-300 mt-1">Get started with us today!</p>
-              </div>
-            </div>
-
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="register-name" className="text-sm font-semibold text-gray-200">
-                  Full Name
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input 
-                    id="register-name" 
-                    name="name" 
-                    type="text" 
-                    placeholder="Your Name" 
-                    required 
-                    className="pl-11 h-11 text-base border-white/10 rounded-lg focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/20 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="register-email" className="text-sm font-semibold text-gray-200">
-                  Email
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input 
-                    id="register-email" 
-                    name="email" 
-                    type="email" 
-                    placeholder="zantechbd@gmail.com" 
-                    required 
-                    className="pl-11 h-11 text-base border-white/10 rounded-lg focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/20 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="register-phone" className="text-sm font-semibold text-gray-200">
-                  Phone
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <Phone className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input 
-                    id="register-phone" 
-                    name="phone" 
-                    type="tel" 
-                    placeholder="Your Phone Number" 
-                    required 
-                    className="pl-11 h-11 text-base border-white/10 rounded-lg focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/20 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="register-password" className="text-sm font-semibold text-gray-200">
-                  Password
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input 
-                    id="register-password" 
-                    name="password" 
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a strong password"
-                    required 
-                    minLength={8}
-                    className="pl-11 pr-11 h-11 text-base border-white/10 rounded-lg focus:border-zan-cyan focus:ring-2 focus:ring-zan-cyan/20 transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors focus:outline-none"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-                <p className="text-xs text-gray-400 mt-1">Minimum 8 characters required</p>
-              </div>
-
-              <Button 
-                type="submit" 
-                disabled={loading} 
-                className="w-full h-12 bg-zan-cyan hover:bg-white text-zan-dark font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 rounded-lg mt-6"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Creating Account...</span>
-                  </div>
-                ) : (
-                  'Create Account'
-                )}
-              </Button>
-
-              <p className="text-center text-sm text-gray-300 mt-4">
-                Already have an account?{' '}
-                <button 
-                  type="button"
-                  onClick={switchToLogin} 
-                  className="font-semibold text-zan-cyan hover:text-zan-cyan hover:underline transition-colors"
-                >
-                  Sign In
-                </button>
-              </p>
-            </form>
-          </div>
-        );
-
-      case 'registerSuccess':
-        return (
-          <div className="text-center space-y-6 py-8 px-1">
-            <div className="relative mx-auto w-24 h-24">
-              <div className="absolute inset-0 bg-emerald-500/15 rounded-full animate-ping opacity-75"></div>
-              <div className="relative bg-emerald-600 rounded-full w-24 h-24 flex items-center justify-center shadow-xl">
-                <CheckCircle className="w-12 h-12 text-white" />
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-2xl font-bold text-white">Registration Successful!</h3>
-              <div className="bg-zan-cyan/10 border-2 border-zan-cyan/20 rounded-xl p-4 space-y-2">
-                <p className="text-sm font-medium text-gray-200">
-                  A verification link has been sent to:
-                </p>
-                <p className="font-bold text-zan-cyan text-base break-all">{registeredEmail}</p>
-              </div>
-              <p className="text-sm text-gray-300 px-2 leading-relaxed">
-                Please check your inbox and click the verification link to activate your account.
-              </p>
-            </div>
-
-            {resendMessage && (
-              <Alert className="bg-emerald-500/10 border-2 border-green-300 text-emerald-400">
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
-                <AlertDescription className="font-medium">{resendMessage}</AlertDescription>
-              </Alert>
-            )}
-
-            <div className="space-y-3 pt-4">
-              <Button 
-                onClick={switchToLogin} 
-                className="w-full h-12 bg-zan-cyan hover:bg-white text-zan-dark font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 rounded-lg"
-              >
-                Back to Login
-              </Button>
-              
-              <Button 
-                onClick={handleResend} 
-                variant="outline" 
-                disabled={loading} 
-                className="w-full h-12 border-2 border-white/10 hover:bg-background hover:border-zan-cyan/40 transition-all duration-200 rounded-lg font-semibold"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
-                    <span>Sending...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    <span>Resend Verification Email</span>
-                  </div>
-                )}
-              </Button>
-            </div>
-
-            <div className="pt-4 border-t border-white/10">
-              <p className="text-xs text-gray-400">
-                Didn't receive the email? Check your spam folder or try resending.
-              </p>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
+  const strength = strengthOf(form.password);
+  const [title, subtitle] = TITLES[view] || TITLES.login;
+  const message = fieldError || error;
 
   return (
-    <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+    <SheetContent className="flex w-full flex-col gap-0 overflow-y-auto border-l border-white/10 bg-card p-0 sm:max-w-md">
       <SheetHeader className="sr-only">
-        <SheetTitle>
-          {view === 'login' && 'Welcome Back!'}
-          {view === 'register' && 'Create an Account'}
-          {view === 'registerSuccess' && 'Registration Successful'}
-        </SheetTitle>
-        <SheetDescription>
-          {view === 'login' && 'Sign in to continue.'}
-          {view === 'register' && 'Get started with us today!'}
-          {view === 'registerSuccess' && 'Check your email to verify your account'}
-        </SheetDescription>
+        <SheetTitle>{title}</SheetTitle>
+        <SheetDescription>{subtitle}</SheetDescription>
       </SheetHeader>
 
-      <div className="py-6">
-        {error && view !== 'registerSuccess' && (
-          <Alert variant="destructive" className="mb-6 border-2 border-red-500/25 bg-red-500/10">
-            <AlertCircle className="h-5 w-5 text-red-400" />
-            <AlertDescription className="text-red-300 font-semibold ml-2">{error}</AlertDescription>
-          </Alert>
+      {/* Brand header */}
+      <div className="relative overflow-hidden border-b border-white/10 bg-surface-2 px-6 pb-6 pt-10">
+        <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-60" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-zan-cyan/15 blur-3xl" />
+        <div className="relative">
+          <img src="/zantech-mark.png" alt="" className="h-10 w-10 object-contain" />
+          <h2 className="mt-4 text-2xl font-black tracking-tight text-white">{title}</h2>
+          <p className="mt-1 text-sm text-gray-400">{subtitle}</p>
+        </div>
+      </div>
+
+      <div className="flex-1 px-6 py-6">
+        {/* Sign in / Create account switch */}
+        {(view === 'login' || view === 'register') && (
+          <div className="mb-6 grid grid-cols-2 rounded-xl border border-white/10 bg-background p-1" role="tablist">
+            {[['login', 'Sign in'], ['register', 'Create account']].map(([v, label]) => (
+              <button
+                key={v}
+                type="button"
+                role="tab"
+                aria-selected={view === v}
+                onClick={() => go(v)}
+                className={`h-10 rounded-lg text-sm font-bold transition-colors ${view === v ? 'bg-card text-white shadow-sm' : 'text-gray-400 hover:text-white'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         )}
-        
-        {renderContent()}
+
+        {message && !['forgotSent', 'registerSuccess'].includes(view) && (
+          <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-red-500/25 bg-red-500/10 p-3.5 text-sm text-red-500" role="alert">
+            <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+            <span>{message}</span>
+          </div>
+        )}
+
+        {view === 'login' && (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Field id="login-email" label="Email" icon={Mail}>
+              <input id="login-email" name="email" type="email" value={form.email} onChange={onChange} autoComplete="email" placeholder="you@example.com" required className={inputCls} />
+            </Field>
+            <Field
+              id="login-password"
+              label="Password"
+              icon={Lock}
+              aside={<button type="button" onClick={() => go('forgot')} className="text-xs font-semibold text-zan-cyan hover:underline">Forgot password?</button>}
+            >
+              <PasswordInput id="login-password" name="password" value={form.password} onChange={onChange} autoComplete="current-password" placeholder="Your password" show={showPassword} onToggle={() => setShowPassword((s) => !s)} />
+            </Field>
+            <button type="submit" disabled={loading} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zan-cyan font-bold text-zan-dark transition-opacity hover:opacity-90 disabled:opacity-60">
+              {loading ? <><Spinner /> Signing in…</> : 'Sign in'}
+            </button>
+            <p className="text-center text-sm text-gray-400">
+              New here?{' '}
+              <button type="button" onClick={() => go('register')} className="font-semibold text-zan-cyan hover:underline">Create a free account</button>
+            </p>
+          </form>
+        )}
+
+        {view === 'register' && (
+          <form onSubmit={handleRegister} className="space-y-4">
+            <Field id="register-name" label="Full name" icon={User}>
+              <input id="register-name" name="name" value={form.name} onChange={onChange} autoComplete="name" placeholder="Your name" required className={inputCls} />
+            </Field>
+            <Field id="register-phone" label="Mobile number" icon={Phone} hint="We'll call this number about deliveries.">
+              <input id="register-phone" name="phone" type="tel" inputMode="numeric" value={form.phone} onChange={onChange} autoComplete="tel" placeholder="01712345678" required className={inputCls} />
+            </Field>
+            <Field id="register-email" label="Email" icon={Mail} hint="Order updates and invoices are sent here.">
+              <input id="register-email" name="email" type="email" value={form.email} onChange={onChange} autoComplete="email" placeholder="you@example.com" required className={inputCls} />
+            </Field>
+            <div className="space-y-1.5">
+              <Field id="register-password" label="Password" icon={Lock}>
+                <PasswordInput id="register-password" name="password" value={form.password} onChange={onChange} autoComplete="new-password" placeholder="At least 8 characters" minLength={8} show={showPassword} onToggle={() => setShowPassword((s) => !s)} />
+              </Field>
+              {form.password && (
+                <div className="flex items-center gap-3">
+                  <div className="grid flex-1 grid-cols-4 gap-1">
+                    {[1, 2, 3, 4].map((i) => (
+                      <span key={i} className={`h-1.5 rounded-full ${i <= strength.score ? strength.color : 'bg-white/10'}`} />
+                    ))}
+                  </div>
+                  <span className="w-16 text-right text-xs font-medium text-gray-400">{strength.label}</span>
+                </div>
+              )}
+            </div>
+            <button type="submit" disabled={loading} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zan-cyan font-bold text-zan-dark transition-opacity hover:opacity-90 disabled:opacity-60">
+              {loading ? <><Spinner /> Creating account…</> : 'Create account'}
+            </button>
+            <p className="text-center text-xs leading-relaxed text-gray-500">
+              By creating an account you agree to our{' '}
+              <SheetClose asChild><Link to="/terms" className="text-zan-cyan hover:underline">Terms</Link></SheetClose> and{' '}
+              <SheetClose asChild><Link to="/privacy-policy" className="text-zan-cyan hover:underline">Privacy Policy</Link></SheetClose>.
+            </p>
+          </form>
+        )}
+
+        {view === 'forgot' && (
+          <form onSubmit={handleForgot} className="space-y-4">
+            <button type="button" onClick={() => go('login')} className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white">
+              <ArrowLeft className="h-4 w-4" /> Back to sign in
+            </button>
+            <Field id="forgot-email" label="Email" icon={Mail}>
+              <input id="forgot-email" name="email" type="email" value={form.email} onChange={onChange} autoComplete="email" placeholder="you@example.com" required className={inputCls} />
+            </Field>
+            <button type="submit" disabled={loading} className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zan-cyan font-bold text-zan-dark transition-opacity hover:opacity-90 disabled:opacity-60">
+              {loading ? <><Spinner /> Sending…</> : <><KeyRound className="h-4 w-4" /> Send reset link</>}
+            </button>
+          </form>
+        )}
+
+        {(view === 'forgotSent' || view === 'registerSuccess') && (
+          <div className="space-y-5 text-center">
+            <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-500">
+              <CheckCircle2 className="h-8 w-8" />
+            </span>
+            <div className="rounded-xl border border-zan-cyan/25 bg-zan-cyan/5 p-4">
+              <p className="text-sm text-gray-400">{view === 'forgotSent' ? 'Reset link sent to' : 'Verification link sent to'}</p>
+              <p className="mt-1 break-all font-bold text-white">{registeredEmail}</p>
+            </div>
+            <p className="text-sm text-gray-400">Can't find it? Check your spam or promotions folder.</p>
+            <button type="button" onClick={() => go('login')} className="h-12 w-full rounded-xl bg-zan-cyan font-bold text-zan-dark transition-opacity hover:opacity-90">
+              Back to sign in
+            </button>
+            {view === 'registerSuccess' && (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => resendVerificationEmail(registeredEmail)}
+                className="h-12 w-full rounded-xl border border-white/15 font-semibold text-white transition-colors hover:border-zan-cyan/40 disabled:opacity-60"
+              >
+                Resend verification email
+              </button>
+            )}
+          </div>
+        )}
+
+        {(view === 'login' || view === 'register') && (
+          <div className="mt-8 rounded-2xl border border-white/10 bg-background p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">With an account you can</p>
+            <ul className="mt-3 grid grid-cols-2 gap-3">
+              {PERKS.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-2 text-sm text-gray-300">
+                  <Icon className="h-4 w-4 flex-shrink-0 text-zan-cyan" /> {text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </SheetContent>
   );

@@ -101,7 +101,7 @@ const QuickSupport = () => {
   ];
 
   return (
-    <div className="fixed right-4 bottom-4 sm:right-6 sm:bottom-6 z-40 flex flex-col items-end gap-3 font-sans">
+    <div className="quick-support fixed right-4 bottom-4 sm:right-6 sm:bottom-6 z-40 flex flex-col items-end gap-3 font-sans">
       {/* Chat Window - Minimalist */}
       <div
         className={`bg-card rounded-3xl shadow-2xl w-[320px] sm:w-[380px] h-[480px] flex flex-col overflow-hidden border border-white/10 mb-2 transition-all duration-500 origin-bottom-right ${

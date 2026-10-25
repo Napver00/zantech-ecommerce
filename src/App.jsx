@@ -1,11 +1,11 @@
-import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import React, { Suspense, lazy, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { CategoriesProvider } from "./context/CategoriesContext";
 import { CompanyProvider } from "./context/CompanyContext";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import ProtectedRoute from "./components/ProtectedRoute";
 import QuickSupport from "./components/QuickSupport";
 import { useTheme } from "./lib/theme";
@@ -35,6 +35,7 @@ const Downloads = lazy(() => import("./pages/Dashboard/Downloads"));
 const Addresses = lazy(() => import("./pages/Dashboard/Addresses"));
 const AccountDetails = lazy(() => import("./pages/Dashboard/AccountDetails"));
 const Wishlist = lazy(() => import("./pages/Dashboard/Wishlist"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 // 404 page
 const NotFound = () => (
@@ -58,6 +59,27 @@ const SearchRedirect = () => {
   return <Navigate to={`/shop?search=${encodeURIComponent(q)}`} replace />;
 };
 
+// The email-verification link sends people back here with ?verified=…
+const VerifiedNotice = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, openAuth } = useAuth();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const state = params.get("verified");
+    if (!state) return;
+    if (state === "success") toast.success("Email verified", { description: "Thanks! Your account is fully set up." });
+    else if (state === "already") toast.info("Your email is already verified.");
+    else toast.error("That verification link didn't work", { description: "Sign in and ask for a new one, or contact us." });
+    if (!user && state !== "invalid") openAuth("login");
+    params.delete("verified");
+    navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
+    // Run once per landing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+  return null;
+};
+
 // Simple loading fallback
 const PageLoader = () => (
   <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -74,6 +96,7 @@ function App() {
         <CompanyProvider>
         <CartProvider>
           <BrowserRouter>
+            <VerifiedNotice />
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -91,6 +114,7 @@ function App() {
                 <Route path="/product/:slug" element={<ProductPage />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/search" element={<SearchRedirect />} />
+                <Route path="/auth/reset" element={<ResetPassword />} />
 
                 <Route
                   path="/dashboard"
