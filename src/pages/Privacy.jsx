@@ -1,12 +1,12 @@
 import React from "react";
 import LegalPageLayout from "@/components/LegalPageLayout";
-import { Shield, Lock, Eye, FileText } from "lucide-react";
+import { Shield, ShieldCheck, Lock, Cookie, UserCheck } from "lucide-react";
 
 const Privacy = () => (
   <LegalPageLayout
     icon={Shield}
     title="Privacy Policy"
-    subtitle="We are committed to protecting your personal information and your right to privacy."
+    subtitle="What we collect when you shop with us, why we need it, and how we protect it."
     endpoint="privacy-policy"
     seo={{
       title: "Privacy Policy - ZAN Tech Store",
@@ -14,9 +14,10 @@ const Privacy = () => (
       url: "https://store.zantechbd.com/privacy-policy",
     }}
     highlights={[
-      { icon: Lock, title: "Secure Data", desc: "Your data is encrypted and stored securely." },
-      { icon: Eye, title: "Transparent", desc: "No hidden tracking or data selling." },
-      { icon: FileText, title: "Compliance", desc: "We follow all local data protection laws." },
+      { icon: ShieldCheck, title: "Never sold", desc: "We don't sell, trade or rent your personal details." },
+      { icon: UserCheck, title: "Only what's needed", desc: "Name, contact and address to deliver your order." },
+      { icon: Cookie, title: "Cookies you control", desc: "Used for your cart and login; manage them in your browser." },
+      { icon: Lock, title: "Kept secure", desc: "Technical and organisational safeguards protect your data." },
     ]}
   />
 );

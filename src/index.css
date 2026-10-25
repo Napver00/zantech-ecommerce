@@ -322,6 +322,12 @@ html.light {
   background-size: 40px 40px;
 }
 
+/* Horizontally scrolling chip rows on phones, without a visible bar */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
 /* Product photos are shot on white — keep them on a clean light tile */
 @utility product-tile {
   background: radial-gradient(circle at 50% 40%, #ffffff 0%, #eef1f6 100%);
