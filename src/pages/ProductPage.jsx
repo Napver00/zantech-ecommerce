@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ShoppingCart, Heart, Star, ChevronLeft, ChevronRight,
   Package, Minus, Plus, Share2, Check, ShieldCheck, Truck,
@@ -164,7 +164,8 @@ const QuantitySelector = ({ max = 1, value = 1, onChange }) => (
     <button
       onClick={() => onChange?.(Math.max(1, value - 1))}
       disabled={value <= 1}
-      className="w-10 h-10 flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-300"
+      aria-label="One less"
+      className="w-10 h-10 flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-300 pointer-coarse:w-11 pointer-coarse:h-11"
     >
       <Minus className="w-3.5 h-3.5" />
     </button>
@@ -172,7 +173,8 @@ const QuantitySelector = ({ max = 1, value = 1, onChange }) => (
     <button
       onClick={() => onChange?.(Math.min(value + 1, max))}
       disabled={value >= max}
-      className="w-10 h-10 flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-300"
+      aria-label="One more"
+      className="w-10 h-10 flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-300 pointer-coarse:w-11 pointer-coarse:h-11"
     >
       <Plus className="w-3.5 h-3.5" />
     </button>
@@ -191,6 +193,27 @@ const ProductPage = () => {
   const { addToWishlist, wishlist } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
+  // Phones: once the buy panel scrolls away, a bar at the bottom of the screen
+  // keeps Add to Cart / Buy Now under the thumb (Fitts's law: near and big).
+  const buyPanelRef = useRef(null);
+  const [showStickyBuy, setShowStickyBuy] = useState(false);
+
+  useEffect(() => {
+    const panel = buyPanelRef.current;
+    if (!panel || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowStickyBuy(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    });
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [product]);
+
+  // Lift the chat button above the bar while it shows (same hook as checkout).
+  useEffect(() => {
+    if (!showStickyBuy) return;
+    document.body.dataset.bottomBar = "1";
+    return () => { delete document.body.dataset.bottomBar; };
+  }, [showStickyBuy]);
 
   const siteUrl = "https://store.zantechbd.com";
   const productUrl = `${siteUrl}/product/${slug}`;
@@ -457,7 +480,7 @@ const ProductPage = () => {
               )}
 
               {/* Buy panel — the one grouped, boxed element on the page */}
-              <div className="mt-5 bg-background rounded-2xl p-4">
+              <div ref={buyPanelRef} className="mt-5 bg-background rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-3.5">
                   <span className="text-sm font-semibold text-gray-200">Quantity</span>
                   <QuantitySelector max={product.quantity} value={quantity} onChange={setQuantity} />
@@ -697,6 +720,36 @@ const ProductPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Phone: price and buy buttons stay in thumb reach after the buy panel scrolls away */}
+      {product.quantity > 0 && (
+        <div
+          aria-hidden={!showStickyBuy}
+          className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-card/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.15)] backdrop-blur transition-transform duration-200 lg:hidden ${showStickyBuy ? "translate-y-0" : "pointer-events-none translate-y-full"}`}
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="min-w-0 mr-auto">
+              <p className="truncate text-xs text-gray-400">{quantity > 1 ? `${quantity} ×` : "Price"}</p>
+              <p className="text-lg font-black leading-tight text-white">৳{product.discountedPrice?.toLocaleString()}</p>
+            </div>
+            <button
+              onClick={handleAddToCart}
+              tabIndex={showStickyBuy ? 0 : -1}
+              aria-label="Add to cart"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-surface-2 text-white active:scale-[0.98]"
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </button>
+            <button
+              onClick={handleBuyNow}
+              tabIndex={showStickyBuy ? 0 : -1}
+              className="flex h-12 flex-1 max-w-[12rem] items-center justify-center gap-2 rounded-xl bg-zan-cyan font-bold text-zan-dark active:scale-[0.98]"
+            >
+              <Zap className="h-4 w-4 fill-current" /> Buy Now
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

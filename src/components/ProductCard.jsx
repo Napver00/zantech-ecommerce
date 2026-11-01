@@ -95,7 +95,7 @@ const ProductCard = ({ product, isNew = false }) => {
       <button
         onClick={handleWishlistToggle}
         className={cn(
-          "absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition-all",
+          "absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition-all pointer-coarse:h-11 pointer-coarse:w-11",
           isWishlisted
             ? "border-zan-red/30 bg-zan-red text-[#fff]"
             : "border-black/5 bg-[#fff]/90 text-[#6b7280] opacity-100 hover:text-zan-red sm:opacity-0 sm:group-hover:opacity-100",
@@ -159,7 +159,7 @@ const ProductCard = ({ product, isNew = false }) => {
             onClick={handleAddToCart}
             disabled={isLoading || outOfStock}
             className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-bold transition-all active:scale-[0.98]",
+              "flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-bold transition-all active:scale-[0.98] pointer-coarse:min-h-11",
               outOfStock
                 ? "cursor-not-allowed border-white/10 bg-white/5 text-gray-500"
                 : justAdded

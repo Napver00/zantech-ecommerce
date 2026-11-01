@@ -70,19 +70,22 @@ const CartItem = ({ item }) => {
           {/* Quantity Controls */}
           <div className="flex items-center justify-between mt-auto">
             <div className="flex items-center border border-white/10 rounded-lg">
+              {/* 36px targets (44px on touch screens): the old 22px buttons were easy to miss */}
               <button
                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                className="px-2 py-1 hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="flex size-9 items-center justify-center hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors pointer-coarse:size-11"
                 disabled={item.quantity <= 1}
+                aria-label="One less"
               >
                 <Minus className="h-3.5 w-3.5 text-gray-300" />
               </button>
-              <span className="px-3 py-1 text-sm font-semibold min-w-[2.5rem] text-center border-x border-white/10">
+              <span className="px-2 text-sm font-semibold min-w-[2.25rem] text-center border-x border-white/10 self-stretch flex items-center justify-center">
                 {item.quantity}
               </span>
               <button
                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                className="px-2 py-1 hover:bg-background transition-colors"
+                className="flex size-9 items-center justify-center hover:bg-background transition-colors pointer-coarse:size-11"
+                aria-label="One more"
               >
                 <Plus className="h-3.5 w-3.5 text-gray-300" />
               </button>
@@ -98,8 +101,9 @@ const CartItem = ({ item }) => {
               </div>
               <button
                 onClick={() => removeFromCart(item.id)}
-                className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                className="flex size-9 items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors pointer-coarse:size-11"
                 title="Remove from cart"
+                aria-label="Remove from cart"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
