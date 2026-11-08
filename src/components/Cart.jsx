@@ -1,5 +1,6 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
+import { cartKeyOf } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 import {
   SheetContent,
@@ -48,6 +49,7 @@ const CartItem = ({ item }) => {
           <h4 className="font-medium text-sm text-white line-clamp-2 mb-1">
             {item.name}
           </h4>
+          {item.variant_name && <p className="-mt-0.5 mb-1 text-xs text-gray-400">{item.variant_label || "Option"}: {item.variant_name}</p>}
 
           {/* Price Section */}
           <div className="flex items-baseline gap-2 mb-2">
@@ -72,7 +74,7 @@ const CartItem = ({ item }) => {
             <div className="flex items-center border border-white/10 rounded-lg">
               {/* 36px targets (44px on touch screens): the old 22px buttons were easy to miss */}
               <button
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                onClick={() => updateQuantity(cartKeyOf(item), item.quantity - 1)}
                 className="flex size-9 items-center justify-center hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors pointer-coarse:size-11"
                 disabled={item.quantity <= 1}
                 aria-label="One less"
@@ -83,7 +85,7 @@ const CartItem = ({ item }) => {
                 {item.quantity}
               </span>
               <button
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                onClick={() => updateQuantity(cartKeyOf(item), item.quantity + 1)}
                 className="flex size-9 items-center justify-center hover:bg-background transition-colors pointer-coarse:size-11"
                 aria-label="One more"
               >
@@ -100,7 +102,7 @@ const CartItem = ({ item }) => {
                 </div>
               </div>
               <button
-                onClick={() => removeFromCart(item.id)}
+                onClick={() => removeFromCart(cartKeyOf(item))}
                 className="flex size-9 items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors pointer-coarse:size-11"
                 title="Remove from cart"
                 aria-label="Remove from cart"
@@ -144,7 +146,7 @@ export const Cart = () => {
           <div className="flex-1 overflow-y-auto scroll-strip px-4 py-3 bg-background min-h-0">
             <div className="space-y-2.5">
               {cartItems.map((item) => (
-                <CartItem key={item.id} item={item} />
+                <CartItem key={cartKeyOf(item)} item={item} />
               ))}
             </div>
           </div>

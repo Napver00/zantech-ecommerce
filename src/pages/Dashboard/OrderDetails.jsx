@@ -186,7 +186,7 @@ const OrderDetails = () => {
           </h2>
           <ul className="divide-y divide-white/10">
             {items.map((item) => (
-              <li key={`${item.product_id}-${item.name}`} className="flex gap-4 p-4 md:p-5">
+              <li key={item.line_id ?? `${item.product_id}-${item.variant_id ?? ""}`} className="flex gap-4 p-4 md:p-5">
                 {item.image ? (
                   <img src={item.image} alt="" loading="lazy" className="product-tile h-16 w-16 flex-shrink-0 rounded-xl border border-white/10 object-contain p-1" />
                 ) : (
@@ -198,6 +198,7 @@ const OrderDetails = () => {
                   ) : (
                     <p className="font-semibold text-gray-400">{item.name}</p>
                   )}
+                  {item.variant_name && <p className="mt-0.5 text-xs text-gray-400">Option: <span className="text-gray-200">{item.variant_name}</span></p>}
                   <p className="mt-1 text-sm text-gray-400">{item.quantity} × {taka(item.price)}</p>
                   {Array.isArray(item.bundle_items) && item.bundle_items.length > 0 && (
                     <p className="mt-1 text-xs text-gray-500">Includes: {item.bundle_items.map((b) => b.name).join(', ')}</p>

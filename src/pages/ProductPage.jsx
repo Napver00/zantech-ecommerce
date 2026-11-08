@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ShoppingCart, Heart, Star, ChevronLeft, ChevronRight,
   Package, Minus, Plus, Share2, Check, ShieldCheck, Truck,
@@ -6,7 +6,7 @@ import {
   ChevronRight as Breadcrumb, MessageSquare, BookOpen,
   Maximize2, X, Zap, Sparkles,
 } from "lucide-react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { config } from "@/config";
 import DOMPurify from "dompurify";
 import Header from "@/components/Header";
@@ -252,20 +252,74 @@ const ProductPage = () => {
         if (mounted) setLoading(false);
       }
     };
+    setChosenVariant(null);
     if (slug) fetchProduct();
     return () => { mounted = false; };
   }, [slug]);
 
+  // ── Variants (e.g. 1 pin / 2 pin / 3 pin): the choice is kept in the address (?v=12) ──
+  const [searchParams, setSearchParams] = useSearchParams();
+  const variants = useMemo(() => product?.variants || [], [product]);
+  // Kept in state too, so the choice counts at once (the address updates a moment later).
+  const [chosenVariant, setChosenVariant] = useState(null);
+  const askedVariant = chosenVariant ?? (Number(searchParams.get("v")) || null);
+  const variant =
+    variants.find((v) => v.id === askedVariant) ||
+    variants.find((v) => v.quantity > 0) ||
+    variants[0] ||
+    null;
+  // Show each option's price on its button only when they differ.
+  const pricesDiffer = new Set(variants.map((v) => v.discountedPrice ?? v.price)).size > 1;
+  const chooseVariant = (v) => {
+    setChosenVariant(v.id);
+    setSearchParams((prev) => { const n = new URLSearchParams(prev); n.set("v", v.id); return n; }, { replace: true });
+    setQuantity(1);
+  };
+
+  // What the customer is looking at: the product, or the chosen variant's price and stock.
+  const view = useMemo(() => {
+    if (!product || !variant) return product;
+    return {
+      ...product,
+      price: variant.price,
+      discountedPrice: variant.discountedPrice ?? variant.price,
+      discountPercentage: variant.discountPercentage,
+      quantity: variant.quantity,
+    };
+  }, [product, variant]);
+
+  // The chosen variant's photo shows first.
+  const galleryImages = useMemo(() => {
+    const imgs = product?.images?.length ? product.images : product?.image ? [product.image] : [];
+    if (!variant?.image_id) return imgs;
+    const hit = imgs.find((i) => i?.id === variant.image_id);
+    return hit ? [hit, ...imgs.filter((i) => i !== hit)] : variant.image_url ? [variant.image_url, ...imgs] : imgs;
+  }, [product, variant]);
+
+  // The cart line: a product, or one variant of it.
+  const cartLine = () =>
+    variant
+      ? {
+          ...view,
+          cartKey: `${product.id}:${variant.id}`,
+          product_id: product.id,
+          variant_id: variant.id,
+          variant_name: variant.name,
+          variant_label: product.variant_label || null,
+          image: variant.image_url || product.image,
+        }
+      : product;
+
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, quantity);
-      toast.success("Added to cart", { description: `${quantity} × ${product.name}` });
+      addToCart(cartLine(), quantity);
+      toast.success("Added to cart", { description: `${quantity} × ${product.name}${variant ? ` (${variant.name})` : ""}` });
     }
   };
 
   const handleBuyNow = () => {
     if (!product) return;
-    addToCart(product, quantity);
+    addToCart(cartLine(), quantity);
     navigate("/checkout");
   };
 
@@ -294,7 +348,7 @@ const ProductPage = () => {
       image={seoImage}
       url={productUrl}
       type="product"
-      product={product ? { price: product.discountedPrice, currency: "BDT", availability: product.quantity > 0 ? "in stock" : "out of stock", brand: product.brand || "ZAN Tech" } : undefined}
+      product={view ? { price: view.discountedPrice, currency: "BDT", availability: view.quantity > 0 ? "in stock" : "out of stock", brand: view.brand || "ZAN Tech" } : undefined}
     />
   );
 
@@ -340,8 +394,8 @@ const ProductPage = () => {
       </div>
     );
 
-  const hasDiscount = product.discountedPrice < product.price;
-  const savings = hasDiscount ? product.price - product.discountedPrice : 0;
+  const hasDiscount = view.discountedPrice < view.price;
+  const savings = hasDiscount ? view.price - view.discountedPrice : 0;
   const isBundleProduct = product.is_bundle === 1 && product.bundle_items?.length > 0;
 
   const bundleIndividualTotal = isBundleProduct
@@ -350,7 +404,7 @@ const ProductPage = () => {
         0
       )
     : 0;
-  const bundleSavings = bundleIndividualTotal - product.discountedPrice;
+  const bundleSavings = bundleIndividualTotal - view.discountedPrice;
   const bundleSavingsPercent = bundleIndividualTotal > 0 ? Math.round((bundleSavings / bundleIndividualTotal) * 100) : 0;
 
   const trustItems = [
@@ -392,10 +446,7 @@ const ProductPage = () => {
 
             {/* Gallery — wider column, no card chrome */}
             <div className="lg:col-span-7">
-              <Gallery
-                images={product.images?.length ? product.images : product.image ? [product.image] : []}
-                alt={product.name}
-              />
+              <Gallery images={galleryImages} alt={variant ? `${product.name}, ${variant.name}` : product.name} />
               {product.brand && (
                 <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-400">
                   <Cpu className="w-3.5 h-3.5" />
@@ -424,10 +475,10 @@ const ProductPage = () => {
                 {product.average_rating > 0 && (
                   <StarRating rating={product.average_rating} totalReviews={product.ratings?.length} />
                 )}
-                {product.quantity > 0 ? (
+                {view.quantity > 0 ? (
                   <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    In stock — {product.quantity} available
+                    In stock — {view.quantity} available
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5 text-xs font-semibold text-red-500">
@@ -441,15 +492,15 @@ const ProductPage = () => {
               <div className="mt-5">
                 <div className="flex items-end gap-3 flex-wrap">
                   <span className="text-4xl font-black text-white">
-                    ৳{product.discountedPrice?.toLocaleString()}
+                    ৳{view.discountedPrice?.toLocaleString()}
                   </span>
                   {hasDiscount && (
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-base text-gray-400 line-through font-medium">
-                        ৳{product.price?.toLocaleString()}
+                        ৳{view.price?.toLocaleString()}
                       </span>
                       <span className="text-xs font-black text-[#fff] bg-red-500 px-2 py-0.5 rounded-full">
-                        -{product.discountPercentage}%
+                        -{view.discountPercentage}%
                       </span>
                     </div>
                   )}
@@ -461,6 +512,39 @@ const ProductPage = () => {
                   </p>
                 )}
               </div>
+
+              {variants.length > 0 && (
+                <fieldset className="mt-5">
+                  <legend className="text-sm font-semibold text-gray-200 mb-2">
+                    {product.variant_label || "Option"}: <span className="text-white">{variant?.name}</span>
+                  </legend>
+                  <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={product.variant_label || "Option"}>
+                    {variants.map((v) => {
+                      const on = v.id === variant?.id;
+                      const out = v.quantity <= 0;
+                      return (
+                        <button
+                          key={v.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={on}
+                          onClick={() => chooseVariant(v)}
+                          className={`relative min-h-[44px] rounded-xl border px-3.5 py-2 text-sm font-semibold transition-colors ${
+                            on ? "border-zan-cyan bg-zan-cyan/10 text-white" : "border-white/15 text-gray-300 hover:border-white/30"
+                          } ${out ? "opacity-60" : ""}`}
+                        >
+                          <span className={out ? "line-through decoration-1" : ""}>{v.name}</span>
+                          {pricesDiffer && (
+                            <span className="ml-1.5 text-xs font-medium text-gray-400">৳{(v.discountedPrice ?? v.price).toLocaleString()}</span>
+                          )}
+                          {out && <span className="sr-only"> (out of stock)</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {variant?.sku && <p className="mt-2 text-xs text-gray-500">SKU: {variant.sku}</p>}
+                </fieldset>
+              )}
 
               {product.short_description && (
                 <p className="text-gray-400 text-sm leading-relaxed mt-4">
@@ -483,20 +567,20 @@ const ProductPage = () => {
               <div ref={buyPanelRef} className="mt-5 bg-background rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-3.5">
                   <span className="text-sm font-semibold text-gray-200">Quantity</span>
-                  <QuantitySelector max={product.quantity} value={quantity} onChange={setQuantity} />
+                  <QuantitySelector max={view.quantity} value={quantity} onChange={setQuantity} />
                 </div>
                 <div className="flex gap-2.5">
                   <button
                     onClick={handleAddToCart}
-                    disabled={product.quantity === 0}
+                    disabled={view.quantity <= 0}
                     className="flex-1 border border-white/15 bg-surface-2 hover:bg-surface-3 disabled:bg-white/10 disabled:cursor-not-allowed text-white font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
                   >
                     <ShoppingCart className="w-4 h-4" />
-                    {product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
+                    {view.quantity <= 0 ? "Out of Stock" : "Add to Cart"}
                   </button>
                   <button
                     onClick={handleBuyNow}
-                    disabled={product.quantity === 0}
+                    disabled={view.quantity <= 0}
                     className="flex-1 bg-zan-cyan hover:bg-cyan-300 disabled:bg-white/10 disabled:cursor-not-allowed text-zan-dark font-bold py-3 px-5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm"
                   >
                     <Zap className="w-4 h-4 fill-current" />
@@ -722,7 +806,7 @@ const ProductPage = () => {
       </main>
 
       {/* Phone: price and buy buttons stay in thumb reach after the buy panel scrolls away */}
-      {product.quantity > 0 && (
+      {view.quantity > 0 && (
         <div
           aria-hidden={!showStickyBuy}
           className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-card/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.15)] backdrop-blur transition-transform duration-200 lg:hidden ${showStickyBuy ? "translate-y-0" : "pointer-events-none translate-y-full"}`}
@@ -730,7 +814,7 @@ const ProductPage = () => {
           <div className="flex items-center gap-2.5">
             <div className="min-w-0 mr-auto">
               <p className="truncate text-xs text-gray-400">{quantity > 1 ? `${quantity} ×` : "Price"}</p>
-              <p className="text-lg font-black leading-tight text-white">৳{product.discountedPrice?.toLocaleString()}</p>
+              <p className="text-lg font-black leading-tight text-white">৳{view.discountedPrice?.toLocaleString()}</p>
             </div>
             <button
               onClick={handleAddToCart}

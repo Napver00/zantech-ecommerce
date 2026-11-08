@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import Seo from "../components/Seo";
 import AddressForm from "../components/AddressForm";
 import { useCart } from "../context/CartContext";
+import { cartKeyOf } from "@/lib/cart";
 import { useAuth } from "../context/AuthContext";
 import { config } from "../config";
 import { isBdMobile, normalisePhone } from "../lib/phone";
@@ -260,7 +261,7 @@ const Checkout = () => {
       total: grandTotal,
       shipping_charge: shippingCharge,
       payment_type: parseInt(payment, 10),
-      products: cartItems.map((item) => ({ product_id: item.id, quantity: item.quantity })),
+      products: cartItems.map((item) => ({ product_id: item.product_id ?? item.id, ...(item.variant_id ? { variant_id: item.variant_id } : {}), quantity: item.quantity })),
       ...(user
         ? { user_id: user.id, shipping_id: addressId }
         : { user_name: guest.user_name.trim(), userphone: normalisePhone(guest.userphone), address: guest.address.trim() }),
@@ -572,24 +573,25 @@ const Checkout = () => {
                 {cartItems.map((item) => {
                   const unit = item.discountedPrice || item.price;
                   return (
-                    <li key={item.id} className="flex gap-3 py-3">
+                    <li key={cartKeyOf(item)} className="flex gap-3 py-3">
                       <img src={item.image} alt="" loading="lazy" className="product-tile h-14 w-14 flex-shrink-0 rounded-lg border border-white/10 object-contain p-1" />
                       <div className="min-w-0 flex-1">
                         <p className="line-clamp-2 text-sm font-medium leading-snug text-white">{item.name}</p>
+                        {item.variant_name && <p className="text-xs text-gray-400">{item.variant_label || "Option"}: {item.variant_name}</p>}
                         <div className="mt-1.5 flex items-center justify-between gap-2">
                           <div className="flex items-center rounded-lg border border-white/10">
-                            <button type="button" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label="Decrease" className="flex h-7 w-7 items-center justify-center text-gray-400 hover:text-white">
+                            <button type="button" onClick={() => updateQuantity(cartKeyOf(item), item.quantity - 1)} aria-label="Decrease" className="flex h-7 w-7 items-center justify-center text-gray-400 hover:text-white">
                               {item.quantity === 1 ? <Trash2 className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}
                             </button>
                             <span className="w-7 text-center text-sm font-semibold text-white">{item.quantity}</span>
-                            <button type="button" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label="Increase" className="flex h-7 w-7 items-center justify-center text-gray-400 hover:text-white">
+                            <button type="button" onClick={() => updateQuantity(cartKeyOf(item), item.quantity + 1)} aria-label="Increase" className="flex h-7 w-7 items-center justify-center text-gray-400 hover:text-white">
                               <Plus className="h-3.5 w-3.5" />
                             </button>
                           </div>
                           <span className="text-sm font-bold text-white">{taka(unit * item.quantity)}</span>
                         </div>
                       </div>
-                      <button type="button" onClick={() => removeFromCart(item.id)} aria-label={`Remove ${item.name}`} className="self-start p-1 text-gray-500 hover:text-red-500">
+                      <button type="button" onClick={() => removeFromCart(cartKeyOf(item))} aria-label={`Remove ${item.name}`} className="self-start p-1 text-gray-500 hover:text-red-500">
                         <X className="h-4 w-4" />
                       </button>
                     </li>

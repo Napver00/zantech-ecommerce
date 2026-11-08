@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart, ShoppingCart, Star, Package, Check } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -19,6 +19,9 @@ const ProductCard = ({ product, isNew = false }) => {
     is_bundle,
   } = product;
   const isBundle = Number(is_bundle) === 1;
+  // Products sold in several versions (1 pin / 2 pin …) are chosen on the product page.
+  const hasOptions = Number(product.variants_count) > 0;
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const { addToWishlist, wishlist } = useAuth();
 
@@ -42,6 +45,10 @@ const ProductCard = ({ product, isNew = false }) => {
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (hasOptions) {
+      navigate(`/product/${product.slug}`);
+      return;
+    }
     if (outOfStock) return;
     setIsLoading(true);
     addToCart(product, 1);
@@ -151,16 +158,16 @@ const ProductCard = ({ product, isNew = false }) => {
 
         <div className="mt-auto">
           <div className="mb-3 flex flex-wrap items-baseline gap-x-2">
-            <span className="text-lg font-bold text-white">৳{finalPrice?.toLocaleString()}</span>
+            <span className="text-lg font-bold text-white">{hasOptions && <span className="mr-1 text-xs font-medium text-gray-400">From</span>}৳{finalPrice?.toLocaleString()}</span>
             {hasDiscount && <span className="text-sm text-gray-500 line-through">৳{price?.toLocaleString()}</span>}
           </div>
 
           <button
             onClick={handleAddToCart}
-            disabled={isLoading || outOfStock}
+            disabled={isLoading || (outOfStock && !hasOptions)}
             className={cn(
               "flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-bold transition-all active:scale-[0.98] pointer-coarse:min-h-11",
-              outOfStock
+              outOfStock && !hasOptions
                 ? "cursor-not-allowed border-white/10 bg-white/5 text-gray-500"
                 : justAdded
                   ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
@@ -171,6 +178,8 @@ const ProductCard = ({ product, isNew = false }) => {
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
             ) : justAdded ? (
               <><Check className="h-4 w-4" /> Added</>
+            ) : hasOptions ? (
+              <>Choose option</>
             ) : (
               <><ShoppingCart className="h-4 w-4" /> {outOfStock ? "Out of stock" : "Add to cart"}</>
             )}

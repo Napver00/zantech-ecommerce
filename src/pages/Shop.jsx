@@ -189,6 +189,7 @@ const Shop = () => {
     reviews: p.reviews_count ?? p.reviews ?? null,
     short_description: p.short_description ?? p.description ?? p.excerpt ?? "",
     categories: p.categories ?? [],
+    variants_count: p.variants_count ?? 0,
     _raw: p,
   });
 

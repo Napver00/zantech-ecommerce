@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { cartKeyOf } from '@/lib/cart';
 
 const CartContext = createContext();
 
@@ -21,10 +22,11 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      const key = cartKeyOf(product);
+      const existingItem = prevItems.find(item => cartKeyOf(item) === key);
       if (existingItem) {
         return prevItems.map(item =>
-          item.id === product.id
+          cartKeyOf(item) === key
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -33,18 +35,19 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  // Takes the line's key (cartKeyOf), which is the product id for products without variants.
+  const removeFromCart = (key) => {
+    setCartItems(prevItems => prevItems.filter(item => cartKeyOf(item) !== key));
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const updateQuantity = (key, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(key);
       return;
     }
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === productId ? { ...item, quantity } : item
+        cartKeyOf(item) === key ? { ...item, quantity } : item
       )
     );
   };
